@@ -1,0 +1,36 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": ["airbnb", "prettier"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": ["import", "jsx-a11y", "react", "react-hooks"],
+  "rules": {
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "always",
+        "asyncArrow": "always"
+      }
+    ],
+    
+    // Restrict file extensions that may contain JSX 
+    // next.js 는 jsx 보다는 js 를 쓰는것 같다고 함, eslint 설정 js 도 허용하게끔 설정 함
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+
+    // Prevent missing props validation in a React component definition 
+    "react/prop-types": ["off"]
+  }
+}
