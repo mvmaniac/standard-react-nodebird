@@ -8,7 +8,7 @@
 
 * next는 9.x 사용
 * eslint & prettier 설정 추가
-* Webpack 설정 변경
+* webpack 설정 변경
 
 ### 3. TODO
 
@@ -27,4 +27,10 @@
     ```npm i -D prettier eslint-config-prettier```
 
 * antd  
-    ```npm i -D antd```  
+    ```npm i next```  
+
+* antd  
+    ```npm i antd```  
+
+* etc  
+    ```npm i prop-types```  

@@ -28,9 +28,10 @@
     
     // Restrict file extensions that may contain JSX 
     // next.js 는 jsx 보다는 js 를 쓰는것 같다고 함, eslint 설정 js 도 허용하게끔 설정 함
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
 
+    // prop-types 으로 해결함
     // Prevent missing props validation in a React component definition 
-    "react/prop-types": ["off"]
+    //"react/prop-types": ["off"]
   }
 }

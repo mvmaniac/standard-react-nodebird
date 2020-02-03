@@ -1,21 +1,44 @@
 import React from 'react';
-import Head from 'next/head';
-import AppLayout from '../components/AppLayout';
+import {Button, List, Card, Icon} from 'antd';
+import NicknameForm from '../components/NicknameForm';
 
 const Profile = () => {
   return (
-    <>
-      <Head>
-        <title>NodeBird - Dev</title>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.7/antd.css"
-        />
-      </Head>
-      <AppLayout>
-        <div>Profile</div>
-      </AppLayout>
-    </>
+    <div>
+      <NicknameForm />
+      <List
+        style={{marginBottom: '20px'}}
+        grid={{gutter: 4, xs: 2, md: 3}}
+        size="small"
+        header={<div>팔로잉 목록</div>}
+        loadMore={<Button style={{width: '100%'}}>더 보기</Button>}
+        bordered
+        dataSource={['following1', 'following2', 'following3']}
+        renderItem={item => (
+          <List.Item style={{marginTop: '20px'}}>
+            <Card actions={[<Icon type="stop" />]}>
+              <Card.Meta description={item} />
+            </Card>
+          </List.Item>
+        )}
+      />
+      <List
+        style={{marginBottom: '20px'}}
+        grid={{gutter: 4, xs: 2, md: 3}}
+        size="small"
+        header={<div>팔로워 목록</div>}
+        loadMore={<Button style={{width: '100%'}}>더 보기</Button>}
+        bordered
+        dataSource={['follower1', 'follower2', 'follower3']}
+        renderItem={item => (
+          <List.Item style={{marginTop: '20px'}}>
+            <Card actions={[<Icon type="stop" />]}>
+              <Card.Meta description={item} />
+            </Card>
+          </List.Item>
+        )}
+      />
+    </div>
   );
 };
 
