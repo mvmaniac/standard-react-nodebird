@@ -1,8 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, {useState, useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 import {Form, Input, Checkbox, Button} from 'antd';
 
-export const SignUp = () => {
+import {signUpAction} from '../reducers/user';
+
+const SignUp = () => {
   const [id, setId] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
@@ -10,6 +13,8 @@ export const SignUp = () => {
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
+
+  const dispatch = useDispatch();
 
   const onSubmit = useCallback(
     evt => {
@@ -23,8 +28,13 @@ export const SignUp = () => {
         return setTermError(true);
       }
 
-      console.log({id, nickname, password, passwordCheck, term});
-      return {};
+      dispatch(
+        signUpAction({
+          id,
+          password,
+          nickname
+        })
+      );
     },
     [password, passwordCheck, term]
   );

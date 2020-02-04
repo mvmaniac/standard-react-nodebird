@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useState, useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import Link from 'next/link';
-import {Input, Button, Form} from 'antd';
+import {Button, Form, Input} from 'antd';
+
+import {loginAction} from '../reducers/user';
 
 const LoginForm = () => {
   // custom hook 를 만들어서 사용할 수 있음
@@ -13,10 +16,12 @@ const LoginForm = () => {
 
   const [id, onChangeId] = useInput('');
   const [password, onChangePassord] = useInput('');
+  const dispatch = useDispatch();
 
   const onSubmitForm = useCallback(
     evt => {
       evt.preventDefault();
+      dispatch(loginAction);
     },
     [id, password]
   );

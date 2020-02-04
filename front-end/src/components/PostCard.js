@@ -1,6 +1,6 @@
 import React from 'react';
-import {Button, Card, Icon, Avatar} from 'antd';
 import PropTypes from 'prop-types';
+import {Button, Card, Icon, Avatar} from 'antd';
 
 const PostCard = ({post}) => {
   return (
@@ -16,8 +16,8 @@ const PostCard = ({post}) => {
       extra={<Button>팔로우</Button>}
     >
       <Card.Meta
-        avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-        title={post.User.nickname}
+        avatar={<Avatar>{post.user.nickname[0]}</Avatar>}
+        title={post.user.nickname}
         description={post.content}
       />
     </Card>
@@ -26,7 +26,7 @@ const PostCard = ({post}) => {
 
 PostCard.propTypes = {
   post: PropTypes.shape({
-    User: PropTypes.object,
+    user: PropTypes.object,
     content: PropTypes.string,
     img: PropTypes.string,
     createdAt: PropTypes.object

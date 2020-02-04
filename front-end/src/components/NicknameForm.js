@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Input, Button} from 'antd';
+import {Button, Form, Input} from 'antd';
 
 const NicknameForm = () => {
   return (
