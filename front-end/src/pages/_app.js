@@ -32,12 +32,11 @@ NodeBird.propTypes = {
   store: PropTypes.shape({}).isRequired
 };
 
-// 3. withRedux가 NodeBird에 props의 store로 연결
-export default withRedux((initialState, options) => {
+const configureStore = (initialState, options) => {
   // 미들웨어는 action과 store 사이에서 동작함
   const sagaMiddleware = createSagaMiddleWare();
   const middlewares = [sagaMiddleware]; // 1. 사가 미들웨어를 리덕스에 미들웨어로 등록
-
+  
   const enhancer =
     process.env.NODE_ENV === 'production'
       ? compose(applyMiddleware(...middlewares))
@@ -53,4 +52,7 @@ export default withRedux((initialState, options) => {
   const store = createStore(rootReducer, initialState, enhancer);
   sagaMiddleware.run(rootSaga); // 2. 루트 사가를 사가 미들웨어에 등록
   return store;
-})(NodeBird);
+};
+
+// 3. withRedux가 NodeBird에 props의 store로 연결
+export default withRedux(configureStore)(NodeBird);

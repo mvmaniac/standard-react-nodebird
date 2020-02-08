@@ -25,6 +25,7 @@
     ``` javascript
     npm i -D eslint
     npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
+    npm i -D babel-eslint
     npm i -D prettier eslint-config-prettier
     ```
 
@@ -50,4 +51,5 @@
 
     ``` javascript
     npm i prop-types
+    npm i axios
     ```

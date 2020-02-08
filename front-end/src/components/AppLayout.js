@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import {Col, Input, Menu, Row} from 'antd';
 
 import LoginForm from './LoginForm';
-import UserPofile from './UserPofile';
+import UserProfile from './UserProfile';
 
 const AppLayout = ({children}) => {
   const {isLoggedIn} = useSelector(state => state.userReducer);
@@ -30,7 +30,7 @@ const AppLayout = ({children}) => {
 
       <Row gutter={8}>
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserPofile /> : <LoginForm />}
+          {isLoggedIn ? <UserProfile /> : <LoginForm />}
         </Col>
 
         <Col xs={24} md={12}>

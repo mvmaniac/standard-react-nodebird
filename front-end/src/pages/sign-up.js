@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, {useState, useCallback} from 'react';
-import {useDispatch} from 'react-redux';
+import React, {useState, useCallback, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import Router from 'next/router';
 import {Form, Input, Checkbox, Button} from 'antd';
 
-import {signUpAction} from '../reducers/user';
+import {SIGN_UP_REQUEST} from '../reducers/user';
 
 const SignUp = () => {
   const [id, setId] = useState('');
@@ -14,7 +15,15 @@ const SignUp = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
 
+  const {isSigningUp, me} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (me) {
+      alert('로그인 해서 메인 페이지로 이동...');
+      Router.push('/');
+    }
+  }, [me && me.id]); // 객체 말고 기본값으로 하는게 편함
 
   const onSubmit = useCallback(
     evt => {
@@ -28,13 +37,14 @@ const SignUp = () => {
         return setTermError(true);
       }
 
-      dispatch(
-        signUpAction({
+      dispatch({
+        type: SIGN_UP_REQUEST,
+        data: {
           id,
           password,
           nickname
-        })
-      );
+        }
+      });
     },
     [password, passwordCheck, term]
   );
@@ -47,11 +57,11 @@ const SignUp = () => {
     setNickname(evt.target.value);
   }, []);
 
-  const onChangePassord = useCallback(evt => {
+  const onChangePassword = useCallback(evt => {
     setPassword(evt.target.value);
   }, []);
 
-  const onChangePassordCheck = useCallback(
+  const onChangePasswordCheck = useCallback(
     evt => {
       const {value} = evt.target;
       setPasswordError(value !== password);
@@ -90,7 +100,7 @@ const SignUp = () => {
           name="user-password"
           required
           value={password}
-          onChange={onChangePassord}
+          onChange={onChangePassword}
         />
       </div>
       <div>
@@ -101,7 +111,7 @@ const SignUp = () => {
           name="user-password-check"
           required
           value={passwordCheck}
-          onChange={onChangePassordCheck}
+          onChange={onChangePasswordCheck}
         />
         {passwordError && <div style={{color: 'red'}}>비밀번호가 일치하지 않습니다.</div>}
       </div>
@@ -113,7 +123,7 @@ const SignUp = () => {
       </div>
       <br />
       <div>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={isSigningUp}>
           가입하기
         </Button>
       </div>

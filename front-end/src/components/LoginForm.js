@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, {useCallback, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Link from 'next/link';
 import {Button, Form, Input} from 'antd';
 
-import {loginAction} from '../reducers/user';
+import {LOG_IN_REQUEST} from '../reducers/user';
 
 const LoginForm = () => {
   // custom hook 를 만들어서 사용할 수 있음
@@ -15,13 +15,21 @@ const LoginForm = () => {
   };
 
   const [id, onChangeId] = useInput('');
-  const [password, onChangePassord] = useInput('');
+  const [password, onChangePassword] = useInput('');
+
+  const {isLoggingIn} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
   const onSubmitForm = useCallback(
     evt => {
       evt.preventDefault();
-      dispatch(loginAction);
+      dispatch({
+        type: LOG_IN_REQUEST,
+        data: {
+          id,
+          password
+        }
+      });
     },
     [id, password]
   );
@@ -40,11 +48,11 @@ const LoginForm = () => {
           name="user-password"
           required
           value={password}
-          onChange={onChangePassord}
+          onChange={onChangePassword}
         />
       </div>
       <div>
-        <Button type="primary" htmlType="submit" loading={false}>
+        <Button type="primary" htmlType="submit" loading={isLoggingIn}>
           로그인
         </Button>
         <Link href="/sign-up">

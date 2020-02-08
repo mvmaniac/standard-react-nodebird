@@ -1,5 +1,13 @@
-import {all, call, fork, put, takeLatest} from 'redux-saga/effects';
-import {LOG_IN, LOG_IN_SUCCESS, LOG_IN_FAILURE} from '../reducers/user';
+import { all, call, fork, put, takeEvery, takeLatest, delay } from 'redux-saga/effects';
+import axios from 'axios';
+import {
+  LOG_IN_SUCCESS,
+  LOG_IN_FAILURE,
+  SIGN_UP_REQUEST,
+  SIGN_UP_SUCCESS,
+  SIGN_UP_FAILURE,
+  LOG_IN_REQUEST
+} from '../reducers/user';
 
 // call: 함수 동기적 호출
 // fork: 함수 비동기적 호출
@@ -14,8 +22,10 @@ function loginAPI () {
 
 function* login () {
   try {
+    yield delay(2000);
+
     // call은 동기적 호출이므로 loginAPI에 대한
-    // 응답이 올때까지 기다리며, 응답이 오고 나서 
+    // 응답이 올때까지 기다리며, 응답이 오고 나서
     // put에 있는 액션이 실행됨
     yield call(loginAPI);
     yield put({
@@ -38,10 +48,34 @@ function* watchLogin () {
   // });
 
   // LOG_IN 액션이 동시에 실행되어도 login은 마지막 1번만 실행됨
-  yield takeLatest(LOG_IN, login);
+  yield takeLatest(LOG_IN_REQUEST, login);
 }
 
-function* watchSignUp () {}
+function signUpAPI () {
+  // return axios.post('/login');
+}
+
+function* signUp () {
+  try {
+    yield call(signUpAPI);
+    yield delay(2000);
+    throw new Error('에러발생');
+    yield put({
+      type: SIGN_UP_SUCCESS
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: SIGN_UP_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchSignUp () {
+  yield takeEvery(SIGN_UP_REQUEST, signUp);
+}
 
 export default function* userSaga () {
   yield all([fork(watchLogin), fork(watchSignUp)]);
