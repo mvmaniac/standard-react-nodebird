@@ -11,34 +11,30 @@
 
 ### 3. TODO
 
+* sequelize 공부 (JPA와 비교하여...)
+
 ### 4. Setting
 
-* react & webpack & nodemon  
+#### 4-1. front-end
+
+* react
 
     ``` javascript
     npm i react react-dom
-    npm i -D webpack nodemon
+    npm i prop-types
     ```
 
-* eslint & prettier
-  
+* redux
+
     ``` javascript
-    npm i -D eslint
-    npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
-    npm i -D babel-eslint
-    npm i -D prettier eslint-config-prettier
+    npm i redux react-redux redux-saga
     ```
 
 * next
 
-    ``` javascript
+    ``` **javascript**
     npm i next
-    ```  
-
-* redux
-  
-    ``` javascript
-    npm i redux react-redux next-redux-wrapper redux-saga
+    npm i next-redux-wrapper
     ```
 
 * antd
@@ -47,9 +43,89 @@
     npm i antd
     ```
 
-* etc
+* axios
 
     ``` javascript
-    npm i prop-types
     npm i axios
     ```
+
+* eslint & prettier
+
+    ``` javascript
+    npm i -D eslint
+    npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
+    npm i -D babel-eslint
+    npm i -D prettier eslint-config-prettier
+    ```
+
+* nodemon
+
+    ``` javascript
+    npm i -D nodemon
+    ```
+
+* webpack
+
+    ``` javascript
+    npm i -D webpack
+    ```
+
+#### 4-2. back-end
+
+* express & etc
+
+    ``` javascript
+    npm i express
+    npm i bcrypt
+    npm i cookie-parser
+    npm i express-session
+    npm i dotenv
+    npm i helmet hpp
+    npm i morgan
+    npm i multer
+    npm i passport passport-local
+    ```
+
+* sequelize
+
+    ``` javascript
+    npm i sequelize sequelize-cli
+    ```
+
+* axios
+
+    ``` javascript
+    npm i axios
+    ```
+
+* mysql2
+
+    ``` javascript
+    npm i mysql2
+    ```
+
+* eslint & prettier
+
+    ``` javascript
+    npm i -D eslint
+    npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y
+    npm i -D babel-eslint
+    npm i -D prettier eslint-config-prettier
+    ```
+
+* nodemon
+
+    ``` javascript
+    npm i -D nodemon
+    ```
+
+#### 4-3. db
+
+* ddl & dcl
+  
+  ```sql
+    CREATE DATABASE nodebird;
+    CREATE USER dev@'%' IDENTIFIED BY '1234';
+    GRANT ALL PRIVILEGES ON nodebird.* TO dev@'%';
+    FLUSH PRIVILEGES;
+  ```
