@@ -7,7 +7,7 @@ import {Form, Input, Checkbox, Button} from 'antd';
 import {SIGN_UP_REQUEST} from '../reducers/user';
 
 const SignUp = () => {
-  const [id, setId] = useState('');
+  const [userId, setUserId] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
@@ -23,7 +23,7 @@ const SignUp = () => {
       alert('로그인 해서 메인 페이지로 이동...');
       Router.push('/');
     }
-  }, [me && me.id]); // 객체 말고 기본값으로 하는게 편함
+  }, [me && me.userId]); // 객체 말고 기본값으로 하는게 편함
 
   const onSubmit = useCallback(
     evt => {
@@ -40,17 +40,20 @@ const SignUp = () => {
       dispatch({
         type: SIGN_UP_REQUEST,
         data: {
-          id,
+          userId,
           password,
           nickname
         }
       });
+
+      // eslint 때문에 추가
+      return true;
     },
-    [password, passwordCheck, term]
+    [userId, nickname, password, passwordCheck, term]
   );
 
-  const onChangeId = useCallback(evt => {
-    setId(evt.target.value);
+  const onChangeUserId = useCallback(evt => {
+    setUserId(evt.target.value);
   }, []);
 
   const onChangeNickname = useCallback(evt => {
@@ -79,36 +82,36 @@ const SignUp = () => {
     <Form onSubmit={onSubmit}>
       <br />
       <div>
-        <label htmlFor="user-id">아이디:</label>
-        <Input id="user-id" name="user-id" required value={id} onChange={onChangeId} />
+        <label htmlFor="sign-userId">아이디:</label>
+        <Input id="sign-userId" name="userId" required value={userId} onChange={onChangeUserId} />
       </div>
       <div>
-        <label htmlFor="user-nickname">별명:</label>
+        <label htmlFor="sign-nickname">별명:</label>
         <Input
-          id="user-nickname"
-          name="user-nickname"
+          id="sign-nickname"
+          name="sign-nickname"
           required
           value={nickname}
           onChange={onChangeNickname}
         />
       </div>
       <div>
-        <label htmlFor="user-password">비밀번호:</label>
+        <label htmlFor="sign-password">비밀번호:</label>
         <Input
           type="password"
-          id="user-password"
-          name="user-password"
+          id="sign-password"
+          name="sign-password"
           required
           value={password}
           onChange={onChangePassword}
         />
       </div>
       <div>
-        <label htmlFor="user-password-check">비밀번호 체크:</label>
+        <label htmlFor="sign-password-check">비밀번호 체크:</label>
         <Input
           type="password"
-          id="user-password-check"
-          name="user-password-check"
+          id="sign-password-check"
+          name="sign-password-check"
           required
           value={passwordCheck}
           onChange={onChangePasswordCheck}
@@ -116,7 +119,7 @@ const SignUp = () => {
         {passwordError && <div style={{color: 'red'}}>비밀번호가 일치하지 않습니다.</div>}
       </div>
       <div>
-        <Checkbox name="user-term" value={term} onChange={onChangeTerm}>
+        <Checkbox name="sign-term" checked={term} onChange={onChangeTerm}>
           약관에 동의합니다.
         </Checkbox>
         {termError && <div style={{color: 'red'}}>약관에 동의하셔야 합니다.</div>}

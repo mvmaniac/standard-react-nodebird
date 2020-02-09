@@ -1,4 +1,4 @@
-import { all, call, fork, put, takeEvery, takeLatest, delay } from 'redux-saga/effects';
+import {all, call, fork, put, takeEvery, takeLatest} from 'redux-saga/effects';
 import axios from 'axios';
 import {
   LOG_IN_SUCCESS,
@@ -16,18 +16,16 @@ import {
 // all: 여러 이펙트를 동시에 샐행 할 수 있게 함
 // takeEvery: while(true)로 감싸는것과 같이 실행됨 (ex. 여러번 클릭 용도)
 // takeLatest takeEvery와 동시에 여러번 액션이 호출되어도 최종 마지막 1번만 호출됨 (ex. 여러번 클릭해도 최종 1번만)
-function loginAPI () {
-  // 서버에 요청
+function loginAPI (loginData) {
+  return axios.post('http://localhost:3065/api/login', loginData);
 }
 
-function* login () {
+function* login (action) {
   try {
-    yield delay(2000);
-
     // call은 동기적 호출이므로 loginAPI에 대한
     // 응답이 올때까지 기다리며, 응답이 오고 나서
     // put에 있는 액션이 실행됨
-    yield call(loginAPI);
+    yield call(loginAPI, action.data);
     yield put({
       type: LOG_IN_SUCCESS
     });
@@ -51,15 +49,13 @@ function* watchLogin () {
   yield takeLatest(LOG_IN_REQUEST, login);
 }
 
-function signUpAPI () {
-  // return axios.post('/login');
+function signUpAPI (signUpData) {
+  return axios.post('http://localhost:3065/api/users', signUpData);
 }
 
-function* signUp () {
+function* signUp (action) {
   try {
-    yield call(signUpAPI);
-    yield delay(2000);
-    throw new Error('에러발생');
+    yield call(signUpAPI, action.data);
     yield put({
       type: SIGN_UP_SUCCESS
     });

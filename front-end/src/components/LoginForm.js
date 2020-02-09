@@ -14,7 +14,7 @@ const LoginForm = () => {
     return [value, handler];
   };
 
-  const [id, onChangeId] = useInput('');
+  const [userId, onChangeUserId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const {isLoggingIn} = useSelector(state => state.userReducer);
@@ -26,26 +26,32 @@ const LoginForm = () => {
       dispatch({
         type: LOG_IN_REQUEST,
         data: {
-          id,
+          userId,
           password
         }
       });
     },
-    [id, password]
+    [userId, password]
   );
 
   return (
     <Form onSubmit={onSubmitForm} style={{padding: '10px'}}>
       <div>
-        <label htmlFor="user-id">아이디</label>
-        <Input id="user-id" name="user-id" required value={id} onChange={onChangeId} />
+        <label htmlFor="login-userId">아이디</label>
+        <Input
+          id="login-userId"
+          name="login-userId"
+          required
+          value={userId}
+          onChange={onChangeUserId}
+        />
       </div>
       <div>
-        <label htmlFor="user-password">비밀번호:</label>
+        <label htmlFor="login-password">비밀번호:</label>
         <Input
           type="password"
-          id="user-password"
-          name="user-password"
+          id="login-password"
+          name="login-password"
           required
           value={password}
           onChange={onChangePassword}
@@ -55,6 +61,7 @@ const LoginForm = () => {
         <Button type="primary" htmlType="submit" loading={isLoggingIn}>
           로그인
         </Button>
+        &nbsp;
         <Link href="/sign-up">
           <Button>회원가입</Button>
         </Link>
