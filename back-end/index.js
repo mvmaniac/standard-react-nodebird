@@ -26,7 +26,10 @@ passportConfig();
 app.use(morgan('dev'));
 
 // Access-Control-Allow-Origin 처리
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 // 세션에 로그인한 사용자 정보 저장
 // 프론트에는 세션을 조회 할 수 있는 쿠키를 전달
@@ -39,7 +42,8 @@ app.use(
     cookie: {
       httpOnly: true, // 쿠키를 자바스크립트에서 접근을 하지 못함
       secure: false // https를 쓸때 true로...
-    }
+    },
+    name: 'dbgmltlr'
   })
 );
 

@@ -24,12 +24,12 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = db => {
     // one to many? 읽기전용?
-    db.User.hasMany(db.Post, {as: 'Posts'});
+    db.User.hasMany(db.Post, {as: 'posts'});
     db.User.hasMany(db.Comment);
 
-    db.User.belongsToMany(db.Post, {through: 'Like', as: 'Liked'});
-    db.User.belongsToMany(db.User, {through: 'Follow', as: 'Followers', foreignKey: 'followingId'});
-    db.User.belongsToMany(db.User, {through: 'Follow', as: 'Followings', foreignKey: 'followerId'});
+    db.User.belongsToMany(db.Post, {through: 'Like', as: 'liked'});
+    db.User.belongsToMany(db.User, {through: 'Follow', as: 'followers', foreignKey: 'followingId'});
+    db.User.belongsToMany(db.User, {through: 'Follow', as: 'followings', foreignKey: 'followerId'});
   };
 
   return User;

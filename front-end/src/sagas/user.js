@@ -9,6 +9,8 @@ import {
   LOG_IN_REQUEST
 } from '../reducers/user';
 
+axios.defaults.baseURL = 'http://localhost:3065/api';
+
 // call: 함수 동기적 호출
 // fork: 함수 비동기적 호출
 // put: 액션 dispatch
@@ -17,7 +19,9 @@ import {
 // takeEvery: while(true)로 감싸는것과 같이 실행됨 (ex. 여러번 클릭 용도)
 // takeLatest takeEvery와 동시에 여러번 액션이 호출되어도 최종 마지막 1번만 호출됨 (ex. 여러번 클릭해도 최종 1번만)
 function loginAPI (loginData) {
-  return axios.post('http://localhost:3065/api/login', loginData);
+  return axios.post('/users/login', loginData, {
+    withCredentials: true
+  });
 }
 
 function* login (action) {
@@ -25,9 +29,10 @@ function* login (action) {
     // call은 동기적 호출이므로 loginAPI에 대한
     // 응답이 올때까지 기다리며, 응답이 오고 나서
     // put에 있는 액션이 실행됨
-    yield call(loginAPI, action.data);
+    const result = yield call(loginAPI, action.data);
     yield put({
-      type: LOG_IN_SUCCESS
+      type: LOG_IN_SUCCESS,
+      data: result.data
     });
   } catch (e) {
     console.error(e);
@@ -50,7 +55,7 @@ function* watchLogin () {
 }
 
 function signUpAPI (signUpData) {
-  return axios.post('http://localhost:3065/api/users', signUpData);
+  return axios.post('/users', signUpData);
 }
 
 function* signUp (action) {

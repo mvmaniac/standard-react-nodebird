@@ -6,9 +6,7 @@ const db = require('../models');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  
-});
+router.get('/', (req, res) => {});
 
 router.post('/', async (req, res, next) => {
   try {
@@ -31,9 +29,8 @@ router.post('/', async (req, res, next) => {
       nickname: bodyData.nickname
     });
 
-    console.log("newUser: %o", newUser);
+    console.log('newUser: %o', newUser);
     return res.status(200).json(newUser);
-
   } catch (e) {
     console.error(e);
     // 에러 처리를 여기서
@@ -41,17 +38,20 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.get('/:id', (req, res) => {
-  
-});
+router.get('/:id', (req, res) => {});
 
 router.post('/logout', (req, res) => {
-  
+  req.logout();
+  req.session.destroy();
+  res.send('logout 성공!!');
 });
 
-router.post('/login', (e, res, next) => {
-  // err, user, info는 passport쪽의 done()에서 받은 정보
-  passport.authenticate('local', (err, user, info) => {
+// 로그인-1. 프론트에서 /login req.body 에 정보를 실어서 보냄
+router.post('/login', (req, res, next) => {
+  // 로그인-2. passport의 LocalStrategy를 실행
+  // e, user, info는 passport쪽의 done()에서 받은 정보
+  passport.authenticate('local', (e, user, info) => {
+    // 로그인-4. LocalStrategy에서 에러가 없다면 실행되는 콜백 함수
     if (e) {
       console.error(e);
       return next(e);
@@ -61,38 +61,51 @@ router.post('/login', (e, res, next) => {
       res.status(401).send(info.reason);
     }
 
-    return req.login(user, (loginError) => {
+    // 로그인-5. req.login을 할 때 passport.serializeUser가 실행됨
+    return req.login(user, async loginError => {
       if (loginError) {
         next(loginError);
       }
 
-      // 사용자 정보에 비밀번호 제거
-      const filteredUser = Object.assign({}, user);
-      delete filteredUser.password;
+      const fullUser = await db.User.findOne({
+        where: {id: user.id},
+        include: [
+          {
+            model: db.Post,
+            as: 'posts',
+            attributes: ['id']
+          },
+          {
+            model: db.User,
+            as: 'followings',
+            attributes: ['id']
+          },
+          {
+            model: db.User,
+            as: 'followers',
+            attributes: ['id']
+          }
+        ],
+        attributes: ['id', 'nickname', 'userId']
+      });
 
-      return res.json(filteredUser);
+      // 사용자 정보에 비밀번호 제거
+      //const filteredUser = Object.assign({}, user.toJSON());
+      //delete filteredUser.password;
+
+      return res.json(fullUser);
     });
   })(req, res, next);
 });
 
-router.get('/:id/follow', (req, res) => {
-  
-});
+router.get('/:id/follow', (req, res) => {});
 
-router.post('/:id/follow', (req, res) => {
-  
-});
+router.post('/:id/follow', (req, res) => {});
 
-router.delete('/:id/follow', (req, res) => {
-  
-});
+router.delete('/:id/follow', (req, res) => {});
 
-router.delete('/:id/follower', (req, res) => {
-  
-});
+router.delete('/:id/follower', (req, res) => {});
 
-router.post('/:id/posts', (req, res) => {
-  
-});
+router.post('/:id/posts', (req, res) => {});
 
 module.exports = router;

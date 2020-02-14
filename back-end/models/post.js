@@ -21,10 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     db.Post.hasMany(db.Comment);
     db.Post.hasMany(db.Image);
 
-    db.Post.belongsTo(db.Post, {as: 'Retweet'}); // RetweetId 컬럼 생김
+    db.Post.belongsTo(db.Post, {as: 'retweet'}); // RetweetId 컬럼 생김
 
     db.Post.belongsToMany(db.Hashtag, {through: 'PostHashtag'});
-    db.Post.belongsToMany(db.User, {through: 'Like', as: 'Likers'});
+    db.Post.belongsToMany(db.User, {through: 'Like', as: 'likers'});
   };
 
   return Post;
