@@ -13,7 +13,7 @@ import rootSaga from '../sagas';
 // component는  next에서 넣어주는 props로
 // index.js, profile.js, sign-up.js 안에 있는 component 들이 넘어옴
 // store는 state, action, reducer가 합쳐진 것
-const NodeBird = ({Component, store}) => {
+const NodeBird = ({Component, store, pageProps}) => {
   return (
     <Provider store={store}>
       <Head>
@@ -21,7 +21,7 @@ const NodeBird = ({Component, store}) => {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.7/antd.css" />
       </Head>
       <AppLayout>
-        <Component />
+        <Component {...pageProps} />
       </AppLayout>
     </Provider>
   );
@@ -29,14 +29,31 @@ const NodeBird = ({Component, store}) => {
 
 NodeBird.propTypes = {
   Component: PropTypes.elementType.isRequired,
-  store: PropTypes.shape({}).isRequired
+  store: PropTypes.shape({}).isRequired,
+  pageProps: PropTypes.shape({}).isRequired
+};
+
+// next에서 추가된 라이프 사이클 getInitialProps
+// componentDidMount 보다 먼저 실행됨, 가장 최초에 작업이 실행됨
+// 서버 사이드 렌더링 할 때 중요함
+NodeBird.getInitialProps = async context => {;
+  const {ctx, Component} = context;
+  let pageProps = {};
+
+  if (Component.getInitialProps) {
+    // 각 컴포넌트 getInitialProps에서 return한 값이 넘어옴
+    pageProps = await Component.getInitialProps(ctx);
+  }
+
+  // console.log('NodeBird.getInitialProps: %s', pageProps);
+  return {pageProps};
 };
 
 const configureStore = (initialState, options) => {
   // 미들웨어는 action과 store 사이에서 동작함
   const sagaMiddleware = createSagaMiddleWare();
   const middlewares = [sagaMiddleware]; // 1. 사가 미들웨어를 리덕스에 미들웨어로 등록
-  
+
   const enhancer =
     process.env.NODE_ENV === 'production'
       ? compose(applyMiddleware(...middlewares))

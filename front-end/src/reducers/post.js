@@ -108,7 +108,7 @@ const postReducer = (state = initialState, action) => {
         ...state,
         isAddingPost: false,
         isAddedPost: true,
-        mainPosts: [dummyPost, ...state.mainPosts]
+        mainPosts: [action.data, ...state.mainPosts]
       };
     }
     case ADD_POST_FAILURE: {
@@ -119,19 +119,25 @@ const postReducer = (state = initialState, action) => {
       };
     }
 
-    case LOAD_MAIN_POSTS_REQUEST: {
+    case LOAD_MAIN_POSTS_REQUEST: 
+    case LOAD_HASHTAG_POSTS_REQUEST: 
+    case LOAD_USER_POSTS_REQUEST: {
       return {
         ...state,
         mainPosts: []
       };
     }
-    case LOAD_MAIN_POSTS_SUCCESS: {
+    case LOAD_MAIN_POSTS_SUCCESS:
+    case LOAD_HASHTAG_POSTS_SUCCESS:
+    case LOAD_USER_POSTS_SUCCESS: {
       return {
         ...state,
         mainPosts: action.data
       };
     }
-    case LOAD_MAIN_POSTS_FAILURE: {
+    case LOAD_MAIN_POSTS_FAILURE: 
+    case LOAD_HASHTAG_POSTS_FAILURE: 
+    case LOAD_USER_POSTS_FAILURE: {
       return {
         ...state
       };
@@ -149,7 +155,7 @@ const postReducer = (state = initialState, action) => {
       const postIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
       const post = state.mainPosts[postIndex];
 
-      const comments = [...post.comments, dummyComment];
+      const comments = [...post.comments, action.data.comment];
       const mainPosts = [...state.mainPosts];
 
       mainPosts[postIndex] = {...post, comments};
@@ -167,6 +173,49 @@ const postReducer = (state = initialState, action) => {
         isAddingComment: false,
         addCommentErrorReason: action.error
       };
+    }
+
+    case LOAD_COMMENTS_SUCCESS: {
+      const postIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
+      const post = state.mainPosts[postIndex];
+
+      const {comments} = action.data
+      const mainPosts = [...state.mainPosts];
+
+      mainPosts[postIndex] = {...post, comments};
+
+      return {
+        ...state,
+        mainPosts
+      };
+    }
+    case LOAD_COMMENTS_FAILURE: {
+      return {
+        ...state
+      };
+    }
+
+    case UPLOAD_IMAGES_REQUEST: {
+      return {
+        ...state
+      };
+    }
+    case UPLOAD_IMAGES_SUCCESS: {
+      return {
+        ...state,
+        imagePaths: [...state.imagePaths, ...action.data]
+      };
+    }
+    case UPLOAD_IMAGES_FAILURE: {
+      return {
+        ...state
+      };
+    }
+    case REMOVE_IMAGE: {
+      return {
+        ...state,
+        imagePaths: state.imagePaths.filter((imagePath, i) => i !== action.data.index)
+      }
     }
 
     default: {

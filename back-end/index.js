@@ -10,6 +10,7 @@ const passportConfig = require('./passport');
 const db = require('./models');
 const userAPIRouter = require('./routes/user');
 const postAPIRouter = require('./routes/post');
+const hashtagAPIRouter = require('./routes/hashtag');
 
 dotenv.config();
 
@@ -25,11 +26,15 @@ passportConfig();
 // 어떤 요청이 들어왔는지 로그를 남김
 app.use(morgan('dev'));
 
+app.use('/', express.static('uploads'));
+
 // Access-Control-Allow-Origin 처리
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: true,
+    credentials: true
+  })
+);
 
 // 세션에 로그인한 사용자 정보 저장
 // 프론트에는 세션을 조회 할 수 있는 쿠키를 전달
@@ -57,6 +62,7 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/api/users', userAPIRouter);
 app.use('/api/posts', postAPIRouter);
+app.use('/api/hashtags', hashtagAPIRouter);
 
 app.listen(3065, () => {
   console.log('server is running on localhost:3065');

@@ -1,8 +1,10 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
+
 import {Button, Card, Icon, Avatar, Input, Form, List, Comment} from 'antd';
 import {useSelector, useDispatch} from 'react-redux';
-import {ADD_COMMENT_REQUEST} from '../reducers/post';
+import {ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST} from '../reducers/post';
 
 const PostCard = ({post}) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -19,6 +21,13 @@ const PostCard = ({post}) => {
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened(prev => !prev);
+
+    if (!commentFormOpened) {
+      dispatch({
+        type: LOAD_COMMENTS_REQUEST,
+        data: {postId: post.id}
+      })
+    }
   }, []);
 
   const onSubmitCommentForm = useCallback(
@@ -33,11 +42,12 @@ const PostCard = ({post}) => {
       dispatch({
         type: ADD_COMMENT_REQUEST,
         data: {
-          postId: post.id
+          postId: post.id,
+          content: commentText
         }
       });
     },
-    [me && me.id]
+    [me && me.id, commentText]
   );
 
   const onChangeComment = useCallback(evt => {
@@ -47,7 +57,6 @@ const PostCard = ({post}) => {
   return (
     <div>
       <Card
-        key={+post.createdAt}
         cover={post.img && <img alt="example" src={post.img} />}
         actions={[
           <Icon key="retweet" type="retweet" />,
@@ -58,9 +67,36 @@ const PostCard = ({post}) => {
         extra={<Button>팔로우</Button>}
       >
         <Card.Meta
-          avatar={<Avatar>{post.user.nickname[0]}</Avatar>}
+          // next의 페이지를 사용하기 위해(?)
+          avatar={(
+            <Link
+              href={{pathname: '/user', query: {id: post.user.id}}}
+              as={`/users/${post.user.id}`}
+            >
+              <a href="true">
+                <Avatar>{post.user.nickname[0]}</Avatar>
+              </a>
+            </Link>
+          )}
           title={post.user.nickname}
-          description={post.content}
+          description={(
+            <div>
+              {post.content.split(/(#[^\s]+)/g).map(v => {
+                if (v.match(/#[^\s]+/)) {
+                  return (
+                    <Link
+                      href={{pathname: '/hashtag', query: {tag: v.slice(1)}}}
+                      as={`/hashtags/${v.slice(1)}`}
+                      key={v}
+                    >
+                      <a href="true">{v}</a>
+                    </Link>
+                  );
+                }
+                return v;
+              })}
+            </div>
+          )}
         />
       </Card>
 
@@ -82,7 +118,16 @@ const PostCard = ({post}) => {
               <li>
                 <Comment
                   author={item.user.nickname}
-                  avatar={<Avatar>{item.user.nickname[0]}</Avatar>}
+                  avatar={(
+                    <Link
+                      href={{pathname: '/user', query: {id: item.user.id}}}
+                      as={`/users/${item.user.id}`}
+                    >
+                      <a href="true">
+                        <Avatar>{item.user.nickname[0]}</Avatar>
+                      </a>
+                    </Link>
+                  )}
                   content={item.content}
                   datetime={item.createdAt}
                 />
@@ -101,7 +146,7 @@ PostCard.propTypes = {
     user: PropTypes.object,
     content: PropTypes.string,
     img: PropTypes.string,
-    createdAt: PropTypes.object,
+    createdAt: PropTypes.string,
     comments: PropTypes.array
   }).isRequired
 };

@@ -115,9 +115,18 @@ const userReducer = (state = initialState, action) => {
       };
     }
     case LOAD_USER_SUCCESS: {
+      // 내 정보
+      if (action.me) {
+        return {
+          ...state,
+          me: action.data
+        };
+      }
+
+      // 남의 정보
       return {
         ...state,
-        me: action.data
+        userInfo: action.data
       };
     }
     case LOAD_USER_FAILURE: {

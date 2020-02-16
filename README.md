@@ -37,6 +37,16 @@
     npm i next-redux-wrapper
     ```
 
+* express
+
+    ``` **javascript**
+    npm i express
+    npm i cookie-parser
+    npm i express-session
+    npm i dotenv
+    npm i morgan
+    ```
+
 * antd
 
     ``` javascript
@@ -129,3 +139,16 @@
     GRANT ALL PRIVILEGES ON nodebird.* TO dev@'%';
     FLUSH PRIVILEGES;
   ```
+
+#### 4-4. etc
+
+* next & express
+
+  * front-end 에서 next와 express를 연결한 이유는 주소를 동적으로 생성하기 위해서  
+    예를 들어 해쉬태그 링크를 눌렀을 떄 동적으로 페이지를 가져오기 위해서(?)
+
+* .env
+  
+  * .env 파일을 만들어서 사용하는 환경변수가 있으므로, 해당 파일을 만들어서 설정 필요 (해당 파일은 저장소에 올리면 안됨)  
+    front-end는 COOKIE_SECRET  
+    back-end는 COOKIE_SECRET, DB_PASSWORD

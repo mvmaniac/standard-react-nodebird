@@ -20,12 +20,12 @@ import {
 // put: 액션 dispatch
 // take: 해당 액션이 dispatch 되면 제너레이터를 next하는 이펙트
 // all: 여러 이펙트를 동시에 샐행 할 수 있게 함
-// takeEvery: while(true)로 감싸는것과 같이 실행됨 (ex. 여러번 클릭 용도)
+// takeEvery: while(true)로 감싸는것과 같이 실행됨 (ex. 여러번 클릭 용도, 카운트같은거?)
 // takeLatest takeEvery와 동시에 여러번 액션이 호출되어도 최종 마지막 1번만 호출됨 (ex. 여러번 클릭해도 최종 1번만)
 
 // login
-function loginAPI (loginData) {
-  return axios.post('/users/login', loginData, {
+function loginAPI (data) {
+  return axios.post('/users/login', data, {
     withCredentials: true
   });
 }
@@ -62,9 +62,13 @@ function* watchLogin () {
 
 // logout
 function logoutAPI () {
-  return axios.post('/users/logout', {}, {
-    withCredentials: true
-  });
+  return axios.post(
+    '/users/logout',
+    {},
+    {
+      withCredentials: true
+    }
+  );
 }
 
 function* logout () {
@@ -88,18 +92,20 @@ function* watchLogout () {
 }
 
 // loadUser
-function loadUserAPI () {
-  return axios.get('/users', {
+function loadUserAPI (data) {
+  // userId 값이 있다면 남의 정보를 요청함
+  return axios.get(data && data.userId ? `/users/${data.userId}` : '/users', {
     withCredentials: true
   });
 }
 
-function* loadUser () {
+function* loadUser (action) {
   try {
-    const result = yield call(loadUserAPI);
+    const result = yield call(loadUserAPI, action.data);
     yield put({
       type: LOAD_USER_SUCCESS,
-      data: result.data
+      data: result.data,
+      me: !action.data // 남의 정보인지 내 정보인지 판단하기 위한 용도
     });
   } catch (e) {
     console.error(e);
@@ -112,12 +118,12 @@ function* loadUser () {
 }
 
 function* watchLoadUser () {
-  yield takeEvery(LOAD_USER_REQUEST, loadUser);
+  yield takeLatest(LOAD_USER_REQUEST, loadUser);
 }
 
 // signUp
-function signUpAPI (signUpData) {
-  return axios.post('/users', signUpData);
+function signUpAPI (data) {
+  return axios.post('/users', data);
 }
 
 function* signUp (action) {
@@ -141,10 +147,5 @@ function* watchSignUp () {
 }
 
 export default function* userSaga () {
-  yield all([
-    fork(watchLogin), 
-    fork(watchLogout),
-    fork(watchLoadUser),
-    fork(watchSignUp)
-  ]);
+  yield all([fork(watchLogin), fork(watchLogout), fork(watchLoadUser), fork(watchSignUp)]);
 }

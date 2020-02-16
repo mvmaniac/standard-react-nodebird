@@ -20,17 +20,17 @@ const UserProfile = () => {
         <div key="twit">
           쨱짹
           <br />
-          {me.posts.length}
+          {/* {me.posts.length} */}
         </div>,
         <div key="following">
           팔로잉
           <br />
-          {me.followings.length}
+          {/* {me.followings.length} */}
         </div>,
         <div key="follower">
           팔로워
           <br />
-          {me.followers.length}
+          {/* {me.followers.length} */}
         </div>
       ]}
     >

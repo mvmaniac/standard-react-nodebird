@@ -3,15 +3,12 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 
 const db = require('../models');
+const {isLoggedIn} = require('./middleware');
 
 const router = express.Router();
 
 // /api/users
-router.get('/', (req, res) => {
-  if (!req.user) {
-    return res.status(401).send('로그인이 필요합니다.');
-  }
-
+router.get('/', isLoggedIn, (req, res) => {
   const user = Object.assign({}, req.user.toJSON());
   delete user.password;
 
@@ -34,14 +31,14 @@ router.post('/', async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(bodyData.password, 12); // salt는 10 ~ 13 사이로
 
-    const newUser = await db.User.create({
+    const savedUser = await db.User.create({
       userId: bodyData.userId,
       password: hashedPassword,
       nickname: bodyData.nickname
     });
 
-    console.log('newUser: %o', newUser);
-    return res.status(200).json(newUser);
+    //console.log('savedUser: %o', savedUser);
+    return res.status(200).json(savedUser);
   } catch (e) {
     console.error(e);
     // 에러 처리를 여기서
@@ -49,7 +46,41 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.get('/:id', (req, res) => {});
+router.get('/:id', async (req, res, next) => {
+  try {
+    const findUser = await db.User.findOne({
+      where: {id: parseInt(req.params.id, 10)},
+      include: [
+        {
+          model: db.Post,
+          as: 'posts',
+          attributes: ['id']
+        },
+        {
+          model: db.User,
+          as: 'followings',
+          attributes: ['id']
+        },
+        {
+          model: db.User,
+          as: 'followers',
+          attributes: ['id']
+        }
+      ],
+      attributes: ['id', 'nickname']
+    });
+
+    const jsonUser = findUser.toJSON();
+    jsonUser.posts = jsonUser.posts ? jsonUser.posts.length : 0;
+    jsonUser.followings = jsonUser.followings ? jsonUser.followings.length : 0;
+    jsonUser.followers = jsonUser.followers ? jsonUser.followers.length : 0;
+
+    return res.json(jsonUser);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+});
 
 router.post('/logout', (req, res) => {
   req.logout();
@@ -69,7 +100,7 @@ router.post('/login', (req, res, next) => {
     }
 
     if (info) {
-      res.status(401).send(info.reason);
+      return res.status(401).send(info.reason);
     }
 
     // 로그인-5. req.login을 할 때 passport.serializeUser가 실행됨
@@ -78,7 +109,7 @@ router.post('/login', (req, res, next) => {
         next(loginError);
       }
 
-      const fullUser = await db.User.findOne({
+      const findUser = await db.User.findOne({
         where: {id: user.id},
         include: [
           {
@@ -104,7 +135,7 @@ router.post('/login', (req, res, next) => {
       //const filteredUser = Object.assign({}, user.toJSON());
       //delete filteredUser.password;
 
-      return res.json(fullUser);
+      return res.json(findUser);
     });
   })(req, res, next);
 });
@@ -117,6 +148,30 @@ router.delete('/:id/follow', (req, res) => {});
 
 router.delete('/:id/follower', (req, res) => {});
 
-router.post('/:id/posts', (req, res) => {});
+router.get('/:id/posts', async (req, res, next) => {
+  try {
+    const findPosts = await db.Post.findAll({
+      where: {
+        userId: parseInt(req.params.id, 10),
+        retweetId: null
+      },
+      include: [
+        {
+          model: db.User,
+          attributes: ['id', 'nickname']
+        }
+      ],
+      order: [
+        ['createdAt', 'DESC'],
+        ['updatedAt', 'ASC']
+      ]
+    });
+
+    return res.json(findPosts);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+});
 
 module.exports = router;
