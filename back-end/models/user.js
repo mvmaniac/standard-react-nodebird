@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    'User',
+    'user',
     {
       userId: {
         type: DataTypes.STRING(20), // 20글자 이하

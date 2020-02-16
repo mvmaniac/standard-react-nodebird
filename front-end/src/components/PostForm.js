@@ -16,13 +16,18 @@ const PostForm = () => {
   const onSubmitForm = useCallback(evt => {
     evt.preventDefault();
 
+    if (!content || !content.trim()) {
+      alert('게시글을 작성하세요.');
+      return;
+    }
+
     dispatch({
       type: ADD_POST_REQUEST,
       data: {
-        content
+        content: content.trim()
       }
     });
-  }, []);
+  }, [content]);
 
   const onChangeContent = useCallback(evt => {
     setContent(evt.target.value);

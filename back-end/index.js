@@ -44,6 +44,7 @@ app.use(
       secure: false // https를 쓸때 true로...
     },
     name: 'dbgmltlr'
+    // store: RedisStore // store 를 따로 써야 서버가 재시작해도 로그인이 유지됨
   })
 );
 

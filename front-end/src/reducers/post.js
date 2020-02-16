@@ -103,7 +103,6 @@ const postReducer = (state = initialState, action) => {
         addPostErrorReason: ''
       };
     }
-
     case ADD_POST_SUCCESS: {
       return {
         ...state,
@@ -112,12 +111,29 @@ const postReducer = (state = initialState, action) => {
         mainPosts: [dummyPost, ...state.mainPosts]
       };
     }
-
     case ADD_POST_FAILURE: {
       return {
         ...state,
         isAddingPost: false,
         addPostErrorReason: action.error
+      };
+    }
+
+    case LOAD_MAIN_POSTS_REQUEST: {
+      return {
+        ...state,
+        mainPosts: []
+      };
+    }
+    case LOAD_MAIN_POSTS_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: action.data
+      };
+    }
+    case LOAD_MAIN_POSTS_FAILURE: {
+      return {
+        ...state
       };
     }
 
@@ -129,7 +145,6 @@ const postReducer = (state = initialState, action) => {
         addCommentErrorReason: ''
       };
     }
-
     case ADD_COMMENT_SUCCESS: {
       const postIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
       const post = state.mainPosts[postIndex];
@@ -146,7 +161,6 @@ const postReducer = (state = initialState, action) => {
         mainPosts
       };
     }
-
     case ADD_COMMENT_FAILURE: {
       return {
         ...state,

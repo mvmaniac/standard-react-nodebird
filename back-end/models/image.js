@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Image = sequelize.define(
-    'Image',
+    'image',
     {
       src: {
         // S3 저장

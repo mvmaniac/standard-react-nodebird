@@ -6,10 +6,14 @@ import {
   SIGN_UP_REQUEST,
   SIGN_UP_SUCCESS,
   SIGN_UP_FAILURE,
-  LOG_IN_REQUEST
+  LOG_IN_REQUEST,
+  LOG_OUT_SUCCESS,
+  LOG_OUT_FAILURE,
+  LOG_OUT_REQUEST,
+  LOAD_USER_SUCCESS,
+  LOAD_USER_FAILURE,
+  LOAD_USER_REQUEST
 } from '../reducers/user';
-
-axios.defaults.baseURL = 'http://localhost:3065/api';
 
 // call: 함수 동기적 호출
 // fork: 함수 비동기적 호출
@@ -18,6 +22,8 @@ axios.defaults.baseURL = 'http://localhost:3065/api';
 // all: 여러 이펙트를 동시에 샐행 할 수 있게 함
 // takeEvery: while(true)로 감싸는것과 같이 실행됨 (ex. 여러번 클릭 용도)
 // takeLatest takeEvery와 동시에 여러번 액션이 호출되어도 최종 마지막 1번만 호출됨 (ex. 여러번 클릭해도 최종 1번만)
+
+// login
 function loginAPI (loginData) {
   return axios.post('/users/login', loginData, {
     withCredentials: true
@@ -54,6 +60,62 @@ function* watchLogin () {
   yield takeLatest(LOG_IN_REQUEST, login);
 }
 
+// logout
+function logoutAPI () {
+  return axios.post('/users/logout', {}, {
+    withCredentials: true
+  });
+}
+
+function* logout () {
+  try {
+    yield call(logoutAPI);
+    yield put({
+      type: LOG_OUT_SUCCESS
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: LOG_OUT_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchLogout () {
+  yield takeLatest(LOG_OUT_REQUEST, logout);
+}
+
+// loadUser
+function loadUserAPI () {
+  return axios.get('/users', {
+    withCredentials: true
+  });
+}
+
+function* loadUser () {
+  try {
+    const result = yield call(loadUserAPI);
+    yield put({
+      type: LOAD_USER_SUCCESS,
+      data: result.data
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: LOAD_USER_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchLoadUser () {
+  yield takeEvery(LOAD_USER_REQUEST, loadUser);
+}
+
+// signUp
 function signUpAPI (signUpData) {
   return axios.post('/users', signUpData);
 }
@@ -79,5 +141,10 @@ function* watchSignUp () {
 }
 
 export default function* userSaga () {
-  yield all([fork(watchLogin), fork(watchSignUp)]);
+  yield all([
+    fork(watchLogin), 
+    fork(watchLogout),
+    fork(watchLoadUser),
+    fork(watchSignUp)
+  ]);
 }
