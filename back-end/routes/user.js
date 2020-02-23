@@ -105,37 +105,41 @@ router.post('/login', (req, res, next) => {
 
     // 로그인-5. req.login을 할 때 passport.serializeUser가 실행됨
     return req.login(user, async loginError => {
-      if (loginError) {
-        next(loginError);
+      try {
+        if (loginError) {
+          next(loginError);
+        }
+  
+        const findUser = await db.User.findOne({
+          where: {id: user.id},
+          include: [
+            {
+              model: db.Post,
+              as: 'posts',
+              attributes: ['id']
+            },
+            {
+              model: db.User,
+              as: 'followings',
+              attributes: ['id']
+            },
+            {
+              model: db.User,
+              as: 'followers',
+              attributes: ['id']
+            }
+          ],
+          attributes: ['id', 'nickname', 'userId']
+        });
+  
+        // 사용자 정보에 비밀번호 제거
+        //const filteredUser = Object.assign({}, user.toJSON());
+        //delete filteredUser.password;
+  
+        return res.json(findUser);
+      } catch (e) {
+        next(e);
       }
-
-      const findUser = await db.User.findOne({
-        where: {id: user.id},
-        include: [
-          {
-            model: db.Post,
-            as: 'posts',
-            attributes: ['id']
-          },
-          {
-            model: db.User,
-            as: 'followings',
-            attributes: ['id']
-          },
-          {
-            model: db.User,
-            as: 'followers',
-            attributes: ['id']
-          }
-        ],
-        attributes: ['id', 'nickname', 'userId']
-      });
-
-      // 사용자 정보에 비밀번호 제거
-      //const filteredUser = Object.assign({}, user.toJSON());
-      //delete filteredUser.password;
-
-      return res.json(findUser);
     });
   })(req, res, next);
 });

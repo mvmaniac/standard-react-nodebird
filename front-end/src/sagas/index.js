@@ -1,5 +1,5 @@
 import {all, call} from 'redux-saga/effects';
-import axios from 'axios'
+import axios from 'axios';
 
 import userSaga from './user';
 import postSaga from './post';

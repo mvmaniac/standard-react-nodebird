@@ -4,11 +4,14 @@ import createSagaMiddleWare from 'redux-saga';
 import {Provider} from 'react-redux';
 import Head from 'next/head';
 import withRedux from 'next-redux-wrapper';
+import withReduxSaga from 'next-redux-saga';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import AppLayout from '../components/AppLayout';
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
+import {LOAD_USER_REQUEST} from '../reducers/user';
 
 // component는  next에서 넣어주는 props로
 // index.js, profile.js, sign-up.js 안에 있는 component 들이 넘어옴
@@ -48,6 +51,19 @@ NodeBird.getInitialProps = async context => {
   const {ctx, Component} = context;
   let pageProps = {};
 
+  const state = ctx.store.getState();
+  const cookie = ctx.isServer ? ctx.req.headers.cookie : ''; // 서버 사이드 렌더링의 경우에는 쿠키를 직접 넣어주어야함
+
+  if (ctx.isServer && cookie) {
+    axios.defaults.headers.cookie = cookie;
+  }
+
+  if (!state.userReducer.me) {
+    ctx.store.dispatch({
+      type: LOAD_USER_REQUEST
+    });
+  }
+
   if (Component.getInitialProps) {
     // 각 컴포넌트 getInitialProps에서 return한 값이 넘어옴
     pageProps = await Component.getInitialProps(ctx);
@@ -75,9 +91,9 @@ const configureStore = (initialState, options) => {
         );
 
   const store = createStore(rootReducer, initialState, enhancer);
-  sagaMiddleware.run(rootSaga); // 2. 루트 사가를 사가 미들웨어에 등록
+  store.sagaTask = sagaMiddleware.run(rootSaga); // 2. 루트 사가를 사가 미들웨어에 등록
   return store;
 };
 
 // 3. withRedux가 NodeBird에 props의 store로 연결
-export default withRedux(configureStore)(NodeBird);
+export default withRedux(configureStore)(withReduxSaga(NodeBird));

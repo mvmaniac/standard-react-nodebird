@@ -38,6 +38,7 @@
     ``` **javascript**
     npm i next
     npm i next-redux-wrapper
+    npm i next-redux-saga
     ```
 
 * express
@@ -90,7 +91,6 @@
     ```
 
 #### 4-2. back-end
-
 
 * express & etc
 

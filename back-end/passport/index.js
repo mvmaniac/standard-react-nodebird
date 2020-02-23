@@ -25,7 +25,24 @@ module.exports = () => {
   passport.deserializeUser(async (id, done) => {
     try {
       const findUser = await db.User.findOne({
-        where: {id}
+        where: {id},
+        include: [
+          {
+            model: db.Post,
+            as: 'posts',
+            attributes: ['id']
+          },
+          {
+            model: db.User,
+            as: 'followings',
+            attributes: ['id']
+          },
+          {
+            model: db.User,
+            as: 'followers',
+            attributes: ['id']
+          }
+        ]
       });
 
       return done(null, findUser); // req.user에 담겨짐
