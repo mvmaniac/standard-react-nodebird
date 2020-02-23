@@ -8,7 +8,11 @@ export const initialState = {
         nickname: '더미'
       },
       content: '더미 내용',
-      img: 'https://i.pinimg.com/236x/cb/05/a9/cb05a9630a545502d2be98d25d3a3c0c.jpg',
+      images: [
+        {
+          src: 'https://i.pinimg.com/236x/cb/05/a9/cb05a9630a545502d2be98d25d3a3c0c.jpg'
+        }
+      ],
       comments: []
     }
   ],
@@ -26,7 +30,7 @@ export const initialState = {
 };
 
 const dummyPost = {
-  id: 1, 
+  id: 1,
   user: {
     id: 1,
     nickname: '더미'
@@ -108,7 +112,8 @@ const postReducer = (state = initialState, action) => {
         ...state,
         isAddingPost: false,
         isAddedPost: true,
-        mainPosts: [action.data, ...state.mainPosts]
+        mainPosts: [action.data, ...state.mainPosts],
+        imagePaths: []
       };
     }
     case ADD_POST_FAILURE: {
@@ -119,8 +124,8 @@ const postReducer = (state = initialState, action) => {
       };
     }
 
-    case LOAD_MAIN_POSTS_REQUEST: 
-    case LOAD_HASHTAG_POSTS_REQUEST: 
+    case LOAD_MAIN_POSTS_REQUEST:
+    case LOAD_HASHTAG_POSTS_REQUEST:
     case LOAD_USER_POSTS_REQUEST: {
       return {
         ...state,
@@ -135,8 +140,8 @@ const postReducer = (state = initialState, action) => {
         mainPosts: action.data
       };
     }
-    case LOAD_MAIN_POSTS_FAILURE: 
-    case LOAD_HASHTAG_POSTS_FAILURE: 
+    case LOAD_MAIN_POSTS_FAILURE:
+    case LOAD_HASHTAG_POSTS_FAILURE:
     case LOAD_USER_POSTS_FAILURE: {
       return {
         ...state
@@ -152,13 +157,13 @@ const postReducer = (state = initialState, action) => {
       };
     }
     case ADD_COMMENT_SUCCESS: {
-      const postIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
-      const post = state.mainPosts[postIndex];
+      const findPostIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
+      const post = state.mainPosts[findPostIndex];
 
       const comments = [...post.comments, action.data.comment];
       const mainPosts = [...state.mainPosts];
 
-      mainPosts[postIndex] = {...post, comments};
+      mainPosts[findPostIndex] = {...post, comments};
 
       return {
         ...state,
@@ -176,13 +181,13 @@ const postReducer = (state = initialState, action) => {
     }
 
     case LOAD_COMMENTS_SUCCESS: {
-      const postIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
-      const post = state.mainPosts[postIndex];
+      const findPostIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
+      const post = state.mainPosts[findPostIndex];
 
-      const {comments} = action.data
+      const {comments} = action.data;
       const mainPosts = [...state.mainPosts];
 
-      mainPosts[postIndex] = {...post, comments};
+      mainPosts[findPostIndex] = {...post, comments};
 
       return {
         ...state,
@@ -215,7 +220,72 @@ const postReducer = (state = initialState, action) => {
       return {
         ...state,
         imagePaths: state.imagePaths.filter((imagePath, i) => i !== action.data.index)
-      }
+      };
+    }
+
+    case LIKE_POST_REQUEST: {
+      return {
+        ...state
+      };
+    }
+    case LIKE_POST_SUCCESS: {
+      const findPostIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
+      const findPost = state.mainPosts[findPostIndex];
+      const likers = [{id: action.data.userId}, ...findPost.likers];
+      const mainPosts = [...state.mainPosts];
+
+      mainPosts[findPostIndex] = {...findPost, likers};
+
+      return {
+        ...state,
+        mainPosts
+      };
+    }
+    case LIKE_POST_FAILURE: {
+      return {
+        ...state
+      };
+    }
+
+    case UNLIKE_POST_REQUEST: {
+      return {
+        ...state
+      };
+    }
+    case UNLIKE_POST_SUCCESS: {
+      const findPostIndex = state.mainPosts.findIndex(post => post.id === action.data.postId);
+      const findPost = state.mainPosts[findPostIndex];
+      const likers = findPost.likers.filter(post => post.id !== action.data.userId);
+      const mainPosts = [...state.mainPosts];
+
+      mainPosts[findPostIndex] = {...findPost, likers};
+
+      return {
+        ...state,
+        mainPosts
+      };
+    }
+    case UNLIKE_POST_FAILURE: {
+      return {
+        ...state
+      };
+    }
+
+    case RETWEET_REQUEST: {
+      return {
+        ...state
+      };
+    }
+    case RETWEET_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: [action.data, ...state.mainPosts]
+      };
+    }
+    case RETWEET_FAILURE: {
+      return {
+        ...state
+      };
     }
 
     default: {

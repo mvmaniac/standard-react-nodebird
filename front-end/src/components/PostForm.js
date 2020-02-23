@@ -25,14 +25,20 @@ const PostForm = () => {
         return;
       }
 
+      const formData = new FormData();
+
+      imagePaths.forEach(i => {
+        formData.append('image', i);
+      });
+
+      formData.append('content', content);
+
       dispatch({
         type: ADD_POST_REQUEST,
-        data: {
-          content: content.trim()
-        }
+        data: formData
       });
     },
-    [content]
+    [content, imagePaths]
   );
 
   const onChangeContent = useCallback(evt => {

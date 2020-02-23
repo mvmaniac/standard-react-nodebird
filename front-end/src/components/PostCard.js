@@ -4,7 +4,17 @@ import Link from 'next/link';
 
 import {Button, Card, Icon, Avatar, Input, Form, List, Comment} from 'antd';
 import {useSelector, useDispatch} from 'react-redux';
-import {ADD_COMMENT_REQUEST, LOAD_COMMENTS_REQUEST} from '../reducers/post';
+
+import {
+  ADD_COMMENT_REQUEST,
+  LOAD_COMMENTS_REQUEST,
+  UNLIKE_POST_REQUEST,
+  LIKE_POST_REQUEST,
+  RETWEET_REQUEST
+} from '../reducers/post';
+import PostImages from './PostImages';
+import PostCardContent from './PostCardContent';
+import PostCardFollow from './PostCardFollow';
 
 const PostCard = ({post}) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -26,7 +36,7 @@ const PostCard = ({post}) => {
       dispatch({
         type: LOAD_COMMENTS_REQUEST,
         data: {postId: post.id}
-      })
+      });
     }
   }, []);
 
@@ -54,50 +64,104 @@ const PostCard = ({post}) => {
     setCommentText(evt.target.value);
   }, []);
 
+  const isLiked = me && post.likers && post.likers.find(liker => liker.id === me.id);
+
+  const onToggleLike = useCallback(() => {
+    if (!me) {
+      alert('로그인이 필요합니다');
+      return;
+    }
+
+    if (isLiked) {
+      // 좋아요 누른 상태
+      dispatch({
+        type: UNLIKE_POST_REQUEST,
+        data: {
+          postId: post.id
+        }
+      });
+    } else {
+      // 좋아요 안 누른 상태
+      dispatch({
+        type: LIKE_POST_REQUEST,
+        data: {
+          postId: post.id
+        }
+      });
+    }
+  }, [me && me.id, post && post.id, isLiked]);
+
+  const onRetweet = useCallback(() => {
+    if (!me) {
+      alert('로그인이 필요합니다');
+    }
+
+    dispatch({
+      type: RETWEET_REQUEST,
+      data: {
+        postId: post.id
+      }
+    });
+  }, [me && me.id, post && post.id]);
+
   return (
     <div>
       <Card
-        cover={post.img && <img alt="example" src={post.img} />}
+        cover={post.images.length && <PostImages images={post.images} />}
         actions={[
-          <Icon key="retweet" type="retweet" />,
-          <Icon key="heart" type="heart" />,
+          <Icon key="retweet" type="retweet" onClick={onRetweet} />,
+          <Icon
+            key="heart"
+            type="heart"
+            theme={isLiked ? 'twoTone' : 'outlined'}
+            twoToneColor="#eb2f96"
+            onClick={onToggleLike}
+          />,
           <Icon key="message" type="message" onClick={onToggleComment} />,
           <Icon key="ellipsis" type="ellipsis" />
         ]}
-        extra={<Button>팔로우</Button>}
+        title={post.retweet ? `${post.user.nickname}님이 리트윗 하셨습니다.` : null}
+        extra={
+          !me || post.user.id === me.id ? null : (
+            <PostCardFollow postUserId={post.user.id} followings={me.followings} />
+          )
+        }
       >
-        <Card.Meta
-          // next의 페이지를 사용하기 위해(?)
-          avatar={(
-            <Link
-              href={{pathname: '/user', query: {id: post.user.id}}}
-              as={`/users/${post.user.id}`}
-            >
-              <a href="true">
-                <Avatar>{post.user.nickname[0]}</Avatar>
-              </a>
-            </Link>
-          )}
-          title={post.user.nickname}
-          description={(
-            <div>
-              {post.content.split(/(#[^\s]+)/g).map(v => {
-                if (v.match(/#[^\s]+/)) {
-                  return (
-                    <Link
-                      href={{pathname: '/hashtag', query: {tag: v.slice(1)}}}
-                      as={`/hashtags/${v.slice(1)}`}
-                      key={v}
-                    >
-                      <a href="true">{v}</a>
-                    </Link>
-                  );
-                }
-                return v;
-              })}
-            </div>
-          )}
-        />
+        {post.retweetId && post.retweet ? (
+          <Card cover={post.retweet.images && <PostImages images={post.retweet.images} />}>
+            <Card.Meta
+              // next의 페이지를 사용하기 위해(?)
+              avatar={(
+                <Link
+                  href={{pathname: '/user', query: {id: post.retweet.user.id}}}
+                  as={`/users/${post.retweet.user.id}`}
+                >
+                  <a href="true">
+                    <Avatar>{post.retweet.user.nickname[0]}</Avatar>
+                  </a>
+                </Link>
+              )}
+              title={post.retweet.user.nickname}
+              description={<PostCardContent postContent={post.retweet.content} />}
+            />
+          </Card>
+        ) : (
+          <Card.Meta
+            // next의 페이지를 사용하기 위해(?)
+            avatar={(
+              <Link
+                href={{pathname: '/user', query: {id: post.user.id}}}
+                as={`/users/${post.user.id}`}
+              >
+                <a href="true">
+                  <Avatar>{post.user.nickname[0]}</Avatar>
+                </a>
+              </Link>
+            )}
+            title={post.user.nickname}
+            description={<PostCardContent postContent={post.content} />}
+          />
+        )}
       </Card>
 
       {commentFormOpened && (
@@ -145,9 +209,12 @@ PostCard.propTypes = {
     id: PropTypes.number,
     user: PropTypes.object,
     content: PropTypes.string,
-    img: PropTypes.string,
+    images: PropTypes.arrayOf(PropTypes.object),
     createdAt: PropTypes.string,
-    comments: PropTypes.array
+    comments: PropTypes.arrayOf(PropTypes.object),
+    likers: PropTypes.arrayOf(PropTypes.object),
+    retweetId: PropTypes.number,
+    retweet: PropTypes.object
   }).isRequired
 };
 

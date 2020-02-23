@@ -19,6 +19,14 @@ const NodeBird = ({Component, store, pageProps}) => {
       <Head>
         <title>NodeBird - Dev</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.7/antd.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+        />
       </Head>
       <AppLayout>
         <Component {...pageProps} />
@@ -36,7 +44,7 @@ NodeBird.propTypes = {
 // next에서 추가된 라이프 사이클 getInitialProps
 // componentDidMount 보다 먼저 실행됨, 가장 최초에 작업이 실행됨
 // 서버 사이드 렌더링 할 때 중요함
-NodeBird.getInitialProps = async context => {;
+NodeBird.getInitialProps = async context => {
   const {ctx, Component} = context;
   let pageProps = {};
 

@@ -12,7 +12,25 @@ import {
   LOG_OUT_REQUEST,
   LOAD_USER_SUCCESS,
   LOAD_USER_FAILURE,
-  LOAD_USER_REQUEST
+  LOAD_USER_REQUEST,
+  FOLLOW_USER_SUCCESS,
+  FOLLOW_USER_FAILURE,
+  FOLLOW_USER_REQUEST,
+  UN_FOLLOW_USER_REQUEST,
+  UN_FOLLOW_USER_SUCCESS,
+  UN_FOLLOW_USER_FAILURE,
+  LOAD_FOLLOWERS_REQUEST,
+  LOAD_FOLLOWERS_SUCCESS,
+  LOAD_FOLLOWERS_FAILURE,
+  LOAD_FOLLOWINGS_REQUEST,
+  LOAD_FOLLOWINGS_SUCCESS,
+  LOAD_FOLLOWINGS_FAILURE,
+  REMOVE_FOLLOWER_REQUEST,
+  REMOVE_FOLLOWER_SUCCESS,
+  REMOVE_FOLLOWER_FAILURE,
+  EDIT_NICKNAME_REQUEST,
+  EDIT_NICKNAME_SUCCESS,
+  EDIT_NICKNAME_FAILURE
 } from '../reducers/user';
 
 // call: 함수 동기적 호출
@@ -146,6 +164,193 @@ function* watchSignUp () {
   yield takeEvery(SIGN_UP_REQUEST, signUp);
 }
 
+// follow
+function followAPI (data) {
+  return axios.post(
+    `/users/${data.userId}/followings`,
+    {},
+    {
+      withCredentials: true
+    }
+  );
+}
+
+function* follow (action) {
+  try {
+    const result = yield call(followAPI, action.data);
+    yield put({
+      type: FOLLOW_USER_SUCCESS,
+      data: result.data
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: FOLLOW_USER_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchFollow () {
+  yield takeLatest(FOLLOW_USER_REQUEST, follow);
+}
+
+// unFollow
+function unFollowAPI (data) {
+  return axios.delete(`/users/${data.userId}/followings`, {
+    withCredentials: true
+  });
+}
+
+function* unFollow (action) {
+  try {
+    const result = yield call(unFollowAPI, action.data);
+    yield put({
+      type: UN_FOLLOW_USER_SUCCESS,
+      data: result.data
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: UN_FOLLOW_USER_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchUnFollow () {
+  yield takeLatest(UN_FOLLOW_USER_REQUEST, unFollow);
+}
+
+// loadFollowings
+function loadFollowingsAPI (data) {
+  return axios.get(`/users/${data.userId}/followings`, {
+    withCredentials: true
+  });
+}
+
+function* loadFollowings (action) {
+  try {
+    const result = yield call(loadFollowingsAPI, action.data);
+    yield put({
+      type: LOAD_FOLLOWINGS_SUCCESS,
+      data: result.data
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: LOAD_FOLLOWINGS_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchLoadFollowings () {
+  yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+
+// loadFollowers
+function loadFollowersAPI (data) {
+  return axios.get(`/users/${data.userId}/followers`, {
+    withCredentials: true
+  });
+}
+
+function* loadFollowers (action) {
+  try {
+    const result = yield call(loadFollowersAPI, action.data);
+    yield put({
+      type: LOAD_FOLLOWERS_SUCCESS,
+      data: result.data
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: LOAD_FOLLOWERS_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchLoadFollowers () {
+  yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+
+// removeFollower
+function removeFollowerAPI (data) {
+  return axios.delete(`/users/${data.userId}/followers`, {
+    withCredentials: true
+  });
+}
+
+function* removeFollower (action) {
+  try {
+    const result = yield call(removeFollowerAPI, action.data);
+    yield put({
+      type: REMOVE_FOLLOWER_SUCCESS,
+      data: result.data
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: REMOVE_FOLLOWER_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchRemoveFollower () {
+  yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
+
+// editNickname
+function editNicknameAPI (data) {
+  return axios.patch(
+    '/users/nickname',
+    {nickname: data.nickname},
+    {
+      withCredentials: true
+    }
+  );
+}
+
+function* editNickname (action) {
+  try {
+    const result = yield call(editNicknameAPI, action.data);
+    yield put({
+      type: EDIT_NICKNAME_SUCCESS,
+      data: result.data
+    });
+  } catch (e) {
+    console.error(e);
+
+    yield put({
+      type: EDIT_NICKNAME_FAILURE,
+      error: e
+    });
+  }
+}
+
+function* watchEditNickname () {
+  yield takeLatest(EDIT_NICKNAME_REQUEST, editNickname);
+}
+
 export default function* userSaga () {
-  yield all([fork(watchLogin), fork(watchLogout), fork(watchLoadUser), fork(watchSignUp)]);
+  yield all([
+    fork(watchLogin),
+    fork(watchLogout),
+    fork(watchLoadUser),
+    fork(watchSignUp),
+    fork(watchFollow),
+    fork(watchUnFollow),
+    fork(watchLoadFollowings),
+    fork(watchLoadFollowers),
+    fork(watchRemoveFollower),
+    fork(watchEditNickname)
+  ]);
 }
