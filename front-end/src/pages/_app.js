@@ -76,7 +76,12 @@ NodeBird.getInitialProps = async context => {
 const configureStore = (initialState, options) => {
   // 미들웨어는 action과 store 사이에서 동작함
   const sagaMiddleware = createSagaMiddleWare();
-  const middlewares = [sagaMiddleware]; // 1. 사가 미들웨어를 리덕스에 미들웨어로 등록
+  const customLoggingMiddleware = store => next => action => {
+    // console.log(action);
+    next(action);
+  };
+
+  const middlewares = [sagaMiddleware, customLoggingMiddleware]; // 1. 사가 미들웨어를 리덕스에 미들웨어로 등록
 
   const enhancer =
     process.env.NODE_ENV === 'production'

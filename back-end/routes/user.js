@@ -148,12 +148,14 @@ router.get('/:id/followings', isLoggedIn, async (req, res, next) => {
   try {
     const findUser = await db.User.findOne({
       where: {
-        id: parseInt(req.params.id, 10)
+        id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0
       }
     });
 
     const followings = await findUser.getFollowings({
-      attributes: ['id', 'nickname']
+      attributes: ['id', 'nickname'],
+      limit: parseInt(req.query.limit, 10),
+      offset: parseInt(req.query.offset, 10)
     });
 
     return res.json(followings);
@@ -199,12 +201,14 @@ router.get('/:id/followers', isLoggedIn, async (req, res, next) => {
   try {
     const findUser = await db.User.findOne({
       where: {
-        id: parseInt(req.params.id, 10)
+        id: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0
       }
     });
 
     const followers = await findUser.getFollowers({
-      attributes: ['id', 'nickname']
+      attributes: ['id', 'nickname'],
+      limit: parseInt(req.query.limit, 10),
+      offset: parseInt(req.query.offset, 10)
     });
 
     return res.json(followers);
@@ -234,7 +238,7 @@ router.get('/:id/posts', async (req, res, next) => {
   try {
     const findPosts = await db.Post.findAll({
       where: {
-        userId: parseInt(req.params.id, 10),
+        userId: parseInt(req.params.id, 10) || (req.user && req.user.id) || 0,
         retweetId: null
       },
       include: [

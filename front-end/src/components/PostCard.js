@@ -2,7 +2,7 @@ import React, {useState, useCallback, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 
-import {Button, Card, Icon, Avatar, Input, Form, List, Comment} from 'antd';
+import {Button, Card, Icon, Avatar, Input, Form, List, Comment, Popover} from 'antd';
 import {useSelector, useDispatch} from 'react-redux';
 
 import {
@@ -10,7 +10,8 @@ import {
   LOAD_COMMENTS_REQUEST,
   UNLIKE_POST_REQUEST,
   LIKE_POST_REQUEST,
-  RETWEET_REQUEST
+  RETWEET_REQUEST,
+  REMOVE_POST_REQUEST
 } from '../reducers/post';
 import PostImages from './PostImages';
 import PostCardContent from './PostCardContent';
@@ -104,6 +105,13 @@ const PostCard = ({post}) => {
     });
   }, [me && me.id, post && post.id]);
 
+  const onRemovePost = useCallback(postId => () => {
+    dispatch({
+      type: REMOVE_POST_REQUEST,
+      data: {postId}
+    });
+  }, []);
+
   return (
     <div>
       <Card
@@ -118,7 +126,25 @@ const PostCard = ({post}) => {
             onClick={onToggleLike}
           />,
           <Icon key="message" type="message" onClick={onToggleComment} />,
-          <Icon key="ellipsis" type="ellipsis" />
+          <Popover
+            key="ellipsis"
+            content={(
+              <Button.Group>
+                {me && post.user.id === me.id ? (
+                  <>
+                    <Button>수정</Button>
+                    <Button type="danger" onClick={onRemovePost(post.id)}>
+                      삭제
+                    </Button>
+                  </>
+                ) : (
+                  <Button>신고</Button>
+                )}
+              </Button.Group>
+            )}
+          >
+            <Icon type="ellipsis" />
+          </Popover>
         ]}
         title={post.retweet ? `${post.user.nickname}님이 리트윗 하셨습니다.` : null}
         extra={
@@ -128,12 +154,12 @@ const PostCard = ({post}) => {
         }
       >
         {post.retweetId && post.retweet ? (
-          <Card cover={post.retweet.images && <PostImages images={post.retweet.images} />}>
+          <Card cover={post.retweet.images.length && <PostImages images={post.retweet.images} />}>
             <Card.Meta
               // next의 페이지를 사용하기 위해(?)
               avatar={(
                 <Link
-                  href={{pathname: '/user', query: {id: post.retweet.user.id}}}
+                  href={{pathname: '/user', query: {userId: post.retweet.user.id}}}
                   as={`/users/${post.retweet.user.id}`}
                 >
                   <a href="true">
@@ -150,7 +176,7 @@ const PostCard = ({post}) => {
             // next의 페이지를 사용하기 위해(?)
             avatar={(
               <Link
-                href={{pathname: '/user', query: {id: post.user.id}}}
+                href={{pathname: '/user', query: {userId: post.user.id}}}
                 as={`/users/${post.user.id}`}
               >
                 <a href="true">
@@ -184,7 +210,7 @@ const PostCard = ({post}) => {
                   author={item.user.nickname}
                   avatar={(
                     <Link
-                      href={{pathname: '/user', query: {id: item.user.id}}}
+                      href={{pathname: '/user', query: {userId: item.user.id}}}
                       as={`/users/${item.user.id}`}
                     >
                       <a href="true">

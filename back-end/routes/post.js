@@ -23,7 +23,19 @@ const upload = multer({
 
 router.get('/', async (req, res, next) => {
   try {
+    const lastId = parseInt(req.query.lastId, 10);
+    let where = {};
+
+    if (lastId) {
+      where = {
+        id: {
+          [db.Sequelize.Op.lt]: lastId
+        }
+      };
+    }
+
     const findPosts = await db.Post.findAll({
+      where,
       include: [
         {
           model: db.User,
@@ -55,9 +67,32 @@ router.get('/', async (req, res, next) => {
       order: [
         ['createdAt', 'DESC'],
         ['updatedAt', 'ASC']
-      ]
+      ],
+      limit: parseInt(req.query.limit, 10)
     });
     return res.json(findPosts);
+  } catch (e) {
+    console.error(e);
+    return next(e);
+  }
+});
+
+router.get('/:id', async (req, res, next) => {
+  try {
+    const findPost = await db.Post.findOne({
+      where: {id: req.params.id},
+      include: [
+        {
+          model: db.User,
+          attributes: ['id', 'nickname']
+        },
+        {
+          model: db.Image
+        }
+      ]
+    });
+
+    return res.json(findPost);
   } catch (e) {
     console.error(e);
     return next(e);
@@ -130,6 +165,28 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
   }
 });
 
+router.delete('/:id', isLoggedIn, async (req, res, next) => {
+  try {
+    // TODO: 중복코드를 미들웨어로 빼기
+    const findPost = await db.Post.findOne({
+      where: {id: req.params.id}
+    });
+
+    if (!findPost) {
+      return res.status(404).send('포스트가 존재하지 않습니다.');
+    }
+
+    await db.Post.destroy({
+      where: {id: req.params.id}
+    });
+
+    return res.send(req.params.id);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
 router.get('/:id/comments', async (req, res, next) => {
   try {
     const findPost = await db.Post.findOne({
@@ -148,7 +205,7 @@ router.get('/:id/comments', async (req, res, next) => {
           attributes: ['id', 'nickname']
         }
       ],
-      order: [['createdAt', 'ASC']]
+      order: [['createdAt', 'DESC']]
     });
 
     return res.json(findComments);
@@ -252,7 +309,10 @@ router.post('/:id/retweet', isLoggedIn, async (req, res, next) => {
       return res.status(404).send('포스트가 존재하지 않습니다.');
     }
 
-    if (req.user.id === post.UserId || (findPost.retweet && findPost.retweet.userId === req.user.id)) {
+    if (
+      req.user.id === findPost.UserId ||
+      (findPost.retweet && findPost.retweet.userId === req.user.id)
+    ) {
       return res.status(403).send('자신의 글을 리트윗 할 수 없습니다.');
     }
 

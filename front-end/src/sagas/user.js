@@ -136,7 +136,7 @@ function* loadUser (action) {
 }
 
 function* watchLoadUser () {
-  yield takeLatest(LOAD_USER_REQUEST, loadUser);
+  yield takeEvery(LOAD_USER_REQUEST, loadUser);
 }
 
 // signUp
@@ -225,8 +225,9 @@ function* watchUnFollow () {
 }
 
 // loadFollowings
-function loadFollowingsAPI (data) {
-  return axios.get(`/users/${data.userId}/followings`, {
+function loadFollowingsAPI ({userId, offset = 0, limit = 3}) {
+  // 디폴트 매개변수가 null 인 경우는 동작하지 않음
+  return axios.get(`/users/${userId || 0}/followings?offset=${offset}&limit=${limit}`, {
     withCredentials: true
   });
 }
@@ -253,8 +254,9 @@ function* watchLoadFollowings () {
 }
 
 // loadFollowers
-function loadFollowersAPI (data) {
-  return axios.get(`/users/${data.userId}/followers`, {
+function loadFollowersAPI ({userId, offset = 0, limit = 3}) {
+  // 디폴트 매개변수가 null 인 경우는 동작하지 않음
+  return axios.get(`/users/${userId || 0}/followers?offset=${offset}&limit=${limit}`, {
     withCredentials: true
   });
 }

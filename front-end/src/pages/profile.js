@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {Button, List, Card, Icon} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -13,34 +13,11 @@ import {
 import {LOAD_USER_POSTS_REQUEST} from '../reducers/post';
 
 const Profile = () => {
-  const {me, followers, followings} = useSelector(state => state.userReducer);
+  const {followers, followings, hasMoreFollowings, hasMoreFollowers} = useSelector(
+    state => state.userReducer
+  );
   const {mainPosts} = useSelector(state => state.postReducer);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (me) {
-      dispatch({
-        type: LOAD_FOLLOWERS_REQUEST,
-        data: {
-          userId: me.id
-        }
-      });
-
-      dispatch({
-        type: LOAD_FOLLOWINGS_REQUEST,
-        data: {
-          userId: me.id
-        }
-      });
-
-      dispatch({
-        type: LOAD_USER_POSTS_REQUEST,
-        data: {
-          userId: me.id
-        }
-      });
-    }
-  }, [me && me.id]);
 
   const onUnFollow = useCallback(
     userId => () => {
@@ -62,6 +39,24 @@ const Profile = () => {
     []
   );
 
+  const loadMoreFollowings = useCallback(() => {
+    dispatch({
+      type: LOAD_FOLLOWINGS_REQUEST,
+      data: {
+        offset: followings.length
+      }
+    });
+  }, [followings.length]);
+
+  const loadMoreFollowers = useCallback(() => {
+    dispatch({
+      type: LOAD_FOLLOWERS_REQUEST,
+      data: {
+        offset: followers.length
+      }
+    });
+  }, [followers.length]);
+
   return (
     <div>
       <NicknameForm />
@@ -70,7 +65,13 @@ const Profile = () => {
         grid={{gutter: 4, xs: 2, md: 3}}
         size="small"
         header={<div>팔로잉 목록</div>}
-        loadMore={<Button style={{width: '100%'}}>더 보기</Button>}
+        loadMore={
+          hasMoreFollowings && (
+            <Button style={{width: '100%'}} onClick={loadMoreFollowings}>
+              더 보기
+            </Button>
+          )
+        }
         bordered
         dataSource={followings}
         renderItem={item => (
@@ -86,7 +87,13 @@ const Profile = () => {
         grid={{gutter: 4, xs: 2, md: 3}}
         size="small"
         header={<div>팔로워 목록</div>}
-        loadMore={<Button style={{width: '100%'}}>더 보기</Button>}
+        loadMore={
+          hasMoreFollowers && (
+            <Button style={{width: '100%'}} onClick={loadMoreFollowers}>
+              더 보기
+            </Button>
+          )
+        }
         bordered
         dataSource={followers}
         renderItem={item => (
@@ -104,6 +111,34 @@ const Profile = () => {
       </div>
     </div>
   );
+};
+
+Profile.getInitialProps = async context => {
+  const {store} = context;
+  const user = store.getState().userReducer;
+
+  // 이 직전에 _app.js 에서 LOAD_USER_REQUEST 실행되는데
+  // LOAD_USER_REQUEST가 끝나야 me 객체가 생김
+  store.dispatch({
+    type: LOAD_FOLLOWERS_REQUEST,
+    data: {
+      userId: user.me && user.me.id
+    }
+  });
+
+  store.dispatch({
+    type: LOAD_FOLLOWINGS_REQUEST,
+    data: {
+      userId: user.me && user.me.id
+    }
+  });
+
+  store.dispatch({
+    type: LOAD_USER_POSTS_REQUEST,
+    data: {
+      userId: user.me && user.me.id
+    }
+  });
 };
 
 export default Profile;

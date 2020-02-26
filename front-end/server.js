@@ -43,7 +43,11 @@ app.prepare().then(() => {
   });
 
   server.get('/users/:id', (req, res) => {
-    return app.render(req, res, '/user', {id: req.params.id});
+    return app.render(req, res, '/user', {userId: req.params.id});
+  });
+
+  server.get('/posts/:id', (req, res) => {
+    return app.render(req, res, '/post', {postId: req.params.id});
   });
 
   server.get('*', (req, res) => {

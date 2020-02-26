@@ -15,6 +15,8 @@
 * 새로고침 시 로그인한 사용자 수 정보 수정 (트윗, 팔로링, 팔로워 수)
 * react-slick UI 변경
 * 해시태크 검색 시 리트윗 글도 나오도록 수정
+* `db.Post.findOne`으로 게시글 체크 중복코드를 미들웨어로 적용
+* loadUserPostsAPI 에도 인피니트스크롤링 적용
 
 ### 4. Setting
 
@@ -67,6 +69,12 @@
   
     ``` javascript
     npm i react-slick
+    ```
+
+* immer
+  
+    ``` javascript
+    npm i immer
     ```
 
 * eslint & prettier

@@ -1,20 +1,46 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
-import {LOAD_HASHTAG_POSTS_REQUEST} from '../reducers/post';
+import {LOAD_HASHTAG_POSTS_REQUEST, LOAD_MAIN_POSTS_REQUEST} from '../reducers/post';
 import PostCard from '../components/PostCard';
 
 const Hashtag = ({tag}) => {
+  const {mainPosts, hasMorePost} = useSelector(state => state.postReducer);
   const dispatch = useDispatch();
-  const {mainPosts} = useSelector(state => state.postReducer);
+  const countRef = useRef([]);
+
+  const onScroll = useCallback(() => {
+    // console.log(
+    //   window.scrollY,
+    //   document.documentElement.clientHeight,
+    //   document.documentElement.scrollHeight
+    // );
+    if (
+      window.scrollY + document.documentElement.clientHeight >
+      document.documentElement.scrollHeight - 300
+    ) {
+      if (hasMorePost && mainPosts.length) {
+        const lastId = mainPosts[mainPosts.length - 1].id;
+
+        if (!countRef.current.includes(lastId)) {
+          dispatch({
+            type: LOAD_MAIN_POSTS_REQUEST,
+            data: {lastId, tag}
+          });
+        }
+
+        countRef.current.push(lastId);
+      }
+    }
+  }, [hasMorePost, mainPosts.length]);
 
   useEffect(() => {
-    dispatch({
-      type: LOAD_HASHTAG_POSTS_REQUEST,
-      data: {tag}
-    });
-  }, [tag]);
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [mainPosts.length]);
 
   return (
     <div>
@@ -31,8 +57,16 @@ Hashtag.propTypes = {
 
 // _app.js에서 NodeBird.getInitialProps에서 가져온 ctx 값이 넘어옴
 Hashtag.getInitialProps = async context => {
-  console.log('hashtag getInitialProps: %s', context.query.tag);
-  return {tag: context.query.tag};
+  const {tag} = context.query;
+
+  console.log('hashtag getInitialProps: %s', tag);
+
+  context.store.dispatch({
+    type: LOAD_HASHTAG_POSTS_REQUEST,
+    data: {tag}
+  });
+
+  return {tag};
 };
 
 export default Hashtag;

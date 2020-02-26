@@ -1,29 +1,14 @@
-import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
-import {useDispatch, useSelector} from 'react-redux';
+import React from 'react';
+import {useSelector} from 'react-redux';
 import {Card, Avatar} from 'antd';
 
 import {LOAD_USER_POSTS_REQUEST} from '../reducers/post';
 import PostCard from '../components/PostCard';
 import {LOAD_USER_REQUEST} from '../reducers/user';
 
-const User = ({id}) => {
+const User = () => {
   const {userInfo} = useSelector(state => state.userReducer);
   const {mainPosts} = useSelector(state => state.postReducer);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch({
-      type: LOAD_USER_REQUEST,
-      data: {userId: id}
-    });
-
-    dispatch({
-      type: LOAD_USER_POSTS_REQUEST,
-      data: {userId: id}
-    });
-  }, []);
 
   return (
     <div>
@@ -58,16 +43,25 @@ const User = ({id}) => {
   );
 };
 
-User.propTypes = {
-  id: PropTypes.number.isRequired
-};
-
 // _app.js에서 NodeBird.getInitialProps에서 가져온 ctx 값이 넘어옴
 User.getInitialProps = async context => {
-  console.log('user getInitialProps: %s', context.query.id);
+  const userId = parseInt(context.query.userId, 10);
+  const {store} = context;
+
+  console.log('user getInitialProps: %s', userId);
+
+  store.dispatch({
+    type: LOAD_USER_REQUEST,
+    data: {userId}
+  });
+
+  store.dispatch({
+    type: LOAD_USER_POSTS_REQUEST,
+    data: {userId}
+  });
 
   // User 쪽에 id를 props로 전달해줌
-  return {id: parseInt(context.query.id, 10)};
+  // return {id: userId};
 };
 
 export default User;
