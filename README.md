@@ -8,6 +8,7 @@
 
 * next는 9.x 사용
 * eslint & prettier 설정 추가
+* EditorConfig 설정 추가
 
 ### 3. TODO
 
@@ -71,10 +72,23 @@
     npm i react-slick
     ```
 
+* react-helmet
+  
+    ``` javascript
+    npm i react-helmet
+    ```
+
 * immer
   
     ``` javascript
     npm i immer
+
+    ```
+
+* styled-components
+  
+    ``` javascript
+    npm i styled-components
     ```
 
 * eslint & prettier
@@ -155,7 +169,7 @@
     CREATE DATABASE nodebird;
     CREATE USER dev@'%' IDENTIFIED BY '1234';
     GRANT ALL PRIVILEGES ON nodebird.* TO dev@'%';
-    FLUSH PRIVILEGES;
+    FLUSH PRIVILEGES;ㅍimport { Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator } from './style';ㅏ
   ```
 
 #### 4-4. etc
@@ -169,4 +183,8 @@
   
   * .env 파일을 만들어서 사용하는 환경변수가 있으므로, 해당 파일을 만들어서 설정 필요 (해당 파일은 저장소에 올리면 안됨)  
     front-end는 COOKIE_SECRET  
-    back-end는 COOKIE_SECRET, DB_PASSWORD
+    back-end는 COOKIE_SECRET, DB_PASSWORD  
+
+* containers와 components 폴더의 차이
+containers 폴더에는 redux의 dispatch 하는 부분이 있는 것만
+components 폴더에는 ImageZoom 처럼 화면만 표시하는 것만 넣음

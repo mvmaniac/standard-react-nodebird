@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Card, Avatar, Button} from 'antd';
 
+import Link from 'next/link';
 import {LOG_OUT_REQUEST} from '../reducers/user';
 
 const UserProfile = () => {
@@ -17,21 +18,27 @@ const UserProfile = () => {
   return (
     <Card
       actions={[
-        <div key="twit">
-          쨱짹
-          <br />
-          {me.posts && me.posts.length}
-        </div>,
-        <div key="following">
-          팔로잉
-          <br />
-          {me.followings && me.followings.length}
-        </div>,
-        <div key="follower">
-          팔로워
-          <br />
-          {me.followers && me.followers.length}
-        </div>
+        <Link href="/profile" key="twit">
+          <div>
+            쨱짹
+            <br />
+            {me.posts && me.posts.length}
+          </div>
+        </Link>,
+        <Link href="/profile" key="following">
+          <div>
+            팔로잉
+            <br />
+            {me.followings && me.followings.length}
+          </div>
+        </Link>,
+        <Link href="/profile" key="follower">
+          <div>
+            팔로워
+            <br />
+            {me.followers && me.followers.length}
+          </div>
+        </Link>
       ]}
     >
       <Card.Meta avatar={<Avatar>{me.nickname[0]}</Avatar>} title={me.nickname} />

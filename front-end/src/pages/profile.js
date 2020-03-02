@@ -2,8 +2,8 @@ import React, {useCallback} from 'react';
 import {Button, List, Card, Icon} from 'antd';
 import {useDispatch, useSelector} from 'react-redux';
 
-import NicknameForm from '../components/NicknameForm';
-import PostCard from '../components/PostCard';
+import NicknameForm from '../containers/NicknameForm';
+import PostCard from '../containers/PostCard';
 import {
   LOAD_FOLLOWERS_REQUEST,
   LOAD_FOLLOWINGS_REQUEST,

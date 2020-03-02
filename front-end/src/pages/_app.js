@@ -1,11 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import {applyMiddleware, compose, createStore} from 'redux';
 import createSagaMiddleWare from 'redux-saga';
 import {Provider} from 'react-redux';
-import Head from 'next/head';
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import AppLayout from '../components/AppLayout';
@@ -19,18 +19,56 @@ import {LOAD_USER_REQUEST} from '../reducers/user';
 const NodeBird = ({Component, store, pageProps}) => {
   return (
     <Provider store={store}>
-      <Head>
-        <title>NodeBird - Dev</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.7/antd.css" />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-        />
-      </Head>
+      <Helmet
+        title="DevFactory NodeBird"
+        htmlAttributes={{lang: 'ko'}}
+        meta={[
+          {charSet: 'utf-8'},
+          {
+            name: 'viewport',
+            content:
+              'width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=yes,viewport-fit=cover'
+          },
+          {
+            'http-equiv': 'X-UA-Compatible',
+            content: 'IE=edge'
+          },
+          {
+            name: 'description',
+            content: 'DevFactory NodeBird SNS'
+          },
+          {
+            property: 'og:type',
+            content: 'website'
+          },
+          {
+            property: 'og:title',
+            content: 'DevFactory - NodeBird'
+          },
+          {
+            property: 'og:description',
+            content: 'DevFactory NodeBird SNS'
+          }
+        ]}
+        link={[
+          {
+            rel: 'shortcut icon',
+            href: '/favicon.ico'
+          },
+          {
+            rel: 'stylesheet',
+            href: 'https://cdnjs.cloudflare.com/ajax/libs/antd/3.26.12/antd.css'
+          },
+          {
+            rel: 'stylesheet',
+            href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css'
+          },
+          {
+            rel: 'stylesheet',
+            href: 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css'
+          }
+        ]}
+      />
       <AppLayout>
         <Component {...pageProps} />
       </AppLayout>
@@ -66,7 +104,7 @@ NodeBird.getInitialProps = async context => {
 
   if (Component.getInitialProps) {
     // 각 컴포넌트 getInitialProps에서 return한 값이 넘어옴
-    pageProps = await Component.getInitialProps(ctx);
+    pageProps = await Component.getInitialProps(ctx) || {};
   }
 
   // console.log('NodeBird.getInitialProps: %s', pageProps);
@@ -81,14 +119,14 @@ const configureStore = (initialState, options) => {
     next(action);
   };
 
-  const middlewares = [sagaMiddleware, customLoggingMiddleware]; // 1. 사가 미들웨어를 리덕스에 미들웨어로 등록
+  const middleWares = [sagaMiddleware, customLoggingMiddleware]; // 1. 사가 미들웨어를 리덕스에 미들웨어로 등록
 
   const enhancer =
     process.env.NODE_ENV === 'production'
-      ? compose(applyMiddleware(...middlewares))
+      ? compose(applyMiddleware(...middleWares))
       : compose(
           // 미들웨어 적용
-          applyMiddleware(...middlewares),
+          applyMiddleware(...middleWares),
           // Redux Devtools 사용하기 위해 추가
           !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
             ? window.__REDUX_DEVTOOLS_EXTENSION__()

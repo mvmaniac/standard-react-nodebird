@@ -1,8 +1,8 @@
 import React, {useEffect, useCallback, useRef} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
-import PostCard from '../components/PostCard';
-import PostForm from '../components/PostForm';
+import PostCard from '../containers/PostCard';
+import PostForm from '../containers/PostForm';
 import {LOAD_MAIN_POSTS_REQUEST} from '../reducers/post';
 
 // 리액트 컴포넌트 분리 기준은 단순하게

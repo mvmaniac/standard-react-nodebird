@@ -1,9 +1,9 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-
 import {Button, Card, Icon, Avatar, Input, Form, List, Comment, Popover} from 'antd';
 import {useSelector, useDispatch} from 'react-redux';
+import styled from 'styled-components';
 
 import {
   ADD_COMMENT_REQUEST,
@@ -13,9 +13,13 @@ import {
   RETWEET_REQUEST,
   REMOVE_POST_REQUEST
 } from '../reducers/post';
-import PostImages from './PostImages';
-import PostCardContent from './PostCardContent';
+import PostImages from '../components/PostImages';
+import PostCardContent from '../components/PostCardContent';
 import PostCardFollow from './PostCardFollow';
+
+const CardWrapper = styled.div`
+  margin-top: 20px;
+`;
 
 const PostCard = ({post}) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
@@ -105,15 +109,18 @@ const PostCard = ({post}) => {
     });
   }, [me && me.id, post && post.id]);
 
-  const onRemovePost = useCallback(postId => () => {
-    dispatch({
-      type: REMOVE_POST_REQUEST,
-      data: {postId}
-    });
-  }, []);
+  const onRemovePost = useCallback(
+    postId => () => {
+      dispatch({
+        type: REMOVE_POST_REQUEST,
+        data: {postId}
+      });
+    },
+    []
+  );
 
   return (
-    <div>
+    <CardWrapper>
       <Card
         cover={post.images.length && <PostImages images={post.images} />}
         actions={[
@@ -226,7 +233,7 @@ const PostCard = ({post}) => {
           />
         </>
       )}
-    </div>
+    </CardWrapper>
   );
 };
 
