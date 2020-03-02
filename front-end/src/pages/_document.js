@@ -35,7 +35,7 @@ class MyDocument extends Document {
 
 MyDocument.propTypes = {
   helmet: PropTypes.shape({}).isRequired,
-  styleTags: PropTypes.shape({}).isRequired
+  styleTags: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default MyDocument;

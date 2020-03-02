@@ -436,6 +436,9 @@ gradle-app.setting
 **/build/
 
 ### upload ###
-uploads/**
+**/uploads/**
+
+### keep ###
+!.keep
 
 # End of https://www.gitignore.io/api/git,svn,node,vuejs,react,linux,macos,maven,gradle,angular,windows,eclipse,intellij+all,visualstudiocode

@@ -6,11 +6,11 @@ const expressSession = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
 
-const passportConfig = require('./passport');
-const db = require('./models');
-const userAPIRouter = require('./routes/user');
-const postAPIRouter = require('./routes/post');
-const hashtagAPIRouter = require('./routes/hashtag');
+const passportConfig = require('./src/passport');
+const db = require('./src/models');
+const userAPIRouter = require('./src/routes/user');
+const postAPIRouter = require('./src/routes/post');
+const hashtagAPIRouter = require('./src/routes/hashtag');
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ passportConfig();
 // 어떤 요청이 들어왔는지 로그를 남김
 app.use(morgan('dev'));
 
-app.use('/', express.static('uploads'));
+app.use('/', express.static('src/uploads'));
 
 // Access-Control-Allow-Origin 처리
 app.use(

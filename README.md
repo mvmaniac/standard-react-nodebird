@@ -6,9 +6,10 @@
 
 ### 2. 차이점
 
-* next는 9.x 사용
+* Next.js는 9.x 사용
 * eslint & prettier 설정 추가
 * EditorConfig 설정 추가
+* @next/bundle-analyzer 사용
 
 ### 3. TODO
 
@@ -91,6 +92,12 @@
     npm i styled-components
     ```
 
+* cross-env
+  
+    ``` javascript
+    npm i cross-env
+    ```
+
 * eslint & prettier
 
     ``` javascript
@@ -106,10 +113,18 @@
     npm i -D nodemon
     ```
 
-* webpack
+* nodemon
+
+    ``` javascript
+    npm i @zeit/next-bundle-analyzer
+    ```
+
+* webpack & plugins
 
     ``` javascript
     npm i -D webpack
+    npm i -D webpack-bundle-analyzer
+    npm i -D compression-webpack-plugin
     ```
 
 #### 4-2. back-end
@@ -169,7 +184,7 @@
     CREATE DATABASE nodebird;
     CREATE USER dev@'%' IDENTIFIED BY '1234';
     GRANT ALL PRIVILEGES ON nodebird.* TO dev@'%';
-    FLUSH PRIVILEGES;ㅍimport { Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator } from './style';ㅏ
+    FLUSH PRIVILEGES;
   ```
 
 #### 4-4. etc
@@ -185,6 +200,15 @@
     front-end는 COOKIE_SECRET  
     back-end는 COOKIE_SECRET, DB_PASSWORD  
 
-* containers와 components 폴더의 차이
-containers 폴더에는 redux의 dispatch 하는 부분이 있는 것만
+* containers와 components 폴더의 차이  
+containers 폴더에는 redux의 dispatch 하는 부분이 있는 것만  
 components 폴더에는 ImageZoom 처럼 화면만 표시하는 것만 넣음
+
+* Next.js Link의 prefetch  
+페이지 로딩 시 해당 페이지까지 같이 불러옴(?)  
+너무 많이 쓰면은 안되고 사용자가 자주 다니는 페이지들인 경우 사용
+근데 Next.js 9 부터는 자동으로 prefetch 되기 떄문에 안 써도 됨
+
+* bundle-analyzer  
+Parsed size 기준으로 500KB ~ 1MB 이하로
+외부 라이브러리가 크다면 tree shaking으로 검색하여 적용해야 함
