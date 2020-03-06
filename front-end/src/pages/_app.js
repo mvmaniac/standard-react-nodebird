@@ -7,6 +7,7 @@ import {Provider} from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
 import axios from 'axios';
+import {enableES5} from 'immer';
 
 import AppLayout from '../components/AppLayout';
 import rootReducer from '../reducers';
@@ -48,6 +49,10 @@ const NodeBird = ({Component, store, pageProps}) => {
           {
             property: 'og:description',
             content: 'DevFactory NodeBird SNS'
+          },
+          {
+            property: 'og:image',
+            content: 'http://localhost:3060/favicon.ico'
           }
         ]}
         link={[
@@ -104,7 +109,7 @@ NodeBird.getInitialProps = async context => {
 
   if (Component.getInitialProps) {
     // 각 컴포넌트 getInitialProps에서 return한 값이 넘어옴
-    pageProps = await Component.getInitialProps(ctx) || {};
+    pageProps = (await Component.getInitialProps(ctx)) || {};
   }
 
   // console.log('NodeBird.getInitialProps: %s', pageProps);
@@ -132,7 +137,6 @@ const configureStore = (initialState, options) => {
             ? window.__REDUX_DEVTOOLS_EXTENSION__()
             : f => f
         );
-
   const store = createStore(rootReducer, initialState, enhancer);
   store.sagaTask = sagaMiddleware.run(rootSaga); // 2. 루트 사가를 사가 미들웨어에 등록
   return store;

@@ -103,6 +103,8 @@ export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 
+export const CLEAR_POSTS = 'CLEAR_POSTS';
+
 const postReducer = (state = initialState, action) => {
   return produce(state, draftState => {
     switch (action.type) {
@@ -255,6 +257,12 @@ const postReducer = (state = initialState, action) => {
         break;
       }
       case REMOVE_POST_FAILURE: {
+        break;
+      }
+
+      case CLEAR_POSTS: {
+        const draft = draftState;
+        draft.mainPosts = [];
         break;
       }
 

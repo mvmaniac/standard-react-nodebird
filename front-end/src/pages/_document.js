@@ -26,6 +26,7 @@ class MyDocument extends Document {
         </head>
         <body {...bodyAttrs}>
           <Main />
+          <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015,es2016,es2017,es2018,es2019,NodeList.prototype.forEach&flags=gated" />
           <NextScript />
         </body>
       </html>

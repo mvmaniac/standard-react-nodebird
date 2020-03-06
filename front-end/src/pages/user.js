@@ -11,7 +11,7 @@ const User = () => {
   const {mainPosts} = useSelector(state => state.postReducer);
 
   return (
-    <div>
+    <div style={{marginTop: "10px"}}>
       {userInfo ? (
         <Card
           actions={[

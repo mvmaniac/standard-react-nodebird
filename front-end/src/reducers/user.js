@@ -77,6 +77,8 @@ export const EDIT_NICKNAME_FAILURE = 'EDIT_NICKNAME_FAILURE';
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
+export const CLEAR_FOLLOWS = 'CLEAR_FOLLOWS';
+
 // dispatch (Action을 실행, 다른 js 파일에서 쓰임)
 // reducer (Action 결과로 state를 어떻게 바꿀지 정의)
 const userReducer = (state = initialState, action) => {
@@ -105,6 +107,7 @@ const userReducer = (state = initialState, action) => {
         const draft = draftState;
         draft.isLoggingIn = false;
         draft.me = null;
+        draft.loginErrorReason = action.error;
         break;
       }
 
@@ -266,6 +269,13 @@ const userReducer = (state = initialState, action) => {
         const draft = draftState;
         draft.isEditingNickname = false;
         draft.editNicknameErrorReason = action.error;
+        break;
+      }
+
+      case CLEAR_FOLLOWS: {
+        const draft = draftState;
+        draft.followings = [];
+        draft.followers = [];
         break;
       }
 

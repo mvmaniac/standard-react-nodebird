@@ -43,7 +43,7 @@ const Hashtag = ({tag}) => {
   }, [mainPosts.length]);
 
   return (
-    <div>
+    <div style={{marginTop: "10px"}}>
       {mainPosts.map(post => (
         <PostCard key={post.id} post={post} />
       ))}

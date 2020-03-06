@@ -59,10 +59,9 @@ function* login (action) {
       data: result.data
     });
   } catch (e) {
-    console.error(e);
-
     yield put({
-      type: LOG_IN_FAILURE
+      type: LOG_IN_FAILURE,
+      error: e?.response.data
     });
   }
 }
@@ -96,8 +95,6 @@ function* logout () {
       type: LOG_OUT_SUCCESS
     });
   } catch (e) {
-    console.error(e);
-
     yield put({
       type: LOG_OUT_FAILURE,
       error: e
@@ -126,8 +123,7 @@ function* loadUser (action) {
       me: !action.data // 남의 정보인지 내 정보인지 판단하기 위한 용도
     });
   } catch (e) {
-    console.error(e);
-
+    // console.error(e);
     yield put({
       type: LOAD_USER_FAILURE,
       error: e

@@ -3,8 +3,26 @@ import React, {useState, useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import Router from 'next/router';
 import {Form, Input, Checkbox, Button} from 'antd';
+import styled from 'styled-components';
 
 import {SIGN_UP_REQUEST} from '../reducers/user';
+
+const SignUpFormAntd = styled(Form)`
+  padding: 10px !important;
+
+  & div.error {
+    color: red;
+  }
+
+  & div {
+    margin-bottom: 8px;
+  }
+
+  & div.buttons {
+    float: right;
+  }
+`;
+
 
 const SignUp = () => {
   const [userId, setUserId] = useState('');
@@ -83,8 +101,7 @@ const SignUp = () => {
   }
 
   return (
-    <Form onSubmit={onSubmit}>
-      <br />
+    <SignUpFormAntd onSubmit={onSubmit}>      
       <div>
         <label htmlFor="sign-userId">아이디:</label>
         <Input id="sign-userId" name="userId" required value={userId} onChange={onChangeUserId} />
@@ -120,21 +137,20 @@ const SignUp = () => {
           value={passwordCheck}
           onChange={onChangePasswordCheck}
         />
-        {passwordError && <div style={{color: 'red'}}>비밀번호가 일치하지 않습니다.</div>}
+        {passwordError && <div className="error">비밀번호가 일치하지 않습니다.</div>}
       </div>
       <div>
         <Checkbox name="sign-term" checked={term} onChange={onChangeTerm}>
           약관에 동의합니다.
         </Checkbox>
-        {termError && <div style={{color: 'red'}}>약관에 동의하셔야 합니다.</div>}
+        {termError && <div className="error">약관에 동의하셔야 합니다.</div>}
       </div>
-      <br />
-      <div>
-        <Button type="primary" htmlType="submit" loading={isSigningUp}>
+      <div className="buttons">
+        <Button type="primary" htmlType="submit" loading={isSigningUp} title="가입하기">
           가입하기
         </Button>
       </div>
-    </Form>
+    </SignUpFormAntd>
   );
 };
 

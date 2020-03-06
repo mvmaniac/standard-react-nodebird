@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import Helmet from 'react-helmet';
+
 import {LOAD_POST_REQUEST} from '../reducers/post';
 
 function Post ({postId}) {

@@ -17,6 +17,7 @@ const UserProfile = () => {
 
   return (
     <Card
+      style={{margin: "10px 0 0 10px"}}
       actions={[
         <Link href="/profile" key="twit">
           <div>
@@ -42,7 +43,7 @@ const UserProfile = () => {
       ]}
     >
       <Card.Meta avatar={<Avatar>{me.nickname[0]}</Avatar>} title={me.nickname} />
-      <Button onClick={onLogout}>로그아웃</Button>
+      <Button onClick={onLogout} title="로그아웃">로그아웃</Button>
     </Card>
   );
 };

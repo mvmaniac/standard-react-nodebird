@@ -3,8 +3,25 @@ import React, {useCallback, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import Link from 'next/link';
 import {Button, Form, Input} from 'antd';
+import styled from 'styled-components';
 
 import {LOG_IN_REQUEST} from '../reducers/user';
+
+const LoginFormAntd = styled(Form)`
+  padding: 10px !important;
+
+  & div.error {
+    color: red;
+  }
+
+  & div.buttons {
+    padding-top: 8px;
+  }
+
+  & div:nth-child(1) {
+    margin-bottom: 8px;
+  }
+`;
 
 const LoginForm = () => {
   // custom hook 를 만들어서 사용할 수 있음
@@ -17,7 +34,7 @@ const LoginForm = () => {
   const [userId, onChangeUserId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
-  const {isLoggingIn} = useSelector(state => state.userReducer);
+  const {isLoggingIn, loginErrorReason} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
 
   const onSubmitForm = useCallback(
@@ -35,7 +52,7 @@ const LoginForm = () => {
   );
 
   return (
-    <Form onSubmit={onSubmitForm} style={{padding: '10px'}}>
+    <LoginFormAntd onSubmit={onSubmitForm}>
       <div>
         <label htmlFor="login-userId">아이디</label>
         <Input
@@ -57,16 +74,17 @@ const LoginForm = () => {
           onChange={onChangePassword}
         />
       </div>
-      <div>
-        <Button type="primary" htmlType="submit" loading={isLoggingIn}>
+      <div className="error">{loginErrorReason}</div>
+      <div className="buttons">
+        <Button type="primary" htmlType="submit" loading={isLoggingIn} title="로그인">
           로그인
         </Button>
         &nbsp;
         <Link href="/sign-up">
-          <Button>회원가입</Button>
+          <Button title="회원가입">회원가입</Button>
         </Link>
       </div>
-    </Form>
+    </LoginFormAntd>
   );
 };
 
