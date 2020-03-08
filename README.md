@@ -74,6 +74,12 @@
     npm i pm2
     ```
 
+* cross-env
+  
+    ``` javascript
+    npm i cross-env
+    ```
+
 * react-slick
   
     ``` javascript
@@ -96,12 +102,6 @@
   
     ``` javascript
     npm i styled-components
-    ```
-
-* cross-env
-  
-    ``` javascript
-    npm i cross-env
     ```
 
 * eslint & prettier
@@ -168,6 +168,12 @@
     npm i pm2
     ```
 
+* cross-env
+  
+    ``` javascript
+    npm i cross-env
+    ```
+
 * mysql2
 
     ``` javascript
@@ -225,7 +231,7 @@
     ```curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash --```
     ```apt-get install -y nodejs```
 
-* 소스 다운로드 (font & back)  
+* 소스 다운로드 (font & back, .env 파일 직접 옮겨야 함)  
     ```git clone https://github.com/mvmaniac/standard-react-nodebird.git /app```
 
 * PM2 설치  
@@ -254,3 +260,9 @@ components 폴더에는 ImageZoom 처럼 화면만 표시하는 것만 넣음
 * bundle-analyzer  
 Parsed size 기준으로 500KB ~ 1MB 이하로
 외부 라이브러리가 크다면 tree shaking으로 검색하여 적용해야 함
+
+* pm2
+```pm2 list```
+```pm2 monit```
+```pm2 kill```
+```pm2 reload all```

@@ -32,7 +32,7 @@ router.get('/:tag', async (req, res, next) => {
         },
         {
           model: db.User,
-          through: 'Like',
+          through: 'like',
           as: 'likers',
           attributes: ['id']
         },

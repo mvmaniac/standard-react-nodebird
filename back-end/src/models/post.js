@@ -23,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
 
     db.Post.belongsTo(db.Post, {as: 'retweet'}); // RetweetId 컬럼 생김
 
-    db.Post.belongsToMany(db.Hashtag, {through: 'PostHashtag'});
-    db.Post.belongsToMany(db.User, {through: 'Like', as: 'likers'});
+    db.Post.belongsToMany(db.Hashtag, {through: 'postHashtag'});
+    db.Post.belongsToMany(db.User, {through: 'like', as: 'likers'});
   };
 
   return Post;

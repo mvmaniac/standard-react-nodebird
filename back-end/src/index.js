@@ -6,11 +6,11 @@ const expressSession = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
 
-const passportConfig = require('./src/passport');
-const db = require('./src/models');
-const userAPIRouter = require('./src/routes/user');
-const postAPIRouter = require('./src/routes/post');
-const hashtagAPIRouter = require('./src/routes/hashtag');
+const passportConfig = require('./passport');
+const db = require('./models');
+const userAPIRouter = require('./routes/user');
+const postAPIRouter = require('./routes/post');
+const hashtagAPIRouter = require('./routes/hashtag');
 
 dotenv.config();
 
@@ -60,10 +60,15 @@ app.use(passport.session()); // expressSession 다음에 위치해야 함
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+app.use('/done', (req, res) => {
+  res.send('react-node-bird back-end done!!');
+});
+
 app.use('/api/users', userAPIRouter);
 app.use('/api/posts', postAPIRouter);
 app.use('/api/hashtags', hashtagAPIRouter);
 
-app.listen(3065, () => {
-  console.log('server is running on localhost:3065');
+const port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3065;
+app.listen(port, () => {
+  console.log(`server is running on ${port}`);
 });
