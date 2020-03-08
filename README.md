@@ -201,7 +201,24 @@
     npm i -D nodemon
     ```
 
-#### 4-3. db
+#### 4-3. lambda
+
+* aws-sdk & sharp
+
+    ``` javascript
+    npm i aws-sdk sharp
+    ```
+
+* eslint & prettier
+
+    ``` javascript
+    npm i -D eslint
+    npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y
+    npm i -D prettier eslint-config-prettier
+    npm i -D babel-eslint
+    ```
+
+#### 4-4. db
 
 * ddl & dcl
   
@@ -212,7 +229,7 @@
     FLUSH PRIVILEGES;
   ```
 
-#### 4-4. server
+#### 4-5. server
 
 * front-end, back-end 는 각각 EC2, DB는 RDS
 * 원활한 진행을 위해 관리자 권한으로 작업  
@@ -243,7 +260,7 @@
 * PM2 설치 (명령어를 전역으로 쓰는 용도임)  
     ```npm i -g pm2```
 
-#### 4-5. etc
+### 5. etc
 
 * next & express
 front-end 에서 next와 express를 연결한 이유는 주소를 동적으로 생성하기 위해서  
