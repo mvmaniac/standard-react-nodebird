@@ -261,8 +261,13 @@ components 폴더에는 ImageZoom 처럼 화면만 표시하는 것만 넣음
 Parsed size 기준으로 500KB ~ 1MB 이하로
 외부 라이브러리가 크다면 tree shaking으로 검색하여 적용해야 함
 
-* pm2
-```pm2 list```
-```pm2 monit```
-```pm2 kill```
-```pm2 reload all```
+* pm2  
+  * 기본 명령어  
+    ```pm2 list```  
+    ```pm2 monit```  
+    ```pm2 kill```  
+    ```pm2 reload all```  
+
+  * 기동 명령어  
+    ```npm run start && pm2 monit```  
+    ```npm run build && pm2 reload all```

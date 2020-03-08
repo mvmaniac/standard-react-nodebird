@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import Helmet from 'react-helmet';
 
+import {FRONT_END_URL, BACK_END_URL} from '../config/config';
 import {LOAD_POST_REQUEST} from '../reducers/post';
 
 function Post ({postId}) {
@@ -18,9 +19,9 @@ function Post ({postId}) {
           {property: 'og:description', content: singlePost.content},
           {
             property: 'og:image',
-            content: singlePost.images[0] && `http://localhost:3065/${singlePost.images[0].src}`
+            content: singlePost.images[0] && `${BACK_END_URL}/${singlePost.images[0].src}`
           },
-          {property: 'og:url', content: `http://localhost:3065/post/${postId}`}
+          {property: 'og:url', content: `${FRONT_END_URL}/post/${postId}`}
         ]}
       />
       <div>{postId}</div>
@@ -28,7 +29,7 @@ function Post ({postId}) {
       <div>{singlePost.user.nickname}</div>
       <div>
         {singlePost.images.length && (
-          <img src={`http://localhost:3065/${singlePost.images[0].src}`} alt="" />
+          <img src={`${BACK_END_URL}/${singlePost.images[0].src}`} alt="" />
         )}
       </div>
     </>

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Slick from 'react-slick';
 import {Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator} from './style';
 
+import {BACK_END_URL} from '../../config/config';
+
 const ImagesZoom = ({images, onClose}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -25,7 +27,7 @@ const ImagesZoom = ({images, onClose}) => {
             {images.map((image, idx) => {
               return (
                 <ImgWrapper key={`${image.src.slice(-1) + idx}`}>
-                  <img src={`http://localhost:3065/${image.src}`} alt="" />
+                  <img src={`${BACK_END_URL}/${image.src}`} alt="" />
                 </ImgWrapper>
               );
             })}

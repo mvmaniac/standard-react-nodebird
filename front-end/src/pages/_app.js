@@ -7,8 +7,8 @@ import {Provider} from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
 import axios from 'axios';
-import {enableES5} from 'immer';
 
+import {IS_PROD, FRONT_END_URL} from '../config/config';
 import AppLayout from '../components/AppLayout';
 import rootReducer from '../reducers';
 import rootSaga from '../sagas';
@@ -52,7 +52,7 @@ const NodeBird = ({Component, store, pageProps}) => {
           },
           {
             property: 'og:image',
-            content: 'http://localhost:3060/favicon.ico'
+            content: `${FRONT_END_URL}/favicon.ico`
           }
         ]}
         link={[
@@ -126,17 +126,16 @@ const configureStore = (initialState, options) => {
 
   const middleWares = [sagaMiddleware, customLoggingMiddleware]; // 1. 사가 미들웨어를 리덕스에 미들웨어로 등록
 
-  const enhancer =
-    process.env.NODE_ENV === 'production'
-      ? compose(applyMiddleware(...middleWares))
-      : compose(
-          // 미들웨어 적용
-          applyMiddleware(...middleWares),
-          // Redux Devtools 사용하기 위해 추가
-          !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
-            ? window.__REDUX_DEVTOOLS_EXTENSION__()
-            : f => f
-        );
+  const enhancer = IS_PROD
+    ? compose(applyMiddleware(...middleWares))
+    : compose(
+        // 미들웨어 적용
+        applyMiddleware(...middleWares),
+        // Redux Devtools 사용하기 위해 추가
+        !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
+          ? window.__REDUX_DEVTOOLS_EXTENSION__()
+          : f => f
+      );
   const store = createStore(rootReducer, initialState, enhancer);
   store.sagaTask = sagaMiddleware.run(rootSaga); // 2. 루트 사가를 사가 미들웨어에 등록
   return store;
