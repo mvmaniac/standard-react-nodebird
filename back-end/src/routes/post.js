@@ -1,23 +1,44 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
 
 const db = require('../models');
 const {isLoggedIn} = require('./middleware');
 
 const router = express.Router();
 
+const isProd = process.env.NODE_ENV === 'production';
+
+AWS.config.update({
+  region: 'ap-northeast-2',
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY_ID
+});
+
+// 로컬에서는 그냥 로컬PC에서 하는걸로...
+const multerStorage = isProd
+  ? multerS3({
+      s3: new AWS.S3(),
+      bucket: 'react-node-bird',
+      key(req, file, cb) {
+        cb(null, `origin/${+new Date()}${path.basename(file.originalname)}`);
+      }
+    })
+  : multer.diskStorage({
+      destination(req, file, done) {
+        done(null, 'uploads');
+      },
+      filename(req, file, done) {
+        const ext = path.extname(file.originalname);
+        const basename = path.basename(file.originalname, ext);
+        done(null, basename + new Date().valueOf() + ext);
+      }
+    });
+
 const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, 'uploads');
-    },
-    filename(req, file, done) {
-      const ext = path.extname(file.originalname);
-      const basename = path.basename(file.originalname, ext);
-      done(null, basename + new Date().valueOf() + ext);
-    }
-  }),
+  storage: multerStorage,
   limits: {fileSize: 20 * 1024 * 1024} // 20MB
 });
 
@@ -254,7 +275,7 @@ router.post('/:id/comments', isLoggedIn, async (req, res, next) => {
 
 router.post('/images', upload.array('images'), (req, res) => {
   // upload.single, upload.array, upload.fields 등등
-  return res.json(req.files.map(file => file.filename));
+  return res.json(req.files.map(file => (isProd ? file.location : file.filename)));
 });
 
 router.post('/:id/like', isLoggedIn, async (req, res, next) => {

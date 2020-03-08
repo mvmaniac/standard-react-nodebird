@@ -2,7 +2,7 @@ import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {Form, Input, Button} from 'antd';
 
-import {BACK_END_URL} from '../config/config';
+import {IMAGE_URL} from '../config/config';
 import {ADD_POST_REQUEST, UPLOAD_IMAGES_REQUEST, REMOVE_IMAGE} from '../reducers/post';
 
 const PostForm = () => {
@@ -95,7 +95,7 @@ const PostForm = () => {
           return (
             <div key={`${idx + 1}`} style={{display: 'inline-block'}}>
               <img
-                src={`${BACK_END_URL}/${imagPath}`}
+                src={`${IMAGE_URL}${imagPath}`}
                 style={{width: '200px'}}
                 alt={imagPath}
               />

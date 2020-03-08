@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import Helmet from 'react-helmet';
 
-import {FRONT_END_URL, BACK_END_URL} from '../config/config';
+import {FRONT_END_URL, BACK_END_URL, IMAGE_URL} from '../config/config';
 import {LOAD_POST_REQUEST} from '../reducers/post';
 
 function Post ({postId}) {
@@ -19,7 +19,7 @@ function Post ({postId}) {
           {property: 'og:description', content: singlePost.content},
           {
             property: 'og:image',
-            content: singlePost.images[0] && `${BACK_END_URL}/${singlePost.images[0].src}`
+            content: singlePost.images[0] ? `${IMAGE_URL}${singlePost.images[0].src}` : `${FRONT_END_URL}/favicon.ico`
           },
           {property: 'og:url', content: `${FRONT_END_URL}/post/${postId}`}
         ]}

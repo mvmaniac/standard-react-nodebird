@@ -153,7 +153,7 @@
 * sequelize
 
     ``` javascript
-    npm i sequelize sequelize-cli
+    npm i sequelize
     ```
 
 * axios
@@ -178,6 +178,12 @@
 
     ``` javascript
     npm i mysql2
+    ```
+
+* aws-sdk & S3
+
+    ``` javascript
+    npm i aws-sdk multer-s3
     ```
 
 * eslint & prettier
@@ -234,7 +240,7 @@
 * 소스 다운로드 (font & back, .env 파일 직접 옮겨야 함)  
     ```git clone https://github.com/mvmaniac/standard-react-nodebird.git /app```
 
-* PM2 설치  
+* PM2 설치 (명령어를 전역으로 쓰는 용도임)  
     ```npm i -g pm2```
 
 #### 4-5. etc
@@ -269,5 +275,6 @@ Parsed size 기준으로 500KB ~ 1MB 이하로
     ```pm2 reload all```  
 
   * 기동 명령어  
-    ```npm run start && pm2 monit```  
-    ```npm run build && pm2 reload all```
+    init: ```npm run start && pm2 monit```  
+    front-end: ```npm run build && pm2 reload all && pm2 monit```  
+    back-end: ```pm2 reload all && pm2 monit```

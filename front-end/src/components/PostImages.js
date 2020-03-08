@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Icon} from 'antd';
 
-import {BACK_END_URL} from '../config/config';
+import {IMAGE_URL} from '../config/config';
 import ImagesZoom from './ImagesZoom';
 
 const PostImages = ({images}) => {
@@ -19,7 +19,7 @@ const PostImages = ({images}) => {
   if (images.length === 1) {
     return (
       <>
-        <img src={`${BACK_END_URL}/${images[0].src}`} alt="" onClick={onZoom} />
+        <img src={`${IMAGE_URL}${images[0].src}`} alt="" onClick={onZoom} />
         {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
     );
@@ -29,8 +29,8 @@ const PostImages = ({images}) => {
     return (
       <>
         <div>
-          <img src={`${BACK_END_URL}/${images[0].src}`} alt="" width="50%" onClick={onZoom} />
-          <img src={`${BACK_END_URL}/${images[1].src}`} alt="" width="50%" onClick={onZoom} />
+          <img src={`${IMAGE_URL}${images[0].src}`} alt="" width="50%" onClick={onZoom} />
+          <img src={`${IMAGE_URL}${images[1].src}`} alt="" width="50%" onClick={onZoom} />
         </div>
         {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
@@ -40,7 +40,7 @@ const PostImages = ({images}) => {
   return (
     <>
       <div>
-        <img src={`${BACK_END_URL}/${images[0].src}`} alt="" width="50%" onClick={onZoom} />
+        <img src={`${IMAGE_URL}${images[0].src}`} alt="" width="50%" onClick={onZoom} />
         <div
           style={{
             display: 'inline-block',
