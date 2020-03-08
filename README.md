@@ -9,7 +9,7 @@
 * Next.js는 9.x 사용
 * eslint & prettier 설정 추가
 * EditorConfig 설정 추가
-* @next/bundle-analyzer 사용
+* CI/CD 적용(?)
 
 ### 3. TODO
 
@@ -39,15 +39,16 @@
 
 * next
 
-    ``` **javascript**
+    ``` javascript
     npm i next
     npm i next-redux-wrapper
     npm i next-redux-saga
+    npm i -D @next/bundle-analyzer
     ```
 
 * express
 
-    ``` **javascript**
+    ``` javascript
     npm i express
     npm i cookie-parser
     npm i express-session
@@ -67,6 +68,12 @@
     npm i axios
     ```
 
+* pm2
+  
+    ``` javascript
+    npm i pm2
+    ```
+
 * react-slick
   
     ``` javascript
@@ -83,7 +90,6 @@
   
     ``` javascript
     npm i immer
-
     ```
 
 * styled-components
@@ -103,8 +109,8 @@
     ``` javascript
     npm i -D eslint
     npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
-    npm i -D babel-eslint
     npm i -D prettier eslint-config-prettier
+    npm i -D babel-eslint
     ```
 
 * nodemon
@@ -113,18 +119,19 @@
     npm i -D nodemon
     ```
 
-* nodemon
-
-    ``` javascript
-    npm i @zeit/next-bundle-analyzer
-    ```
-
 * webpack & plugins
 
     ``` javascript
     npm i -D webpack
-    npm i -D webpack-bundle-analyzer
     npm i -D compression-webpack-plugin
+    ```
+
+* babel
+
+    ``` javascript
+    npm i -D @babel/plugin-proposal-nullish-coalescing-operator
+    npm i -D @babel/plugin-proposal-optional-chaining
+    npm i -D babel-plugin-styled-components
     ```
 
 #### 4-2. back-end
@@ -155,6 +162,12 @@
     npm i axios
     ```
 
+* pm2
+  
+    ``` javascript
+    npm i pm2
+    ```
+
 * mysql2
 
     ``` javascript
@@ -166,8 +179,8 @@
     ``` javascript
     npm i -D eslint
     npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y
-    npm i -D babel-eslint
     npm i -D prettier eslint-config-prettier
+    npm i -D babel-eslint
     ```
 
 * nodemon
@@ -182,23 +195,52 @@
   
   ```sql
     CREATE DATABASE nodebird;
-    CREATE USER dev@'%' IDENTIFIED BY '1234';
+    CREATE USER dev@'%' IDENTIFIED BY 'xxxx';
     GRANT ALL PRIVILEGES ON nodebird.* TO dev@'%';
     FLUSH PRIVILEGES;
   ```
 
-#### 4-4. etc
+#### 4-4. server
+
+* front-end, back-end 는 각각 EC2, DB는 RDS
+* 원활한 진행을 위해 관리자 권한으로 작업  
+  ```sudo su -```
+
+* 필요한 패키지 설치 (font & back)  
+    amazon-linux  
+    ```amazon-linux-extras install -y epel```  
+    ```yum install -y git```  
+    or  
+    ```yum groupinstall 'Development Tools'```
+
+    ubuntu  
+    ```apt-get install -y build-essential```
+
+* nodejs 설치 (font & back)  
+    amazon-linux  
+    ```curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash --```
+    ```yum install -y nodejs```
+
+    ubuntu  
+    ```curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash --```
+    ```apt-get install -y nodejs```
+
+* 소스 다운로드 (font & back)  
+    ```git clone https://github.com/mvmaniac/standard-react-nodebird.git /app```
+
+* PM2 설치  
+    ```npm i -g pm2```
+
+#### 4-5. etc
 
 * next & express
-
-  * front-end 에서 next와 express를 연결한 이유는 주소를 동적으로 생성하기 위해서  
-    예를 들어 해쉬태그 링크를 눌렀을 떄 동적으로 페이지를 가져오기 위해서(?)
+front-end 에서 next와 express를 연결한 이유는 주소를 동적으로 생성하기 위해서  
+예를 들어 해쉬태그 링크를 눌렀을 떄 동적으로 페이지를 가져오기 위해서(?)
 
 * .env
-  
-  * .env 파일을 만들어서 사용하는 환경변수가 있으므로, 해당 파일을 만들어서 설정 필요 (해당 파일은 저장소에 올리면 안됨)  
-    front-end는 COOKIE_SECRET  
-    back-end는 COOKIE_SECRET, DB_PASSWORD  
+.env 파일을 만들어서 사용하는 환경변수가 있으므로, 해당 파일을 만들어서 설정 필요 (해당 파일은 저장소에 올리면 안됨)  
+front-end는 COOKIE_SECRET  
+back-end는 COOKIE_SECRET, DB_PASSWORD  
 
 * containers와 components 폴더의 차이  
 containers 폴더에는 redux의 dispatch 하는 부분이 있는 것만  
