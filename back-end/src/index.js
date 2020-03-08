@@ -5,12 +5,16 @@ const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const hpp = require('hpp');
+const helmet = require('helmet');
 
 const passportConfig = require('./passport');
 const db = require('./models');
 const userAPIRouter = require('./routes/user');
 const postAPIRouter = require('./routes/post');
 const hashtagAPIRouter = require('./routes/hashtag');
+
+const isProd = process.env.NODE_ENV === 'production';
 
 dotenv.config();
 
@@ -23,18 +27,30 @@ db.sequelize.sync();
 // 패스포트 전략 설정
 passportConfig();
 
-// 어떤 요청이 들어왔는지 로그를 남김
-app.use(morgan('dev'));
+if (isProd) {
+  app.use(hpp());
+  app.use(helmet());
+  app.use(morgan('combined'));
+  app.use(
+    cors({
+      origin: /devfactory\.me$/,
+      credentials: true
+    })
+  );
+} else {
+  // 어떤 요청이 들어왔는지 로그를 남김
+  app.use(morgan('dev'));
+
+  // Access-Control-Allow-Origin 처리
+  app.use(
+    cors({
+      origin: true,
+      credentials: true
+    })
+  );
+}
 
 app.use('/', express.static('src/uploads'));
-
-// Access-Control-Allow-Origin 처리
-app.use(
-  cors({
-    origin: true,
-    credentials: true
-  })
-);
 
 // 세션에 로그인한 사용자 정보 저장
 // 프론트에는 세션을 조회 할 수 있는 쿠키를 전달
@@ -46,7 +62,8 @@ app.use(
     secret: process.env.COOKIE_SECRET, // 암호화
     cookie: {
       httpOnly: true, // 쿠키를 자바스크립트에서 접근을 하지 못함
-      secure: false // https를 쓸때 true로...
+      secure: false, // https를 쓸때 true로...
+      domain: isProd && '.devfactory.me'
     },
     name: 'dbgmltlr'
     // store: RedisStore // store 를 따로 써야 서버가 재시작해도 로그인이 유지됨
@@ -68,7 +85,7 @@ app.use('/api/users', userAPIRouter);
 app.use('/api/posts', postAPIRouter);
 app.use('/api/hashtags', hashtagAPIRouter);
 
-const port = process.env.NODE_ENV === 'production' ? process.env.PORT : 3065;
+const port = isProd ? process.env.PORT : 3065;
 app.listen(port, () => {
   console.log(`server is running on ${port}`);
 });
