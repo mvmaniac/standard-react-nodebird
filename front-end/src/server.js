@@ -7,8 +7,7 @@ const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 
 const dev = process.env.NODE_ENV !== 'production';
-const prod = process.env.NODE_ENV === 'production';
-const port = prod ? process.env.PORT : 3060;
+const port = dev ? 3060 : process.env.PORT;
 
 const app = next({dev});
 const handle = app.getRequestHandler();

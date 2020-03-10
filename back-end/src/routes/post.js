@@ -6,19 +6,18 @@ const multerS3 = require('multer-s3');
 
 const db = require('../models');
 const {isLoggedIn} = require('./middleware');
+const config = require('../config/config');
 
 const router = express.Router();
 
-const isProd = process.env.NODE_ENV === 'production';
-
 AWS.config.update({
   region: 'ap-northeast-2',
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY_ID
+  accessKeyId: config.s3AccessKeyId,
+  secretAccessKey: config.s3SecretAccessKey
 });
 
 // 로컬에서는 그냥 로컬PC에서 하는걸로...
-const multerStorage = isProd
+const multerStorage = config.isProd
   ? multerS3({
       s3: new AWS.S3(),
       bucket: 'react-node-bird',
@@ -276,7 +275,7 @@ router.post('/:id/comments', isLoggedIn, async (req, res, next) => {
 router.post('/images', upload.array('images'), (req, res) => {
   // upload.single, upload.array, upload.fields 등등
   return res.json(
-    req.files.map(file => (isProd ? file.location : file.filename))
+    req.files.map(file => (config.isProd ? file.location : file.filename))
   );
 });
 

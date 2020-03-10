@@ -1,30 +1,23 @@
 const Sequelize = require('sequelize');
 
-const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config')[env];
+const {db} = require('../config/config');
 
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config
-);
+const sequelize = new Sequelize(db.database, db.username, db.password, db);
+const database = {};
 
-const db = {};
+database.Comment = require('./comment')(sequelize, Sequelize);
+database.Hashtag = require('./hashtag')(sequelize, Sequelize);
+database.Image = require('./image')(sequelize, Sequelize);
+database.Post = require('./post')(sequelize, Sequelize);
+database.User = require('./user')(sequelize, Sequelize);
 
-db.Comment = require('./comment')(sequelize, Sequelize);
-db.Hashtag = require('./hashtag')(sequelize, Sequelize);
-db.Image = require('./image')(sequelize, Sequelize);
-db.Post = require('./post')(sequelize, Sequelize);
-db.User = require('./user')(sequelize, Sequelize);
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
+Object.keys(database).forEach(modelName => {
+  if (database[modelName].associate) {
+    database[modelName].associate(database);
   }
 });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+database.sequelize = sequelize;
+database.Sequelize = Sequelize;
 
-module.exports = db;
+module.exports = database;
