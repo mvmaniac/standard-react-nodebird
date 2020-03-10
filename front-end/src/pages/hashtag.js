@@ -36,14 +36,14 @@ const Hashtag = ({tag}) => {
         countRef.current.push(lastId);
       }
     }
-  }, [hasMorePost, mainPosts.length]);
+  }, [hasMorePost, mainPosts.length, tag]);
 
   useEffect(() => {
     window.addEventListener('scroll', onScroll);
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [mainPosts.length]);
+  }, [hasMorePost, mainPosts.length, tag]);
 
   return (
     <div style={{marginTop: '10px'}}>

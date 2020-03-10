@@ -1,29 +1,30 @@
 const dotenv = require('dotenv');
 
-dotenv.config();
+let path;
+
+switch (process.env.NODE_ENV) {
+  case 'production':
+    path = `${__dirname}/../../.env.prod`;
+    break;
+
+  default:
+    path = `${__dirname}/../../.env.dev`;
+    break;
+}
+
+dotenv.config({path});
 
 module.exports = {
-  development: {
-    username: 'dev',
+  isProd: process.env.NODE_ENV === 'production',
+  cookie: process.env.COOKIE_SECRET,
+  port: this.isProd ? process.env.PORT : 3065,
+  s3AccessKeyId: process.env.S3_ACCESS_KEY_ID,
+  s3SecretAccessKey: process.env.S3_SECRET_ACCESS_KEY_ID,
+  db: {
+    username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: 'nodebird',
-    host: '127.0.0.1',
-    dialect: 'mysql',
-    operatorsAliases: false
-  },
-  test: {
-    username: 'dev',
-    password: process.env.DB_PASSWORD,
-    database: 'nodebird',
-    host: '127.0.0.1',
-    dialect: 'mysql',
-    operatorsAliases: false
-  },
-  production: {
-    username: 'dev',
-    password: process.env.DB_PASSWORD,
-    database: 'nodebird',
-    host: 'react-node-bird.c0lxkx7lk0j0.ap-northeast-2.rds.amazonaws.com',
+    database: process.env.DB_DATABASE,
+    host: process.env.DB_HOST,
     dialect: 'mysql',
     operatorsAliases: false
   }

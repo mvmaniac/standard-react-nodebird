@@ -3,7 +3,6 @@ const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
-const dotenv = require('dotenv');
 const passport = require('passport');
 const hpp = require('hpp');
 const helmet = require('helmet');
@@ -13,10 +12,7 @@ const db = require('./models');
 const userAPIRouter = require('./routes/user');
 const postAPIRouter = require('./routes/post');
 const hashtagAPIRouter = require('./routes/hashtag');
-
-const isProd = process.env.NODE_ENV === 'production';
-
-dotenv.config();
+const config = require('./config/config');
 
 const app = express();
 
@@ -27,7 +23,7 @@ db.sequelize.sync();
 // 패스포트 전략 설정
 passportConfig();
 
-if (isProd) {
+if (config.isProd) {
   app.use(hpp());
   app.use(helmet());
   app.use(morgan('combined'));
@@ -54,16 +50,16 @@ app.use('/', express.static('src/uploads'));
 
 // 세션에 로그인한 사용자 정보 저장
 // 프론트에는 세션을 조회 할 수 있는 쿠키를 전달
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(config.cookie));
 app.use(
   expressSession({
     resave: false, // 매번 세션 강제 저장 여부
     saveUninitialized: false, // 빈 값도 저장 여부
-    secret: process.env.COOKIE_SECRET, // 암호화
+    secret: config.cookie, // 암호화
     cookie: {
       httpOnly: true, // 쿠키를 자바스크립트에서 접근을 하지 못함
       secure: false, // https를 쓸때 true로...
-      domain: isProd && '.devfactory.me'
+      domain: config.isProd && '.devfactory.me'
     },
     name: 'dbgmltlr'
     // store: RedisStore // store 를 따로 써야 서버가 재시작해도 로그인이 유지됨
@@ -85,7 +81,6 @@ app.use('/api/users', userAPIRouter);
 app.use('/api/posts', postAPIRouter);
 app.use('/api/hashtags', hashtagAPIRouter);
 
-const port = isProd ? process.env.PORT : 3065;
-app.listen(port, () => {
-  console.log(`server is running on ${port}`);
+app.listen(config.port, () => {
+  console.log(`server is running on ${config.port}`);
 });
