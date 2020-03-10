@@ -29,8 +29,18 @@ const PostImages = ({images}) => {
     return (
       <>
         <div>
-          <img src={`${IMAGE_URL}${images[0].src}`} alt="" width="50%" onClick={onZoom} />
-          <img src={`${IMAGE_URL}${images[1].src}`} alt="" width="50%" onClick={onZoom} />
+          <img
+            src={`${IMAGE_URL}${images[0].src}`}
+            alt=""
+            width="50%"
+            onClick={onZoom}
+          />
+          <img
+            src={`${IMAGE_URL}${images[1].src}`}
+            alt=""
+            width="50%"
+            onClick={onZoom}
+          />
         </div>
         {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
       </>
@@ -40,7 +50,12 @@ const PostImages = ({images}) => {
   return (
     <>
       <div>
-        <img src={`${IMAGE_URL}${images[0].src}`} alt="" width="50%" onClick={onZoom} />
+        <img
+          src={`${IMAGE_URL}${images[0].src}`}
+          alt=""
+          width="50%"
+          onClick={onZoom}
+        />
         <div
           style={{
             display: 'inline-block',

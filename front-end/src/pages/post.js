@@ -6,7 +6,7 @@ import Helmet from 'react-helmet';
 import {FRONT_END_URL, BACK_END_URL, IMAGE_URL} from '../config/config';
 import {LOAD_POST_REQUEST} from '../reducers/post';
 
-function Post ({postId}) {
+function Post({postId}) {
   const {singlePost} = useSelector(state => state.postReducer);
 
   return (
@@ -15,11 +15,16 @@ function Post ({postId}) {
         title={`${singlePost.user.nickname}`}
         meta={[
           {name: 'description', content: singlePost.content},
-          {property: 'og:title', content: `${singlePost.user.nickname}님의 게시글`},
+          {
+            property: 'og:title',
+            content: `${singlePost.user.nickname}님의 게시글`
+          },
           {property: 'og:description', content: singlePost.content},
           {
             property: 'og:image',
-            content: singlePost.images[0] ? `${IMAGE_URL}${singlePost.images[0].src}` : `${FRONT_END_URL}/favicon.ico`
+            content: singlePost.images[0]
+              ? `${IMAGE_URL}${singlePost.images[0].src}`
+              : `${FRONT_END_URL}/favicon.ico`
           },
           {property: 'og:url', content: `${FRONT_END_URL}/post/${postId}`}
         ]}

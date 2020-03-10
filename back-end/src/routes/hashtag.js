@@ -13,8 +13,8 @@ router.get('/:tag', async (req, res, next) => {
         id: {
           [db.Sequelize.Op.lt]: lastId
         }
-      }
-    } 
+      };
+    }
 
     const findPosts = await db.Post.findAll({
       where,

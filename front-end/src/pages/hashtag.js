@@ -2,7 +2,10 @@ import React, {useCallback, useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {useSelector, useDispatch} from 'react-redux';
 
-import {LOAD_HASHTAG_POSTS_REQUEST, LOAD_MAIN_POSTS_REQUEST} from '../reducers/post';
+import {
+  LOAD_HASHTAG_POSTS_REQUEST,
+  LOAD_MAIN_POSTS_REQUEST
+} from '../reducers/post';
 import PostCard from '../containers/PostCard';
 
 const Hashtag = ({tag}) => {
@@ -43,7 +46,7 @@ const Hashtag = ({tag}) => {
   }, [mainPosts.length]);
 
   return (
-    <div style={{marginTop: "10px"}}>
+    <div style={{marginTop: '10px'}}>
       {mainPosts.map(post => (
         <PostCard key={post.id} post={post} />
       ))}

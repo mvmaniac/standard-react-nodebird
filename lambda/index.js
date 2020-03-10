@@ -9,8 +9,9 @@ exports.handler = async (event, context, callback) => {
   const Bucket = event.Records[0].s3.bucket.name;
   const Key = event.Records[0].s3.object.key;
 
-  const filename = Key.split('/')[Key.split('/').length - 1];
-  const ext = Key.split('.')[Key.split('.').length - 1];
+  const decodeKey = decodeURIComponent(Key); // 한글 파일명을 위한 디코딩
+  const filename = decodeKey.split('/')[decodeKey.split('/').length - 1];
+  const ext = decodeKey.split('.')[decodeKey.split('.').length - 1];
 
   console.log(Key, filename, ext);
 
@@ -20,7 +21,7 @@ exports.handler = async (event, context, callback) => {
     const s3Object = await S3.getObject({
       // S3에서 이미지를 받아 옴
       Bucket,
-      Key
+      decodeKey
     }).promise();
 
     console.log('original', s3Object.Body.length);

@@ -42,13 +42,13 @@ import {
 // takeLatest takeEvery와 동시에 여러번 액션이 호출되어도 최종 마지막 1번만 호출됨 (ex. 여러번 클릭해도 최종 1번만)
 
 // login
-function loginAPI (data) {
+function loginAPI(data) {
   return axios.post('/users/login', data, {
     withCredentials: true
   });
 }
 
-function* login (action) {
+function* login(action) {
   try {
     // call은 동기적 호출이므로 loginAPI에 대한
     // 응답이 올때까지 기다리며, 응답이 오고 나서
@@ -66,7 +66,7 @@ function* login (action) {
   }
 }
 
-function* watchLogin () {
+function* watchLogin() {
   // LOG_IN 액션을 받으면 LOG_IN_SUCCESS 액션을 실행
   // yield take(LOG_IN);
   // yield put({
@@ -78,7 +78,7 @@ function* watchLogin () {
 }
 
 // logout
-function logoutAPI () {
+function logoutAPI() {
   return axios.post(
     '/users/logout',
     {},
@@ -88,7 +88,7 @@ function logoutAPI () {
   );
 }
 
-function* logout () {
+function* logout() {
   try {
     yield call(logoutAPI);
     yield put({
@@ -102,19 +102,19 @@ function* logout () {
   }
 }
 
-function* watchLogout () {
+function* watchLogout() {
   yield takeLatest(LOG_OUT_REQUEST, logout);
 }
 
 // loadUser
-function loadUserAPI (data) {
+function loadUserAPI(data) {
   // userId 값이 있다면 남의 정보를 요청함
   return axios.get(data && data.userId ? `/users/${data.userId}` : '/users', {
     withCredentials: true
   });
 }
 
-function* loadUser (action) {
+function* loadUser(action) {
   try {
     const result = yield call(loadUserAPI, action.data);
     yield put({
@@ -131,16 +131,16 @@ function* loadUser (action) {
   }
 }
 
-function* watchLoadUser () {
+function* watchLoadUser() {
   yield takeEvery(LOAD_USER_REQUEST, loadUser);
 }
 
 // signUp
-function signUpAPI (data) {
+function signUpAPI(data) {
   return axios.post('/users', data);
 }
 
-function* signUp (action) {
+function* signUp(action) {
   try {
     yield call(signUpAPI, action.data);
     yield put({
@@ -156,12 +156,12 @@ function* signUp (action) {
   }
 }
 
-function* watchSignUp () {
+function* watchSignUp() {
   yield takeEvery(SIGN_UP_REQUEST, signUp);
 }
 
 // follow
-function followAPI (data) {
+function followAPI(data) {
   return axios.post(
     `/users/${data.userId}/followings`,
     {},
@@ -171,7 +171,7 @@ function followAPI (data) {
   );
 }
 
-function* follow (action) {
+function* follow(action) {
   try {
     const result = yield call(followAPI, action.data);
     yield put({
@@ -188,18 +188,18 @@ function* follow (action) {
   }
 }
 
-function* watchFollow () {
+function* watchFollow() {
   yield takeLatest(FOLLOW_USER_REQUEST, follow);
 }
 
 // unFollow
-function unFollowAPI (data) {
+function unFollowAPI(data) {
   return axios.delete(`/users/${data.userId}/followings`, {
     withCredentials: true
   });
 }
 
-function* unFollow (action) {
+function* unFollow(action) {
   try {
     const result = yield call(unFollowAPI, action.data);
     yield put({
@@ -216,19 +216,22 @@ function* unFollow (action) {
   }
 }
 
-function* watchUnFollow () {
+function* watchUnFollow() {
   yield takeLatest(UN_FOLLOW_USER_REQUEST, unFollow);
 }
 
 // loadFollowings
-function loadFollowingsAPI ({userId, offset = 0, limit = 3}) {
+function loadFollowingsAPI({userId, offset = 0, limit = 3}) {
   // 디폴트 매개변수가 null 인 경우는 동작하지 않음
-  return axios.get(`/users/${userId || 0}/followings?offset=${offset}&limit=${limit}`, {
-    withCredentials: true
-  });
+  return axios.get(
+    `/users/${userId || 0}/followings?offset=${offset}&limit=${limit}`,
+    {
+      withCredentials: true
+    }
+  );
 }
 
-function* loadFollowings (action) {
+function* loadFollowings(action) {
   try {
     const result = yield call(loadFollowingsAPI, action.data);
     yield put({
@@ -245,19 +248,22 @@ function* loadFollowings (action) {
   }
 }
 
-function* watchLoadFollowings () {
+function* watchLoadFollowings() {
   yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
 }
 
 // loadFollowers
-function loadFollowersAPI ({userId, offset = 0, limit = 3}) {
+function loadFollowersAPI({userId, offset = 0, limit = 3}) {
   // 디폴트 매개변수가 null 인 경우는 동작하지 않음
-  return axios.get(`/users/${userId || 0}/followers?offset=${offset}&limit=${limit}`, {
-    withCredentials: true
-  });
+  return axios.get(
+    `/users/${userId || 0}/followers?offset=${offset}&limit=${limit}`,
+    {
+      withCredentials: true
+    }
+  );
 }
 
-function* loadFollowers (action) {
+function* loadFollowers(action) {
   try {
     const result = yield call(loadFollowersAPI, action.data);
     yield put({
@@ -274,18 +280,18 @@ function* loadFollowers (action) {
   }
 }
 
-function* watchLoadFollowers () {
+function* watchLoadFollowers() {
   yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
 }
 
 // removeFollower
-function removeFollowerAPI (data) {
+function removeFollowerAPI(data) {
   return axios.delete(`/users/${data.userId}/followers`, {
     withCredentials: true
   });
 }
 
-function* removeFollower (action) {
+function* removeFollower(action) {
   try {
     const result = yield call(removeFollowerAPI, action.data);
     yield put({
@@ -302,12 +308,12 @@ function* removeFollower (action) {
   }
 }
 
-function* watchRemoveFollower () {
+function* watchRemoveFollower() {
   yield takeLatest(REMOVE_FOLLOWER_REQUEST, removeFollower);
 }
 
 // editNickname
-function editNicknameAPI (data) {
+function editNicknameAPI(data) {
   return axios.patch(
     '/users/nickname',
     {nickname: data.nickname},
@@ -317,7 +323,7 @@ function editNicknameAPI (data) {
   );
 }
 
-function* editNickname (action) {
+function* editNickname(action) {
   try {
     const result = yield call(editNicknameAPI, action.data);
     yield put({
@@ -334,11 +340,11 @@ function* editNickname (action) {
   }
 }
 
-function* watchEditNickname () {
+function* watchEditNickname() {
   yield takeLatest(EDIT_NICKNAME_REQUEST, editNickname);
 }
 
-export default function* userSaga () {
+export default function* userSaga() {
   yield all([
     fork(watchLogin),
     fork(watchLogout),

@@ -9,7 +9,7 @@ const router = express.Router();
 
 // /api/users
 router.get('/', isLoggedIn, (req, res) => {
-  const user = Object.assign({}, req.user.toJSON());
+  const user = {...req.user.toJSON()};
   delete user.password;
 
   return res.json(user);
@@ -37,7 +37,7 @@ router.post('/', async (req, res, next) => {
       nickname: bodyData.nickname
     });
 
-    //console.log('savedUser: %o', savedUser);
+    // console.log('savedUser: %o', savedUser);
     return res.status(200).json(savedUser);
   } catch (e) {
     console.error(e);
@@ -107,9 +107,9 @@ router.post('/login', (req, res, next) => {
     return req.login(user, async loginError => {
       try {
         if (loginError) {
-          next(loginError);
+          return next(loginError);
         }
-  
+
         const findUser = await db.User.findOne({
           where: {id: user.id},
           include: [
@@ -131,14 +131,14 @@ router.post('/login', (req, res, next) => {
           ],
           attributes: ['id', 'nickname', 'userId']
         });
-  
+
         // 사용자 정보에 비밀번호 제거
-        //const filteredUser = Object.assign({}, user.toJSON());
-        //delete filteredUser.password;
-  
+        // const filteredUser = Object.assign({}, user.toJSON());
+        // delete filteredUser.password;
+
         return res.json(findUser);
-      } catch (e) {
-        next(e);
+      } catch (err) {
+        return next(err);
       }
     });
   })(req, res, next);
@@ -161,7 +161,7 @@ router.get('/:id/followings', isLoggedIn, async (req, res, next) => {
     return res.json(followings);
   } catch (e) {
     console.error(e);
-    next(e);
+    return next(e);
   }
 });
 
@@ -177,11 +177,11 @@ router.post('/:id/followings', isLoggedIn, async (req, res, next) => {
     return res.send(req.params.id);
   } catch (e) {
     console.error(e);
-    next(e);
+    return next(e);
   }
 });
 
-router.delete('/:id/followings', isLoggedIn, async (req, res) => {
+router.delete('/:id/followings', isLoggedIn, async (req, res, next) => {
   try {
     const findUser = await db.User.findOne({
       where: {
@@ -193,7 +193,7 @@ router.delete('/:id/followings', isLoggedIn, async (req, res) => {
     return res.send(req.params.id);
   } catch (e) {
     console.error(e);
-    next(e);
+    return next(e);
   }
 });
 
@@ -214,7 +214,7 @@ router.get('/:id/followers', isLoggedIn, async (req, res, next) => {
     return res.json(followers);
   } catch (e) {
     console.error(e);
-    next(e);
+    return next(e);
   }
 });
 
@@ -230,7 +230,7 @@ router.delete('/:id/followers', isLoggedIn, async (req, res, next) => {
     return res.send(req.params.id);
   } catch (e) {
     console.error(e);
-    next(e);
+    return next(e);
   }
 });
 
@@ -283,7 +283,7 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
     return res.send(req.body.nickname);
   } catch (e) {
     console.error(e);
-    next(e);
+    return next(e);
   }
 });
 

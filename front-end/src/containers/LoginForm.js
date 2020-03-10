@@ -34,7 +34,9 @@ const LoginForm = () => {
   const [userId, onChangeUserId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
-  const {isLoggingIn, loginErrorReason} = useSelector(state => state.userReducer);
+  const {isLoggingIn, loginErrorReason} = useSelector(
+    state => state.userReducer
+  );
   const dispatch = useDispatch();
 
   const onSubmitForm = useCallback(
@@ -76,7 +78,12 @@ const LoginForm = () => {
       </div>
       <div className="error">{loginErrorReason}</div>
       <div className="buttons">
-        <Button type="primary" htmlType="submit" loading={isLoggingIn} title="로그인">
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={isLoggingIn}
+          title="로그인"
+        >
           로그인
         </Button>
         &nbsp;

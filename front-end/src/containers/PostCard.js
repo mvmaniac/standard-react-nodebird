@@ -27,11 +27,14 @@ const CardWrapper = styled.div`
 
 const PostCard = memo(({post}) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
-  const meId = useSelector(state => state.userReducer.me && state.userReducer.me.id);
+  const meId = useSelector(
+    state => state.userReducer.me && state.userReducer.me.id
+  );
 
   const dispatch = useDispatch();
 
-  const isLiked = meId && post.likers && post.likers.find(liker => liker.id === meId);
+  const isLiked =
+    meId && post.likers && post.likers.find(liker => liker.id === meId);
 
   const onToggleComment = useCallback(() => {
     setCommentFormOpened(prev => !prev);
@@ -108,7 +111,7 @@ const PostCard = memo(({post}) => {
           <Icon key="message" type="message" onClick={onToggleComment} />,
           <Popover
             key="ellipsis"
-            content={(
+            content={
               <Button.Group>
                 {meId && post.user.id === meId ? (
                   <>
@@ -121,36 +124,49 @@ const PostCard = memo(({post}) => {
                   <Button>신고</Button>
                 )}
               </Button.Group>
-            )}
+            }
           >
             <Icon type="ellipsis" />
           </Popover>
         ]}
-        title={post.retweet ? `${post.user.nickname}님이 리트윗 하셨습니다.` : null}
+        title={
+          post.retweet ? `${post.user.nickname}님이 리트윗 하셨습니다.` : null
+        }
         extra={<FollowButton post={post} />}
       >
         {post.retweetId && post.retweet ? (
-          <Card cover={post.retweet.images.length && <PostImages images={post.retweet.images} />}>
+          <Card
+            cover={
+              post.retweet.images.length && (
+                <PostImages images={post.retweet.images} />
+              )
+            }
+          >
             <Card.Meta
               // next의 페이지를 사용하기 위해(?)
-              avatar={(
+              avatar={
                 <Link
-                  href={{pathname: '/user', query: {userId: post.retweet.user.id}}}
+                  href={{
+                    pathname: '/user',
+                    query: {userId: post.retweet.user.id}
+                  }}
                   as={`/users/${post.retweet.user.id}`}
                 >
                   <a href="true">
                     <Avatar>{post.retweet.user.nickname[0]}</Avatar>
                   </a>
                 </Link>
-              )}
+              }
               title={post.retweet.user.nickname}
-              description={<PostCardContent postContent={post.retweet.content} />}
+              description={
+                <PostCardContent postContent={post.retweet.content} />
+              }
             />
           </Card>
         ) : (
           <Card.Meta
             // next의 페이지를 사용하기 위해(?)
-            avatar={(
+            avatar={
               <Link
                 href={{pathname: '/user', query: {userId: post.user.id}}}
                 as={`/users/${post.user.id}`}
@@ -159,7 +175,7 @@ const PostCard = memo(({post}) => {
                   <Avatar>{post.user.nickname[0]}</Avatar>
                 </a>
               </Link>
-            )}
+            }
             title={post.user.nickname}
             description={<PostCardContent postContent={post.content} />}
           />
@@ -177,7 +193,7 @@ const PostCard = memo(({post}) => {
               <li>
                 <Comment
                   author={item.user.nickname}
-                  avatar={(
+                  avatar={
                     <Link
                       href={{pathname: '/user', query: {userId: item.user.id}}}
                       as={`/users/${item.user.id}`}
@@ -186,7 +202,7 @@ const PostCard = memo(({post}) => {
                         <Avatar>{item.user.nickname[0]}</Avatar>
                       </a>
                     </Link>
-                  )}
+                  }
                   content={item.content}
                   datetime={item.createdAt}
                 />

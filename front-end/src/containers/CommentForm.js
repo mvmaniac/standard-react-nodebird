@@ -9,7 +9,9 @@ const CommentForm = ({post}) => {
   const [commentText, setCommentText] = useState('');
 
   const {me} = useSelector(state => state.userReducer);
-  const {isAddingComment, isAddedComment} = useSelector(state => state.postReducer);
+  const {isAddingComment, isAddedComment} = useSelector(
+    state => state.postReducer
+  );
 
   const dispatch = useDispatch();
 
@@ -44,9 +46,18 @@ const CommentForm = ({post}) => {
   return (
     <Form onSubmit={onSubmitCommentForm}>
       <Form.Item>
-        <Input.TextArea row={4} value={commentText} onChange={onChangeComment} />
+        <Input.TextArea
+          row={4}
+          value={commentText}
+          onChange={onChangeComment}
+        />
       </Form.Item>
-      <Button type="primary" htmlType="submit" loading={isAddingComment} title="삐약">
+      <Button
+        type="primary"
+        htmlType="submit"
+        loading={isAddingComment}
+        title="삐약"
+      >
         삐약
       </Button>
     </Form>

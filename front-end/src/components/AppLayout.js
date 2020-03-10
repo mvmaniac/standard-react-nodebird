@@ -12,7 +12,10 @@ const AppLayout = ({children}) => {
   const {me} = useSelector(state => state.userReducer);
 
   const onSearch = value => {
-    Router.push({pathname: '/hashtag', query: {tag: value}}, `/hashtags/${value}`);
+    Router.push(
+      {pathname: '/hashtag', query: {tag: value}},
+      `/hashtags/${value}`
+    );
   };
 
   return (
@@ -29,7 +32,11 @@ const AppLayout = ({children}) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="search">
-          <Input.Search style={{verticalAlign: 'middle'}} enterButton onSearch={onSearch} />
+          <Input.Search
+            style={{verticalAlign: 'middle'}}
+            enterButton
+            onSearch={onSearch}
+          />
         </Menu.Item>
       </Menu>
 

@@ -184,15 +184,19 @@ const userReducer = (state = initialState, action) => {
         break;
       }
       case UN_FOLLOW_USER_SUCCESS: {
-        let index = draftState.me.followings.findIndex(following => following.id === action.data);
+        let index = draftState.me.followings.findIndex(
+          following => following.id === action.data
+        );
         draftState.me.followings.splice(index, 1);
 
-        index = draftState.followings.findIndex(following => following.id === action.data);
+        index = draftState.followings.findIndex(
+          following => following.id === action.data
+        );
         draftState.followings.splice(index, 1);
         break;
       }
       case UN_FOLLOW_USER_FAILURE: {
-        break
+        break;
       }
 
       case ADD_POST_TO_ME: {
@@ -201,7 +205,9 @@ const userReducer = (state = initialState, action) => {
       }
 
       case REMOVE_POST_OF_ME: {
-        const index = draftState.me.posts.findIndex(post => post.id === action.data);
+        const index = draftState.me.posts.findIndex(
+          post => post.id === action.data
+        );
         draftState.me.posts.splice(index, 1);
         break;
       }
@@ -209,7 +215,9 @@ const userReducer = (state = initialState, action) => {
       case LOAD_FOLLOWINGS_REQUEST: {
         const draft = draftState;
         draft.followings = !action.data.offset ? [] : draft.followings;
-        draft.hasMoreFollowings = action.data.offset ? draft.hasMoreFollowings : true;
+        draft.hasMoreFollowings = action.data.offset
+          ? draft.hasMoreFollowings
+          : true;
         return;
       }
       case LOAD_FOLLOWINGS_SUCCESS: {
@@ -225,7 +233,9 @@ const userReducer = (state = initialState, action) => {
       case LOAD_FOLLOWERS_REQUEST: {
         const draft = draftState;
         draft.followers = !action.data.offset ? [] : draft.followers;
-        draft.hasMoreFollowers = action.data.offset ? draft.hasMoreFollowers : true;
+        draft.hasMoreFollowers = action.data.offset
+          ? draft.hasMoreFollowers
+          : true;
         return;
       }
       case LOAD_FOLLOWERS_SUCCESS: {
@@ -242,10 +252,14 @@ const userReducer = (state = initialState, action) => {
         break;
       }
       case REMOVE_FOLLOWER_SUCCESS: {
-        let index = draftState.me.followers.findIndex(following => following.id === action.data);
+        let index = draftState.me.followers.findIndex(
+          following => following.id === action.data
+        );
         draftState.me.followers.splice(index, 1);
 
-        index = draftState.followers.findIndex(following => following.id === action.data);
+        index = draftState.followers.findIndex(
+          following => following.id === action.data
+        );
         draftState.followers.splice(index, 1);
         break;
       }

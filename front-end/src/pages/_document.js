@@ -5,15 +5,17 @@ import Document, {Main, NextScript} from 'next/document';
 import {ServerStyleSheet} from 'styled-components';
 
 class MyDocument extends Document {
-  static getInitialProps (context) {
+  static getInitialProps(context) {
     const sheet = new ServerStyleSheet();
-    const page = context.renderPage(App => props => sheet.collectStyles(<App {...props} />));
+    const page = context.renderPage(App => props =>
+      sheet.collectStyles(<App {...props} />)
+    );
     const styleTags = sheet.getStyleElement(); // 순서가 중요함 sheet -> sheet.collectStyles -> sheet.getStyleElement
 
     return {...page, helmet: Helmet.renderStatic(), styleTags};
   }
 
-  render () {
+  render() {
     const {htmlAttributes, bodyAttributes, ...helmet} = this.props.helmet;
     const htmlAttrs = htmlAttributes.toComponent();
     const bodyAttrs = bodyAttributes.toComponent();

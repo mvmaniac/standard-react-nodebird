@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 const MyError = ({statusCode}) => {
   return (
     <div>
-      <h1>
-        {statusCode}
-        {' '}
-        에러 발생
-      </h1>
+      <h1>{statusCode} 에러 발생</h1>
     </div>
   );
 };

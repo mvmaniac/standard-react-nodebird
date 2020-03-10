@@ -23,7 +23,6 @@ const SignUpFormAntd = styled(Form)`
   }
 `;
 
-
 const SignUp = () => {
   const [userId, setUserId] = useState('');
   const [nickname, setNickname] = useState('');
@@ -101,10 +100,16 @@ const SignUp = () => {
   }
 
   return (
-    <SignUpFormAntd onSubmit={onSubmit}>      
+    <SignUpFormAntd onSubmit={onSubmit}>
       <div>
         <label htmlFor="sign-userId">아이디:</label>
-        <Input id="sign-userId" name="userId" required value={userId} onChange={onChangeUserId} />
+        <Input
+          id="sign-userId"
+          name="userId"
+          required
+          value={userId}
+          onChange={onChangeUserId}
+        />
       </div>
       <div>
         <label htmlFor="sign-nickname">별명:</label>
@@ -137,7 +142,9 @@ const SignUp = () => {
           value={passwordCheck}
           onChange={onChangePasswordCheck}
         />
-        {passwordError && <div className="error">비밀번호가 일치하지 않습니다.</div>}
+        {passwordError && (
+          <div className="error">비밀번호가 일치하지 않습니다.</div>
+        )}
       </div>
       <div>
         <Checkbox name="sign-term" checked={term} onChange={onChangeTerm}>
@@ -146,7 +153,12 @@ const SignUp = () => {
         {termError && <div className="error">약관에 동의하셔야 합니다.</div>}
       </div>
       <div className="buttons">
-        <Button type="primary" htmlType="submit" loading={isSigningUp} title="가입하기">
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={isSigningUp}
+          title="가입하기"
+        >
           가입하기
         </Button>
       </div>

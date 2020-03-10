@@ -109,7 +109,7 @@
     ``` javascript
     npm i -D eslint
     npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
-    npm i -D prettier eslint-config-prettier
+    npm i -D prettier eslint-config-prettier eslint-plugin-prettier
     npm i -D babel-eslint
     ```
 
@@ -190,9 +190,8 @@
 
     ``` javascript
     npm i -D eslint
-    npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y
-    npm i -D prettier eslint-config-prettier
-    npm i -D babel-eslint
+    npm i -D eslint-config-airbnb-base eslint-plugin-import
+    npm i -D prettier eslint-config-prettier eslint-plugin-prettier
     ```
 
 * nodemon
@@ -213,9 +212,8 @@
 
     ``` javascript
     npm i -D eslint
-    npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y
-    npm i -D prettier eslint-config-prettier
-    npm i -D babel-eslint
+    npm i -D eslint-config-airbnb-base eslint-plugin-import
+    npm i -D prettier eslint-config-prettier eslint-plugin-prettier
     ```
 
 #### 4-4. db
@@ -232,10 +230,10 @@
 #### 4-5. server
 
 * front-end, back-end 는 각각 EC2, DB는 RDS
-* 원활한 진행을 위해 관리자 권한으로 작업  
+* 원활한 진행을 위해 관리자 권한으로 작업 아니면 ```sudo``` 붙여서 명령어 실행  
   ```sudo su -```
 
-* 필요한 패키지 설치 (font & back)  
+* 필요한 패키지 설치  
     amazon-linux  
     ```amazon-linux-extras install -y epel```  
     ```yum install -y git```  
@@ -245,16 +243,16 @@
     ubuntu  
     ```apt-get install -y build-essential```
 
-* nodejs 설치 (font & back)  
+* nodejs 설치 (LTS 버전으로)  
     amazon-linux  
-    ```curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash --```
+    ```curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash --```  
     ```yum install -y nodejs```
 
     ubuntu  
-    ```curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash --```
+    ```curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash --```  
     ```apt-get install -y nodejs```
 
-* 소스 다운로드 (font & back, .env 파일 직접 옮겨야 함)  
+* 소스 다운로드 (.env 파일 직접 옮겨야 함)  
     ```git clone https://github.com/mvmaniac/standard-react-nodebird.git /app```
 
 * PM2 설치 (명령어를 전역으로 쓰는 용도임)  

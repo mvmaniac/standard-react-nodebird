@@ -7,6 +7,6 @@ import postSaga from './post';
 
 axios.defaults.baseURL = API_URL;
 
-export default function* rootSaga () {
+export default function* rootSaga() {
   yield all([call(userSaga), call(postSaga)]);
 }

@@ -28,7 +28,11 @@ const NicknameForm = () => {
 
   return (
     <Form
-      style={{marginBottom: '20px', border: '1px solid #d9d9d9', padding: '15px'}}
+      style={{
+        marginBottom: '20px',
+        border: '1px solid #d9d9d9',
+        padding: '15px'
+      }}
       onSubmit={onEditNickname}
     >
       <Row>
@@ -40,8 +44,13 @@ const NicknameForm = () => {
             style={{width: '100% !important'}}
           />
         </Col>
-        <Col span={6} style={{paddingLeft: "5px"}}>
-          <Button type="primary" htmlType="submit" loading={isEditingNickname} title="수정">
+        <Col span={6} style={{paddingLeft: '5px'}}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isEditingNickname}
+            title="수정"
+          >
             수정
           </Button>
         </Col>

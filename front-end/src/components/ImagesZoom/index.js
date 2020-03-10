@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Slick from 'react-slick';
-import {Overlay, Header, CloseBtn, SlickWrapper, ImgWrapper, Indicator} from './style';
+import {
+  Overlay,
+  Header,
+  CloseBtn,
+  SlickWrapper,
+  ImgWrapper,
+  Indicator
+} from './style';
 
 import {BACK_END_URL} from '../../config/config';
 
@@ -34,11 +41,7 @@ const ImagesZoom = ({images, onClose}) => {
           </Slick>
           <Indicator>
             <div>
-              {currentSlide + 1}
-              {' '}
-              /
-              {' '}
-              {images.length}
+              {currentSlide + 1} / {images.length}
             </div>
           </Indicator>
         </div>

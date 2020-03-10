@@ -11,7 +11,7 @@ const User = () => {
   const {mainPosts} = useSelector(state => state.postReducer);
 
   return (
-    <div style={{marginTop: "10px"}}>
+    <div style={{marginTop: '10px'}}>
       {userInfo ? (
         <Card
           actions={[
@@ -32,7 +32,10 @@ const User = () => {
             </div>
           ]}
         >
-          <Card.Meta avatar={<Avatar>{userInfo.nickname[0]}</Avatar>} title={userInfo.nickname} />
+          <Card.Meta
+            avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
+            title={userInfo.nickname}
+          />
         </Card>
       ) : null}
 

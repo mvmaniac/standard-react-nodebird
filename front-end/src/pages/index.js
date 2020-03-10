@@ -36,7 +36,7 @@ const Home = () => {
             data: {lastId}
           });
         }
-        
+
         countRef.current.push(lastId);
       }
     }

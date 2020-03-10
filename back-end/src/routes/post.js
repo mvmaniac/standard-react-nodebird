@@ -167,9 +167,9 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
     }
 
     // 첫번째 방법
-    //const user = await newPost.getUser();
-    //newPost.user = user;
-    //res.json(newPost);
+    // const user = await newPost.getUser();
+    // newPost.user = user;
+    // res.json(newPost);
 
     // 두번째 방법
     const findPost = await db.Post.findOne({
@@ -204,7 +204,7 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
     return res.send(req.params.id);
   } catch (e) {
     console.error(e);
-    next(e);
+    return next(e);
   }
 });
 
@@ -275,7 +275,9 @@ router.post('/:id/comments', isLoggedIn, async (req, res, next) => {
 
 router.post('/images', upload.array('images'), (req, res) => {
   // upload.single, upload.array, upload.fields 등등
-  return res.json(req.files.map(file => (isProd ? file.location : file.filename)));
+  return res.json(
+    req.files.map(file => (isProd ? file.location : file.filename))
+  );
 });
 
 router.post('/:id/like', isLoggedIn, async (req, res, next) => {

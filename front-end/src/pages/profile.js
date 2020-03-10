@@ -13,12 +13,14 @@ import {
 import {LOAD_USER_POSTS_REQUEST, CLEAR_POSTS} from '../reducers/post';
 import UserFollow from '../components/UserFollow';
 
-
-
 const Profile = () => {
-  const {me, followers, followings, hasMoreFollowings, hasMoreFollowers} = useSelector(
-    state => state.userReducer
-  );
+  const {
+    me,
+    followers,
+    followings,
+    hasMoreFollowings,
+    hasMoreFollowers
+  } = useSelector(state => state.userReducer);
   const {mainPosts} = useSelector(state => state.postReducer);
   const dispatch = useDispatch();
 
@@ -125,7 +127,7 @@ const Profile = () => {
 Profile.getInitialProps = async context => {
   const {store} = context;
   const user = store.getState().userReducer;
-  
+
   // 이 직전에 _app.js 에서 LOAD_USER_REQUEST 실행되는데
   // LOAD_USER_REQUEST가 끝나야 me 객체가 생김
   store.dispatch({
