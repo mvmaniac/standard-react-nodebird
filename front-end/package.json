@@ -21,7 +21,7 @@
     "express-session": "^1.17.0",
     "immer": "^6.0.2",
     "morgan": "^1.9.1",
-    "next": "^9.3.0",
+    "next": "^9.3.1",
     "next-redux-saga": "^4.1.2",
     "next-redux-wrapper": "^5.0.0",
     "pm2": "^4.2.3",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
     "@babel/plugin-proposal-optional-chaining": "^7.8.3",
-    "@next/bundle-analyzer": "^9.3.0",
+    "@next/bundle-analyzer": "^9.3.1",
     "babel-eslint": "^10.1.0",
     "babel-plugin-styled-components": "^1.10.7",
     "compression-webpack-plugin": "^3.1.0",

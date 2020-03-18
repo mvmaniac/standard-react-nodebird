@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
 import Helmet from 'react-helmet';
 
-import {FRONT_END_URL, BACK_END_URL, IMAGE_URL} from '../config/config';
+import {FRONT_END_URL, IMAGE_URL} from '../config/config';
 import {LOAD_POST_REQUEST} from '../reducers/post';
 
 function Post({postId}) {
@@ -34,7 +34,7 @@ function Post({postId}) {
       <div>{singlePost.user.nickname}</div>
       <div>
         {singlePost.images.length && (
-          <img src={`${BACK_END_URL}/${singlePost.images[0].src}`} alt="" />
+          <img src={`${IMAGE_URL}${singlePost.images[0].src}`} alt="" />
         )}
       </div>
     </>

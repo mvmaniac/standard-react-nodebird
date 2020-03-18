@@ -13,7 +13,7 @@ exports.handler = async (event, context, callback) => {
   const filename = decodeKey.split('/')[decodeKey.split('/').length - 1];
   const ext = decodeKey.split('.')[decodeKey.split('.').length - 1];
 
-  console.log(Key, filename, ext);
+  console.log(Key, decodeKey, filename, ext);
 
   const requiredFormat = ext === 'jpg' ? 'jpeg' : ext; // sharp에서는 jpg 대신 jpeg 사용
 
@@ -21,7 +21,7 @@ exports.handler = async (event, context, callback) => {
     const s3Object = await S3.getObject({
       // S3에서 이미지를 받아 옴
       Bucket,
-      decodeKey
+      Key: decodeKey
     }).promise();
 
     console.log('original', s3Object.Body.length);

@@ -10,7 +10,7 @@ import {
   Indicator
 } from './style';
 
-import {BACK_END_URL} from '../../config/config';
+import {IMAGE_URL} from '../../config/config';
 
 const ImagesZoom = ({images, onClose}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -34,7 +34,7 @@ const ImagesZoom = ({images, onClose}) => {
             {images.map((image, idx) => {
               return (
                 <ImgWrapper key={`${image.src.slice(-1) + idx}`}>
-                  <img src={`${BACK_END_URL}/${image.src}`} alt="" />
+                  <img src={`${IMAGE_URL}${image.src}`} alt="" />
                 </ImgWrapper>
               );
             })}

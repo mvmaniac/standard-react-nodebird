@@ -18,6 +18,7 @@
 * 해시태크 검색 시 리트윗 글도 나오도록 수정
 * `db.Post.findOne`으로 게시글 체크 중복코드를 미들웨어로 적용
 * loadUserPostsAPI 에도 인피니트스크롤링 적용
+* https 적용
 
 ### 4. Setting
 
@@ -292,3 +293,9 @@ Parsed size 기준으로 500KB ~ 1MB 이하로
     init: ```npm run start && pm2 monit```  
     front-end: ```npm run build && pm2 reload all && pm2 monit```  
     back-end: ```pm2 reload all && pm2 monit```
+
+* Sequelize를 사용해서 등록일/수정일 사용하는 경우  
+[블로그 내용 참고](https://lemontia.tistory.com/873 "블로그 내용 참고")  
+    > 등록일/수정일을 서버시간이나 DB시간를 보지 않음, timezone 설정으로 하면 됨  
+    > 조회 할 때도 timezone 설정으로 가지고 오지 않음, dialectOptions 으로 시간을 String으로 변환  
+    > 한 마디로 저장할 때는 timezone을 적용하도록 옵션을 유지하되, 조회 할 때 날짜를 String 형태로 받음  
