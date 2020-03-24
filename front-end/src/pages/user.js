@@ -7,8 +7,8 @@ import PostCard from '../containers/PostCard';
 import {LOAD_USER_REQUEST} from '../reducers/user';
 
 const User = () => {
-  const {userInfo} = useSelector(state => state.userReducer);
-  const {mainPosts} = useSelector(state => state.postReducer);
+  const {userInfo} = useSelector((state) => state.userReducer);
+  const {mainPosts} = useSelector((state) => state.postReducer);
 
   return (
     <div style={{marginTop: '10px'}}>
@@ -39,7 +39,7 @@ const User = () => {
         </Card>
       ) : null}
 
-      {mainPosts.map(post => (
+      {mainPosts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
     </div>
@@ -47,7 +47,7 @@ const User = () => {
 };
 
 // _app.js에서 NodeBird.getInitialProps에서 가져온 ctx 값이 넘어옴
-User.getInitialProps = async context => {
+User.getInitialProps = async (context) => {
   const userId = parseInt(context.query.userId, 10);
   const {store} = context;
 

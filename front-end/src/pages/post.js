@@ -7,7 +7,7 @@ import {FRONT_END_URL, IMAGE_URL} from '../config/config';
 import {LOAD_POST_REQUEST} from '../reducers/post';
 
 function Post({postId}) {
-  const {singlePost} = useSelector(state => state.postReducer);
+  const {singlePost} = useSelector((state) => state.postReducer);
 
   return (
     <>
@@ -45,7 +45,7 @@ Post.propTypes = {
   postId: PropTypes.number.isRequired
 };
 
-Post.getInitialProps = async context => {
+Post.getInitialProps = async (context) => {
   const {postId} = context.query;
 
   context.store.dispatch({

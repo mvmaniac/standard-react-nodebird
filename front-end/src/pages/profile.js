@@ -20,8 +20,8 @@ const Profile = () => {
     followings,
     hasMoreFollowings,
     hasMoreFollowers
-  } = useSelector(state => state.userReducer);
-  const {mainPosts} = useSelector(state => state.postReducer);
+  } = useSelector((state) => state.userReducer);
+  const {mainPosts} = useSelector((state) => state.postReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const Profile = () => {
   }, [me && me.id]);
 
   const onUnFollow = useCallback(
-    userId => () => {
+    (userId) => () => {
       dispatch({
         type: UN_FOLLOW_USER_REQUEST,
         data: {userId}
@@ -71,7 +71,7 @@ const Profile = () => {
   );
 
   const onRemoveFollower = useCallback(
-    userId => () => {
+    (userId) => () => {
       dispatch({
         type: REMOVE_FOLLOWER_REQUEST,
         data: {userId}
@@ -116,7 +116,7 @@ const Profile = () => {
         onClickRemove={onRemoveFollower}
       />
       <div>
-        {mainPosts.map(post => (
+        {mainPosts.map((post) => (
           <PostCard key={post.id} post={post} />
         ))}
       </div>
@@ -124,7 +124,7 @@ const Profile = () => {
   );
 };
 
-Profile.getInitialProps = async context => {
+Profile.getInitialProps = async (context) => {
   const {store} = context;
   const user = store.getState().userReducer;
 

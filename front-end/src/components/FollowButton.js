@@ -6,13 +6,13 @@ import {Button} from 'antd';
 import {FOLLOW_USER_REQUEST, UN_FOLLOW_USER_REQUEST} from '../reducers/user';
 
 const FollowButton = ({post}) => {
-  const {me} = useSelector(state => state.userReducer);
+  const {me} = useSelector((state) => state.userReducer);
 
   const postUserId = post.user.id;
   const dispatch = useDispatch();
 
   const onFollow = useCallback(
-    userId => () => {
+    (userId) => () => {
       dispatch({
         type: FOLLOW_USER_REQUEST,
         data: {userId}
@@ -22,7 +22,7 @@ const FollowButton = ({post}) => {
   );
 
   const onUnFollow = useCallback(
-    userId => () => {
+    (userId) => () => {
       dispatch({
         type: UN_FOLLOW_USER_REQUEST,
         data: {userId}
@@ -35,7 +35,7 @@ const FollowButton = ({post}) => {
     return null;
   }
 
-  return me.followings.find(follow => follow.id === postUserId) ? (
+  return me.followings.find((follow) => follow.id === postUserId) ? (
     <Button onClick={onUnFollow(postUserId)} title="언팔로우">
       언팔로우
     </Button>

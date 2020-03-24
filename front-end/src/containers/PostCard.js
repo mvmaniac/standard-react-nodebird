@@ -28,16 +28,16 @@ const CardWrapper = styled.div`
 const PostCard = memo(({post}) => {
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const meId = useSelector(
-    state => state.userReducer.me && state.userReducer.me.id
+    (state) => state.userReducer.me && state.userReducer.me.id
   );
 
   const dispatch = useDispatch();
 
   const isLiked =
-    meId && post.likers && post.likers.find(liker => liker.id === meId);
+    meId && post.likers && post.likers.find((liker) => liker.id === meId);
 
   const onToggleComment = useCallback(() => {
-    setCommentFormOpened(prev => !prev);
+    setCommentFormOpened((prev) => !prev);
 
     if (!commentFormOpened) {
       dispatch({
@@ -86,7 +86,7 @@ const PostCard = memo(({post}) => {
   }, [meId, post && post.id]);
 
   const onRemovePost = useCallback(
-    postId => () => {
+    (postId) => () => {
       dispatch({
         type: REMOVE_POST_REQUEST,
         data: {postId}
@@ -189,7 +189,7 @@ const PostCard = memo(({post}) => {
             header={`${post.comments ? post.comments.length : 0} 댓글`}
             itemLayout="horizontal"
             dataSource={post.comments || []}
-            renderItem={item => (
+            renderItem={(item) => (
               <li>
                 <Comment
                   author={item.user.nickname}

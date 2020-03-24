@@ -9,9 +9,9 @@ import LoginForm from '../containers/LoginForm';
 import UserProfile from '../containers/UserProfile';
 
 const AppLayout = ({children}) => {
-  const {me} = useSelector(state => state.userReducer);
+  const {me} = useSelector((state) => state.userReducer);
 
-  const onSearch = value => {
+  const onSearch = (value) => {
     Router.push(
       {pathname: '/hashtag', query: {tag: value}},
       `/hashtags/${value}`

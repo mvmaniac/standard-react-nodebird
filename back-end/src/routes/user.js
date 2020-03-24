@@ -104,7 +104,7 @@ router.post('/login', (req, res, next) => {
     }
 
     // 로그인-5. req.login을 할 때 passport.serializeUser가 실행됨
-    return req.login(user, async loginError => {
+    return req.login(user, async (loginError) => {
       try {
         if (loginError) {
           return next(loginError);

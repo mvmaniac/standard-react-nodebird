@@ -92,7 +92,7 @@ NodeBird.propTypes = {
 // next에서 추가된 라이프 사이클 getInitialProps
 // componentDidMount 보다 먼저 실행됨, 가장 최초에 작업이 실행됨
 // 서버 사이드 렌더링 할 때 중요함
-NodeBird.getInitialProps = async context => {
+NodeBird.getInitialProps = async (context) => {
   const {ctx, Component} = context;
   let pageProps = {};
 
@@ -121,7 +121,7 @@ NodeBird.getInitialProps = async context => {
 const configureStore = (initialState, options) => {
   // 미들웨어는 action과 store 사이에서 동작함
   const sagaMiddleware = createSagaMiddleWare();
-  const customLoggingMiddleware = store => next => action => {
+  const customLoggingMiddleware = (store) => (next) => (action) => {
     // console.log(action);
     next(action);
   };
@@ -136,7 +136,7 @@ const configureStore = (initialState, options) => {
         // Redux Devtools 사용하기 위해 추가
         !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
           ? window.__REDUX_DEVTOOLS_EXTENSION__()
-          : f => f
+          : (f) => f
       );
   const store = createStore(rootReducer, initialState, enhancer);
   store.sagaTask = sagaMiddleware.run(rootSaga); // 2. 루트 사가를 사가 미들웨어에 등록

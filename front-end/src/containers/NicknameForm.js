@@ -6,15 +6,15 @@ import {EDIT_NICKNAME_REQUEST} from '../reducers/user';
 
 const NicknameForm = () => {
   const [editedName, setEditedName] = useState('');
-  const {me, isEditingNickname} = useSelector(state => state.userReducer);
+  const {me, isEditingNickname} = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
 
-  const onChangeNickname = useCallback(evt => {
+  const onChangeNickname = useCallback((evt) => {
     setEditedName(evt.target.value);
   }, []);
 
   const onEditNickname = useCallback(
-    evt => {
+    (evt) => {
       evt.preventDefault();
       dispatch({
         type: EDIT_NICKNAME_REQUEST,

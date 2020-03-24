@@ -13,7 +13,7 @@ MyError.propTypes = {
   statusCode: PropTypes.number.isRequired
 };
 
-MyError.getInitialProps = async context => {
+MyError.getInitialProps = async (context) => {
   // const statusCode = context.res ? context.res.statusCode : context.err ? context.err.statusCode : null;
   const statusCode = context.res?.statusCode ?? context.err?.statusCode ?? null;
   return {statusCode};

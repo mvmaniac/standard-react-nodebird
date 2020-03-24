@@ -106,7 +106,7 @@ export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
 export const CLEAR_POSTS = 'CLEAR_POSTS';
 
 const postReducer = (state = initialState, action) => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     switch (action.type) {
       case LOAD_POST_SUCCESS: {
         const draft = draftState;
@@ -152,7 +152,7 @@ const postReducer = (state = initialState, action) => {
       case LOAD_HASHTAG_POSTS_SUCCESS:
       case LOAD_USER_POSTS_SUCCESS: {
         const draft = draftState;
-        action.data.forEach(data => draft.mainPosts.push(data));
+        action.data.forEach((data) => draft.mainPosts.push(data));
         draft.hasMorePost = action.data.length === 10;
         break;
       }
@@ -172,7 +172,7 @@ const postReducer = (state = initialState, action) => {
       case ADD_COMMENT_SUCCESS: {
         const draft = draftState;
         const postIndex = draft.mainPosts.findIndex(
-          post => post.id === action.data.postId
+          (post) => post.id === action.data.postId
         );
         draft.isAddingComment = false;
         draft.isAddedComment = true;
@@ -189,7 +189,7 @@ const postReducer = (state = initialState, action) => {
       case LOAD_COMMENTS_SUCCESS: {
         const draft = draftState;
         const postIndex = draft.mainPosts.findIndex(
-          post => post.id === action.data.postId
+          (post) => post.id === action.data.postId
         );
         draft.mainPosts[postIndex].comments = action.data.comments;
         break;
@@ -202,7 +202,7 @@ const postReducer = (state = initialState, action) => {
         break;
       }
       case UPLOAD_IMAGES_SUCCESS: {
-        action.data.forEach(p => draftState.imagePaths.push(p));
+        action.data.forEach((p) => draftState.imagePaths.push(p));
         break;
       }
       case UPLOAD_IMAGES_FAILURE: {
@@ -222,7 +222,7 @@ const postReducer = (state = initialState, action) => {
       case LIKE_POST_SUCCESS: {
         const draft = draftState;
         const postIndex = draft.mainPosts.findIndex(
-          post => post.id === action.data.postId
+          (post) => post.id === action.data.postId
         );
         draft.mainPosts[postIndex].likers.unshift({id: action.data.userId});
         break;
@@ -237,10 +237,10 @@ const postReducer = (state = initialState, action) => {
       case UNLIKE_POST_SUCCESS: {
         const draft = draftState;
         const postIndex = draft.mainPosts.findIndex(
-          post => post.id === action.data.postId
+          (post) => post.id === action.data.postId
         );
         const likeIndex = draft.mainPosts[postIndex].likers.findIndex(
-          liker => liker.id !== action.data.userId
+          (liker) => liker.id !== action.data.userId
         );
         draft.mainPosts[postIndex].likers.splice(likeIndex, 1);
         break;
@@ -265,7 +265,7 @@ const postReducer = (state = initialState, action) => {
       }
       case REMOVE_POST_SUCCESS: {
         const index = draftState.mainPosts.findIndex(
-          post => post.id === action.data
+          (post) => post.id === action.data
         );
         draftState.mainPosts.splice(index, 1);
         break;

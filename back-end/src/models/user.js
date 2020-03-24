@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  User.associate = db => {
+  User.associate = (db) => {
     // one to many? 읽기전용?
     db.User.hasMany(db.Post, {as: 'posts'});
     db.User.hasMany(db.Comment);

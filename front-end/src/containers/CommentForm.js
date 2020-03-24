@@ -8,9 +8,9 @@ import {ADD_COMMENT_REQUEST} from '../reducers/post';
 const CommentForm = ({post}) => {
   const [commentText, setCommentText] = useState('');
 
-  const {me} = useSelector(state => state.userReducer);
+  const {me} = useSelector((state) => state.userReducer);
   const {isAddingComment, isAddedComment} = useSelector(
-    state => state.postReducer
+    (state) => state.postReducer
   );
 
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ const CommentForm = ({post}) => {
   }, [isAddedComment === true]);
 
   const onSubmitCommentForm = useCallback(
-    evt => {
+    (evt) => {
       evt.preventDefault();
 
       if (!me) {
@@ -39,7 +39,7 @@ const CommentForm = ({post}) => {
     [me && me.id, commentText]
   );
 
-  const onChangeComment = useCallback(evt => {
+  const onChangeComment = useCallback((evt) => {
     setCommentText(evt.target.value);
   }, []);
 

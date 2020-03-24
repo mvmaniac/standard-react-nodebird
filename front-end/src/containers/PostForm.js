@@ -14,7 +14,7 @@ const PostForm = () => {
 
   const dispatch = useDispatch();
   const {imagePaths, isAddingPost, isAddedPost} = useSelector(
-    state => state.postReducer
+    (state) => state.postReducer
   );
 
   const imageInput = useRef();
@@ -24,7 +24,7 @@ const PostForm = () => {
   }, [isAddedPost === true]);
 
   const onSubmitForm = useCallback(
-    evt => {
+    (evt) => {
       evt.preventDefault();
 
       if (!content || !content.trim()) {
@@ -34,7 +34,7 @@ const PostForm = () => {
 
       const formData = new FormData();
 
-      imagePaths.forEach(i => {
+      imagePaths.forEach((i) => {
         formData.append('image', i);
       });
 
@@ -48,16 +48,16 @@ const PostForm = () => {
     [content, imagePaths]
   );
 
-  const onChangeContent = useCallback(evt => {
+  const onChangeContent = useCallback((evt) => {
     setContent(evt.target.value);
   }, []);
 
-  const onChangeImage = useCallback(evt => {
+  const onChangeImage = useCallback((evt) => {
     console.log(evt.target.files);
 
     const imageFormData = new FormData();
 
-    [].forEach.call(evt.target.files, file => {
+    [].forEach.call(evt.target.files, (file) => {
       imageFormData.append('images', file);
     });
 
@@ -72,7 +72,7 @@ const PostForm = () => {
   }, [imageInput.current]);
 
   const onRemoveImage = useCallback(
-    index => () => {
+    (index) => () => {
       dispatch({
         type: REMOVE_IMAGE,
         data: {index}

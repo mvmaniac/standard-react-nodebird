@@ -130,7 +130,7 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
 
     if (hashtags) {
       const result = await Promise.all(
-        hashtags.map(tag =>
+        hashtags.map((tag) =>
           db.Hashtag.findOrCreate({
             where: {
               name: tag.slice(1).toLowerCase()
@@ -141,14 +141,14 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
 
       console.log(result);
 
-      await savedPost.addHashtags(result.map(r => r[0]));
+      await savedPost.addHashtags(result.map((r) => r[0]));
     }
 
     // 이미지 주소 처리
     if (req.body.image) {
       if (Array.isArray(req.body.image)) {
         const images = await Promise.all(
-          req.body.image.map(image =>
+          req.body.image.map((image) =>
             db.Image.create({
               src: image,
               postId: savedPost.id
@@ -275,7 +275,7 @@ router.post('/:id/comments', isLoggedIn, async (req, res, next) => {
 router.post('/images', upload.array('images'), (req, res) => {
   // upload.single, upload.array, upload.fields 등등
   return res.json(
-    req.files.map(file => (config.isProd ? file.location : file.filename))
+    req.files.map((file) => (config.isProd ? file.location : file.filename))
   );
 });
 

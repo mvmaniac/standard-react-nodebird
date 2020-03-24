@@ -7,7 +7,7 @@ import {ServerStyleSheet} from 'styled-components';
 class MyDocument extends Document {
   static getInitialProps(context) {
     const sheet = new ServerStyleSheet();
-    const page = context.renderPage(App => props =>
+    const page = context.renderPage((App) => (props) =>
       sheet.collectStyles(<App {...props} />)
     );
     const styleTags = sheet.getStyleElement(); // 순서가 중요함 sheet -> sheet.collectStyles -> sheet.getStyleElement
@@ -24,7 +24,7 @@ class MyDocument extends Document {
       <html {...htmlAttrs}>
         <head>
           {this.props.styleTags}
-          {Object.values(helmet).map(el => el.toComponent())}
+          {Object.values(helmet).map((el) => el.toComponent())}
         </head>
         <body {...bodyAttrs}>
           <Main />

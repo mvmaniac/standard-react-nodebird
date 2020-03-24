@@ -82,7 +82,7 @@ export const CLEAR_FOLLOWS = 'CLEAR_FOLLOWS';
 // dispatch (Action을 실행, 다른 js 파일에서 쓰임)
 // reducer (Action 결과로 state를 어떻게 바꿀지 정의)
 const userReducer = (state = initialState, action) => {
-  return produce(state, draftState => {
+  return produce(state, (draftState) => {
     switch (action.type) {
       case LOG_IN_REQUEST: {
         // state 변경으로 렌더링이 되기 때문에
@@ -185,12 +185,12 @@ const userReducer = (state = initialState, action) => {
       }
       case UN_FOLLOW_USER_SUCCESS: {
         let index = draftState.me.followings.findIndex(
-          following => following.id === action.data
+          (following) => following.id === action.data
         );
         draftState.me.followings.splice(index, 1);
 
         index = draftState.followings.findIndex(
-          following => following.id === action.data
+          (following) => following.id === action.data
         );
         draftState.followings.splice(index, 1);
         break;
@@ -206,7 +206,7 @@ const userReducer = (state = initialState, action) => {
 
       case REMOVE_POST_OF_ME: {
         const index = draftState.me.posts.findIndex(
-          post => post.id === action.data
+          (post) => post.id === action.data
         );
         draftState.me.posts.splice(index, 1);
         break;
@@ -222,7 +222,7 @@ const userReducer = (state = initialState, action) => {
       }
       case LOAD_FOLLOWINGS_SUCCESS: {
         const draft = draftState;
-        action.data.forEach(data => draft.followings.push(data));
+        action.data.forEach((data) => draft.followings.push(data));
         draft.hasMoreFollowings = action.data.length === 3;
         break;
       }
@@ -240,7 +240,7 @@ const userReducer = (state = initialState, action) => {
       }
       case LOAD_FOLLOWERS_SUCCESS: {
         const draft = draftState;
-        action.data.forEach(data => draft.followers.push(data));
+        action.data.forEach((data) => draft.followers.push(data));
         draft.hasMoreFollowers = action.data.length === 3;
         break;
       }
@@ -253,12 +253,12 @@ const userReducer = (state = initialState, action) => {
       }
       case REMOVE_FOLLOWER_SUCCESS: {
         let index = draftState.me.followers.findIndex(
-          following => following.id === action.data
+          (following) => following.id === action.data
         );
         draftState.me.followers.splice(index, 1);
 
         index = draftState.followers.findIndex(
-          following => following.id === action.data
+          (following) => following.id === action.data
         );
         draftState.followers.splice(index, 1);
         break;

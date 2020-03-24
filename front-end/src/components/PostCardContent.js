@@ -5,7 +5,7 @@ import Link from 'next/link';
 const PostCardContent = ({postContent}) => {
   return (
     <div>
-      {postContent.split(/(#[^\s]+)/g).map(v => {
+      {postContent.split(/(#[^\s]+)/g).map((v) => {
         if (v.match(/#[^\s]+/)) {
           return (
             <Link

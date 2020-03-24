@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  Post.associate = db => {
+  Post.associate = (db) => {
     // many to one + 연관관계 주인?
     db.Post.belongsTo(db.User); // 테이블에 UserId 컬럼이 생김
 

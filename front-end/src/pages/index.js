@@ -12,8 +12,8 @@ const Home = () => {
   // state 변경 시 리랜더링 때문에 아래처럼 최대한 잘게 쪼개서 가져올 필요가 있을 수 있음
   // const me = useSelector(state => state.userReducer.me);
   // const user = useSelector(state => state.userReducer.user);
-  const {me} = useSelector(state => state.userReducer);
-  const {mainPosts, hasMorePost} = useSelector(state => state.postReducer);
+  const {me} = useSelector((state) => state.userReducer);
+  const {mainPosts, hasMorePost} = useSelector((state) => state.postReducer);
   const dispatch = useDispatch();
   const countRef = useRef([]);
 
@@ -52,14 +52,14 @@ const Home = () => {
   return (
     <div>
       {me && <PostForm />}
-      {mainPosts.map(post => {
+      {mainPosts.map((post) => {
         return <PostCard key={post.id} post={post} />;
       })}
     </div>
   );
 };
 
-Home.getInitialProps = async context => {
+Home.getInitialProps = async (context) => {
   context.store.dispatch({
     type: LOAD_MAIN_POSTS_REQUEST
   });

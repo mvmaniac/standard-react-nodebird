@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {LOG_OUT_REQUEST} from '../reducers/user';
 
 const UserProfile = () => {
-  const {me} = useSelector(state => state.userReducer);
+  const {me} = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
 
   const onLogout = useCallback(() => {

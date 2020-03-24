@@ -11,7 +11,7 @@ database.Image = require('./image')(sequelize, Sequelize);
 database.Post = require('./post')(sequelize, Sequelize);
 database.User = require('./user')(sequelize, Sequelize);
 
-Object.keys(database).forEach(modelName => {
+Object.keys(database).forEach((modelName) => {
   if (database[modelName].associate) {
     database[modelName].associate(database);
   }

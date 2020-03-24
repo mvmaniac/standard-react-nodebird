@@ -9,7 +9,7 @@ import {
 import PostCard from '../containers/PostCard';
 
 const Hashtag = ({tag}) => {
-  const {mainPosts, hasMorePost} = useSelector(state => state.postReducer);
+  const {mainPosts, hasMorePost} = useSelector((state) => state.postReducer);
   const dispatch = useDispatch();
   const countRef = useRef([]);
 
@@ -47,7 +47,7 @@ const Hashtag = ({tag}) => {
 
   return (
     <div style={{marginTop: '10px'}}>
-      {mainPosts.map(post => (
+      {mainPosts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
     </div>
@@ -59,7 +59,7 @@ Hashtag.propTypes = {
 };
 
 // _app.js에서 NodeBird.getInitialProps에서 가져온 ctx 값이 넘어옴
-Hashtag.getInitialProps = async context => {
+Hashtag.getInitialProps = async (context) => {
   const {tag} = context.query;
 
   console.log('hashtag getInitialProps: %s', tag);

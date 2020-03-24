@@ -32,7 +32,7 @@ const SignUp = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
 
-  const {isSigningUp, me} = useSelector(state => state.userReducer);
+  const {isSigningUp, me} = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const SignUp = () => {
   }, [me && me.userId]); // 객체 말고 기본값으로 하는게 편함
 
   const onSubmit = useCallback(
-    evt => {
+    (evt) => {
       evt.preventDefault();
 
       if (password !== passwordCheck) {
@@ -69,20 +69,20 @@ const SignUp = () => {
     [userId, nickname, password, passwordCheck, term]
   );
 
-  const onChangeUserId = useCallback(evt => {
+  const onChangeUserId = useCallback((evt) => {
     setUserId(evt.target.value);
   }, []);
 
-  const onChangeNickname = useCallback(evt => {
+  const onChangeNickname = useCallback((evt) => {
     setNickname(evt.target.value);
   }, []);
 
-  const onChangePassword = useCallback(evt => {
+  const onChangePassword = useCallback((evt) => {
     setPassword(evt.target.value);
   }, []);
 
   const onChangePasswordCheck = useCallback(
-    evt => {
+    (evt) => {
       const {value} = evt.target;
       setPasswordError(value !== password);
       setPasswordCheck(value);
@@ -90,7 +90,7 @@ const SignUp = () => {
     [password]
   );
 
-  const onChangeTerm = useCallback(evt => {
+  const onChangeTerm = useCallback((evt) => {
     setTermError(false);
     setTerm(evt.target.checked);
   }, []);

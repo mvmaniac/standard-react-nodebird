@@ -23,7 +23,7 @@ const UserFollow = memo(
         }
         bordered
         dataSource={data}
-        renderItem={item => (
+        renderItem={(item) => (
           <List.Item style={{marginTop: '20px'}}>
             <Card
               actions={[<Icon type="stop" />]}

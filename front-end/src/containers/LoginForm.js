@@ -27,7 +27,7 @@ const LoginForm = () => {
   // custom hook 를 만들어서 사용할 수 있음
   const useInput = (initValue = null) => {
     const [value, setter] = useState(initValue);
-    const handler = useCallback(evt => setter(evt.target.value), []);
+    const handler = useCallback((evt) => setter(evt.target.value), []);
     return [value, handler];
   };
 
@@ -35,12 +35,12 @@ const LoginForm = () => {
   const [password, onChangePassword] = useInput('');
 
   const {isLoggingIn, loginErrorReason} = useSelector(
-    state => state.userReducer
+    (state) => state.userReducer
   );
   const dispatch = useDispatch();
 
   const onSubmitForm = useCallback(
-    evt => {
+    (evt) => {
       evt.preventDefault();
       dispatch({
         type: LOG_IN_REQUEST,
