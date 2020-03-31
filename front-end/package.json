@@ -21,7 +21,7 @@
     "express-session": "^1.17.0",
     "immer": "^6.0.2",
     "morgan": "^1.10.0",
-    "next": "^9.3.1",
+    "next": "^9.3.2",
     "next-redux-saga": "^4.1.2",
     "next-redux-wrapper": "^5.0.0",
     "pm2": "^4.2.3",
