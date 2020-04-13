@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
-import Helmet from 'react-helmet';
+import {Helmet} from 'react-helmet';
 
 import {FRONT_END_URL, IMAGE_URL} from '../config/config';
 import {LOAD_POST_REQUEST} from '../reducers/post';

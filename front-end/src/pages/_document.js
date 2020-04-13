@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
+import {Helmet} from 'react-helmet';
 import Document, {Main, NextScript} from 'next/document';
 import {ServerStyleSheet} from 'styled-components';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
+import {Helmet} from 'react-helmet';
 import {applyMiddleware, compose, createStore} from 'redux';
 import createSagaMiddleWare from 'redux-saga';
 import {Provider} from 'react-redux';
@@ -134,7 +134,8 @@ const configureStore = (initialState, options) => {
         // 미들웨어 적용
         applyMiddleware(...middleWares),
         // Redux Devtools 사용하기 위해 추가
-        !options.isServer && window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
+        !options.isServer &&
+          typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
           ? window.__REDUX_DEVTOOLS_EXTENSION__()
           : (f) => f
       );

@@ -1,6 +1,6 @@
 # Standard React NodeBird
 
-### 1. React로 NodeBird SNS 만들기 강의의 실습 예제 기반
+### 1. React로 NodeBird SNS 만들기 강의 실습 예제 기반
 
 * [React로 NodeBird SNS 만들기](https://www.inflearn.com/course/react_nodebird "React로 NodeBird SNS 만들기") 참고
 
