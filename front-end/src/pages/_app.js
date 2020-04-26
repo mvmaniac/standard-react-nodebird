@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {Helmet} from 'react-helmet';
 import {applyMiddleware, compose, createStore} from 'redux';
 import createSagaMiddleWare from 'redux-saga';
+import {composeWithDevTools} from 'redux-devtools-extension';
 import {Provider} from 'react-redux';
 import withRedux from 'next-redux-wrapper';
 import withReduxSaga from 'next-redux-saga';
@@ -130,15 +131,8 @@ const configureStore = (initialState, options) => {
 
   const enhancer = IS_PROD
     ? compose(applyMiddleware(...middleWares))
-    : compose(
-        // 미들웨어 적용
-        applyMiddleware(...middleWares),
-        // Redux Devtools 사용하기 위해 추가
-        !options.isServer &&
-          typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== 'undefined'
-          ? window.__REDUX_DEVTOOLS_EXTENSION__()
-          : (f) => f
-      );
+    : composeWithDevTools(applyMiddleware(...middleWares));
+
   const store = createStore(rootReducer, initialState, enhancer);
   store.sagaTask = sagaMiddleware.run(rootSaga); // 2. 루트 사가를 사가 미들웨어에 등록
   return store;

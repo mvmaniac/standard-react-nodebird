@@ -29,6 +29,7 @@
     ``` javascript
     npm i react react-dom
     npm i prop-types
+    npm i react-redux redux-devtools-extension
     ```
 
 * redux
