@@ -19,6 +19,7 @@
 * `db.Post.findOne`으로 게시글 체크 중복코드를 미들웨어로 적용
 * loadUserPostsAPI 에도 인피니트스크롤링 적용
 * https 적용
+* MySQL 8.x 변경
 
 ### 4. Setting
 
@@ -236,7 +237,7 @@
 
 * 필요한 패키지 설치  
     amazon-linux  
-    ```amazon-linux-extras install -y epel```  
+    ```amazon-linux-extras install -y **epel**```  
     ```yum install -y git```  
     or  
     ```yum groupinstall 'Development Tools'```
@@ -258,6 +259,61 @@
 
 * PM2 설치 (명령어를 전역으로 쓰는 용도임)  
     ```npm i -g pm2```
+
+#### 4-6. aws
+
+* EC2  
+보안그룹 명칭은 'react-node-bird-server', 인바운드 규칙은 80, 22, 433  
+외부접속은 내 IP만 가능하게 할 수 있음
+
+* Route 53  
+탄력적 IP는 비용이 발생하므로 번거롭지만 EC2 IP가 변경 될 때마다 IP 설정 필요  
+유료 도메인 구매 후 해당 사이트에서 AWS 에서 제공한 DNS로 변경해야함  
+변경 후 다시 AWS 에서 EC2 연결하고 해당 도메인으로 접속하는데 최초는 오래 걸리는 듯? (2 ~ 3일?)  
+아니면 상황에 따라 다를 수 있음.
+
+* RDS (MySQL 5.x)  
+중지 시켜도 비용이 발생하므로 안쓰면 삭제 해야 함  
+퍼블릭 액세스 가능성을 '예'  
+보안그룹 명칭은 'react-node-bird-db', 인바운드 규칙은 3306  
+파라미터 그룹 명칭은 'react-node-bird', 아래 처럼 파라미터 변경
+
+    아래 목록은 'utf8mb4'  
+    character_set_client  
+    character_set_connection  
+    character_set_database  
+    character_set_filesystem  
+    character_set_results  
+    character_set_server  
+  
+    아래 목록은 'utf8mb4_general_ci'  
+    collation_connection  
+    collation_server  
+
+* S3  
+버킷정책을 퍼블릭으로 함
+
+    ``` javascript
+    {
+        "Version": "2012-10-17",
+        "Id": "PolicyXXXXXXXXXXXXXX",
+        "Statement": [
+            {
+                "Sid": "StmtXXXXXXXXXXXXXX",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": [
+                    "s3:GetObject",
+                    "s3:PutObject"
+                ],
+                "Resource": "arn:aws:s3:::S3명칭/*"
+            }
+        ]
+    }
+    ```
+
+* Lambda & Cloud9  
+람다 배포는 Cloud9 를 통해서 올림
 
 ### 5. etc
 
