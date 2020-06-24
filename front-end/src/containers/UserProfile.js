@@ -21,7 +21,7 @@ const UserProfile = () => {
       actions={[
         <Link href="/profile" key="twit">
           <div>
-            쨱짹
+            짹짹
             <br />
             {me.posts && me.posts.length}
           </div>

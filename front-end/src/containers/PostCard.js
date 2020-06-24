@@ -1,7 +1,14 @@
 import React, {useState, useCallback, memo} from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import {Button, Card, Icon, Avatar, List, Comment, Popover} from 'antd';
+import {Button, Card, Avatar, List, Comment, Popover} from 'antd';
+import {
+  RetweetOutlined,
+  HeartOutlined,
+  HeartTwoTone,
+  MessageOutlined,
+  EllipsisOutlined
+} from '@ant-design/icons';
 import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
 
@@ -54,7 +61,6 @@ const PostCard = memo(({post}) => {
     }
 
     if (isLiked) {
-      // 좋아요 누른 상태
       dispatch({
         type: UNLIKE_POST_REQUEST,
         data: {
@@ -95,20 +101,20 @@ const PostCard = memo(({post}) => {
     []
   );
 
+  const heartIcon = isLiked ? (
+    <HeartTwoTone onClick={onToggleLike} twoToneColor="#eb2f96" />
+  ) : (
+    <HeartOutlined onClick={onToggleLike} twoToneColor="#eb2f96" />
+  );
+
   return (
     <CardWrapper>
       <Card
         cover={post.images.length && <PostImages images={post.images} />}
         actions={[
-          <Icon key="retweet" type="retweet" onClick={onRetweet} />,
-          <Icon
-            key="heart"
-            type="heart"
-            theme={isLiked ? 'twoTone' : 'outlined'}
-            twoToneColor="#eb2f96"
-            onClick={onToggleLike}
-          />,
-          <Icon key="message" type="message" onClick={onToggleComment} />,
+          <RetweetOutlined key="retweet" type="retweet" onClick={onRetweet} />,
+          heartIcon,
+          <MessageOutlined key="message" onClick={onToggleComment} />,
           <Popover
             key="ellipsis"
             content={
@@ -126,7 +132,7 @@ const PostCard = memo(({post}) => {
               </Button.Group>
             }
           >
-            <Icon type="ellipsis" />
+            <EllipsisOutlined />
           </Popover>
         ]}
         title={

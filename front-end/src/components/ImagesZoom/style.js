@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {Icon} from 'antd';
+import {CloseOutlined} from '@ant-design/icons';
 
 // tagged templates 방식으로 백틱(`)으로 함수 호출함
 // styled.div도 함수임
@@ -32,7 +32,7 @@ export const SlickWrapper = styled.div`
   background: #090909;
 `;
 
-export const CloseBtn = styled(Icon)`
+export const CloseBtn = styled(CloseOutlined)`
   position: absolute;
   right: 0;
   top: 0;

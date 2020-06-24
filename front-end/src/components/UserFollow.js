@@ -1,13 +1,14 @@
 import React, {memo} from 'react';
 import PropTypes from 'prop-types';
-import {List, Button, Card, Icon} from 'antd';
+import {List, Button, Card} from 'antd';
+import {StopOutlined} from '@ant-design/icons';
 
 const UserFollow = memo(
   ({header, hasMore, data, onClickMore, onClickRemove}) => {
     return (
       <List
         style={{marginBottom: '20px'}}
-        grid={{gutter: 4, xs: 2, md: 3}}
+        grid={{gutter: 16, xs: 2, md: 3}}
         size="small"
         header={<div>{header}</div>}
         loadMore={
@@ -25,10 +26,7 @@ const UserFollow = memo(
         dataSource={data}
         renderItem={(item) => (
           <List.Item style={{marginTop: '20px'}}>
-            <Card
-              actions={[<Icon type="stop" />]}
-              onClick={onClickRemove(item.id)}
-            >
+            <Card actions={[<StopOutlined />]} onClick={onClickRemove(item.id)}>
               <Card.Meta description={item.nickname} />
             </Card>
           </List.Item>

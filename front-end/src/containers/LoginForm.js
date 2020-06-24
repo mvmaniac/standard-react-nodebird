@@ -39,22 +39,18 @@ const LoginForm = () => {
   );
   const dispatch = useDispatch();
 
-  const onSubmitForm = useCallback(
-    (evt) => {
-      evt.preventDefault();
-      dispatch({
-        type: LOG_IN_REQUEST,
-        data: {
-          userId,
-          password
-        }
-      });
-    },
-    [userId, password]
-  );
+  const onFinishForm = useCallback(() => {
+    dispatch({
+      type: LOG_IN_REQUEST,
+      data: {
+        userId,
+        password
+      }
+    });
+  }, [userId, password]);
 
   return (
-    <LoginFormAntd onSubmit={onSubmitForm}>
+    <LoginFormAntd onFinish={onFinishForm}>
       <div>
         <label htmlFor="login-userId">아이디</label>
         <Input

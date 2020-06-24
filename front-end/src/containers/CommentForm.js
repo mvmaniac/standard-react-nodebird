@@ -19,32 +19,27 @@ const CommentForm = ({post}) => {
     setCommentText('');
   }, [isAddedComment === true]);
 
-  const onSubmitCommentForm = useCallback(
-    (evt) => {
-      evt.preventDefault();
+  const onFinishCommentForm = useCallback(() => {
+    if (!me) {
+      alert('로그인이 필요합니다');
+      return;
+    }
 
-      if (!me) {
-        alert('로그인이 필요합니다');
-        return;
+    dispatch({
+      type: ADD_COMMENT_REQUEST,
+      data: {
+        postId: post.id,
+        content: commentText
       }
-
-      dispatch({
-        type: ADD_COMMENT_REQUEST,
-        data: {
-          postId: post.id,
-          content: commentText
-        }
-      });
-    },
-    [me && me.id, commentText]
-  );
+    });
+  }, [me && me.id, commentText]);
 
   const onChangeComment = useCallback((evt) => {
     setCommentText(evt.target.value);
   }, []);
 
   return (
-    <Form onSubmit={onSubmitCommentForm}>
+    <Form onFinish={onFinishCommentForm}>
       <Form.Item>
         <Input.TextArea
           row={4}

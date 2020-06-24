@@ -23,30 +23,25 @@ const PostForm = () => {
     setContent('');
   }, [isAddedPost === true]);
 
-  const onSubmitForm = useCallback(
-    (evt) => {
-      evt.preventDefault();
+  const onFinishForm = useCallback(() => {
+    if (!content || !content.trim()) {
+      alert('게시글을 작성하세요.');
+      return;
+    }
 
-      if (!content || !content.trim()) {
-        alert('게시글을 작성하세요.');
-        return;
-      }
+    const formData = new FormData();
 
-      const formData = new FormData();
+    imagePaths.forEach((i) => {
+      formData.append('image', i);
+    });
 
-      imagePaths.forEach((i) => {
-        formData.append('image', i);
-      });
+    formData.append('content', content);
 
-      formData.append('content', content);
-
-      dispatch({
-        type: ADD_POST_REQUEST,
-        data: formData
-      });
-    },
-    [content, imagePaths]
-  );
+    dispatch({
+      type: ADD_POST_REQUEST,
+      data: formData
+    });
+  }, [content, imagePaths]);
 
   const onChangeContent = useCallback((evt) => {
     setContent(evt.target.value);
@@ -85,7 +80,7 @@ const PostForm = () => {
     <Form
       encType="multipart/form-data"
       style={{margin: '10px 0 20px'}}
-      onSubmit={onSubmitForm}
+      onFinish={onFinishForm}
     >
       <Input.TextArea
         maxLength={140}
