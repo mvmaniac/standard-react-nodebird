@@ -2,13 +2,9 @@
   "env": {
     "browser": true,
     "node": true,
-    "es2020": true
+    "es2021": true
   },
-  "extends": [
-    "airbnb",
-    "plugin:prettier/recommended",
-    "prettier/react"
-  ],
+  "extends": ["airbnb", "airbnb/hooks", "prettier", "prettier/react"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
@@ -18,58 +14,11 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 2020,
+    "ecmaVersion": 2021,
     "sourceType": "module"
   },
-  "plugins": [
-    "import",
-    "jsx-a11y",
-    "react",
-    "react-hooks",
-    "prettier"
-  ],
+  "plugins": ["react", "react-hooks", "jsx-a11y", "import"],
   "rules": {
-    "prettier/prettier": ["error"],
-
-    // "space-before-function-paren": [
-    //   "error",
-    //   {
-    //     "anonymous": "always",
-    //     "named": "always",
-    //     "asyncArrow": "always"
-    //   }
-    // ],
-    
-    "no-unused-vars": ["warn"],
-    "no-underscore-dangle": ["warn"],
-
-    // Restrict file extensions that may contain JSX
-    // next.js 는 jsx 보다는 js 를 쓰는것 같다고 함, eslint 설정 js 도 허용하게끔 설정 함
-    "react/jsx-filename-extension": [
-      "warn",
-      {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
-      }
-    ],
-    
-    "react/jsx-props-no-spreading": [
-      "warn",
-      {
-        "html": "ignore"
-      }
-    ],
-
-    // prop-types 으로 해결함
-    // Prevent missing props validation in a React component definition
-    //"react/prop-types": ["off"]
-
-    "jsx-a11y/click-events-have-key-events": ["off"],
-
-    "jsx-a11y/no-noninteractive-element-interactions": ["off"],
-
-    "jsx-a11y/html-has-lang": ["off"]
+    "react/jsx-filename-extension": ["warn", {"extensions": [".js", ".jsx"]}]
   }
 }
