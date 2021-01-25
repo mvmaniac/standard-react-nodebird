@@ -1,8 +1,0 @@
-{
-  "watch": [
-    "src/server.js",
-    "nodemon.json"
-  ],
-  "exec": "node src/server.js",
-  "ext": "js json jsx"
-}
