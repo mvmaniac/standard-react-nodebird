@@ -1,24 +1,31 @@
 import React, {useCallback} from 'react';
-import PropTypes from 'prop-types';
+import {useDispatch} from 'react-redux';
 import Link from 'next/link';
 import {Button, Form, Input} from 'antd';
 import styled from 'styled-components';
 
 import useInput from '../hooks/useInput';
+import {loginAction} from '../reducers/user';
 
 const FormStyled = styled(Form)`
   margin: 10px 0 0 10px;
 `;
 
-const LoginForm = ({setIsLoggedIn}) => {
+const LoginForm = () => {
   const [id, onChangeId] = useInput('');
   const [password, onChangePassword] = useInput('');
 
+  const dispatch = useDispatch();
+
   // antd의 onFinish를 사용하는 경우 event.preventDefault를 안해줘도 됨
   const onSubmitForm = useCallback(() => {
-    console.log(id, password);
-    setIsLoggedIn(true);
-  }, [id, password, setIsLoggedIn]);
+    dispatch(
+      loginAction({
+        id,
+        password
+      })
+    );
+  }, [dispatch, id, password]);
 
   return (
     <FormStyled layout="vertical" onFinish={onSubmitForm}>
@@ -43,10 +50,6 @@ const LoginForm = ({setIsLoggedIn}) => {
       </Form.Item>
     </FormStyled>
   );
-};
-
-LoginForm.propTypes = {
-  setIsLoggedIn: PropTypes.func.isRequired
 };
 
 export default LoginForm;

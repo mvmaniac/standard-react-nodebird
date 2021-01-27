@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 
+import wrapper from '../store/configureStore';
+
 import 'antd/dist/antd.css';
 
 // pages들의 공통 부분 (_app.js, _app.jsx, _app.tsx 파일 확장자는 상관 없는듯?)
@@ -19,4 +21,4 @@ NodeBird.propTypes = {
   Component: PropTypes.elementType.isRequired
 };
 
-export default NodeBird;
+export default wrapper.withRedux(NodeBird);
