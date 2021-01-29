@@ -7,12 +7,12 @@ import styled from 'styled-components';
 const ListStyled = styled(List)`
   margin-bottom: 20px;
 
-  .btn-more {
+  .box-more {
     text-align: center;
     margin: 10px 0;
   }
 
-  .list-item {
+  .list-follow {
     margin-top: 20px;
   }
 `;
@@ -24,14 +24,14 @@ const FollowList = ({header, data}) => (
     size="small"
     header={<div>{header}</div>}
     loadMore={
-      <div className="btn-more">
+      <div className="box-more">
         <Button>더보기</Button>
       </div>
     }
     bordered
     dataSource={data}
     renderItem={(item) => (
-      <List.Item className="list-item">
+      <List.Item className="list-follow">
         <Card actions={[<StopOutlined key="stop" />]}>
           <Card.Meta description={item.nickname} />
         </Card>

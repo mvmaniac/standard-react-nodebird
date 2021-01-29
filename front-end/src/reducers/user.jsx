@@ -8,7 +8,7 @@ const dummyUser = {
 
 export const initialState = {
   isLoggedIn: false,
-  user: null,
+  my: null,
   signUpData: {},
   loginData: {}
 };
@@ -44,7 +44,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoggedIn: true,
-        user: dummyUser,
+        my: dummyUser,
         loginData: action.data
       };
     }
@@ -53,7 +53,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoggedIn: false,
-        user: null
+        my: null
       };
     }
 

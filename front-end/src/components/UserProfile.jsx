@@ -5,7 +5,7 @@ import Avatar from 'antd/lib/avatar/avatar';
 import {logoutAction} from '../reducers/user';
 
 const UserProfile = () => {
-  const user = useSelector((state) => state.user.user);
+  const my = useSelector((state) => state.user.my);
   const dispatch = useDispatch();
 
   const onLogout = useCallback(() => {
@@ -30,8 +30,8 @@ const UserProfile = () => {
       ]}
     >
       <Card.Meta
-        avatar={<Avatar>{user.nickname[0]}</Avatar>}
-        title={user.nickname}
+        avatar={<Avatar>{my.nickname[0]}</Avatar>}
+        title={my.nickname}
       />
       <Button onClick={onLogout}>로그아웃</Button>
     </Card>

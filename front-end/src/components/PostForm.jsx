@@ -6,18 +6,24 @@ import styled from 'styled-components';
 import {addPost} from '../reducers/post';
 
 const FormStyled = styled(Form)`
-  margin: 10px 0 20px;
+  margin: 0 0 20px;
 
-  .btn-submit {
-    float: right;
+  div.box-upload {
+    display: flex;
+
+    button[type='submit'] {
+      margin-left: auto;
+    }
   }
 
-  .image {
-    display: inline-block;
-  }
+  div.box-image {
+    .image {
+      display: inline-block;
 
-  .image > img {
-    width: 200px;
+      img {
+        width: 200px;
+      }
+    }
   }
 `;
 
@@ -42,39 +48,41 @@ const PostForm = () => {
     setText(e.target.value);
   }, []);
 
-  const onSubmit = useCallback(() => {
+  const onSubmitForm = useCallback(() => {
     dispatch(addPost);
   }, [dispatch]);
 
   return (
-    <FormStyled encType="multipart/form-data" onFinish={onSubmit}>
-      <Input.TextArea
-        value={text}
-        onChange={onChangeText}
-        maxLength={140}
-        placeholder="어떤 신기한 일이 있었나요?"
-      />
-      <div>
-        <input type="file" multiple hidden ref={imageInput} />
-        <Button onClick={onClickImageUpload}>이미지 업로드</Button>
-        <Button type="primary" htmlType="submit" className="btn-submit">
-          짹짹
-        </Button>
-      </div>
-      <div>
-        {imagePaths.map((v) => (
-          <div key={v} className="image">
-            <img
-              src={`http://localhost:3000/${v}`}
-              style={{width: '200px'}}
-              alt={v}
-            />
-            <div>
-              <Button>제거</Button>
+    <FormStyled encType="multipart/form-data" onFinish={onSubmitForm}>
+      <Form.Item>
+        <Input.TextArea
+          value={text}
+          onChange={onChangeText}
+          maxLength={140}
+          placeholder="어떤 신기한 일이 있었나요?"
+        />
+        <div className="box-upload">
+          <input t ype="file" multiple hidden ref={imageInput} />
+          <Button onClick={onClickImageUpload}>이미지 업로드</Button>
+          <Button type="primary" htmlType="submit">
+            짹짹
+          </Button>
+        </div>
+        <div className="box-image">
+          {imagePaths.map((v) => (
+            <div key={v} className="image">
+              <img
+                src={`http://localhost:3000/${v}`}
+                style={{width: '200px'}}
+                alt={v}
+              />
+              <div>
+                <Button>제거</Button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </Form.Item>
     </FormStyled>
   );
 };
