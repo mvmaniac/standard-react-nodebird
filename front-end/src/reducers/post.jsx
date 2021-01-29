@@ -17,7 +17,7 @@ export const initialState = {
         id: 1,
         nickname: '제로초'
       },
-      content: '첫 번째 게시글',
+      content: '첫 번째 게시글 #해시태그 #걸기 졸리군...',
       images: [
         {
           src:

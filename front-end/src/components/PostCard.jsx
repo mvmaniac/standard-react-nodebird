@@ -13,6 +13,7 @@ import {
 
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
+import PostCardContent from './PostCardContent';
 
 const CardStyled = styled(Card)`
   &:not(:first-child) {
@@ -74,7 +75,7 @@ const PostCard = ({post}) => {
         <Card.Meta
           avatar={<Avatar>{postUser.nickname[0]}</Avatar>}
           title={postUser.nickname}
-          description={post.content}
+          description={<PostCardContent postData={post.content} />}
         />
       </CardStyled>
       {isCommentOpened && (
