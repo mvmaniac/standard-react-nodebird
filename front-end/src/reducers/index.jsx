@@ -1,8 +1,8 @@
 import {HYDRATE} from 'next-redux-wrapper';
 import {combineReducers} from 'redux';
 
-import user from './user';
-import post from './post';
+import userReducer from './user';
+import postReducer from './post';
 
 const rootReducer = combineReducers({
   index: (state = {}, action) => {
@@ -14,8 +14,8 @@ const rootReducer = combineReducers({
         return state;
     }
   },
-  user,
-  post
+  user: userReducer,
+  post: postReducer
 });
 
 export default rootReducer;

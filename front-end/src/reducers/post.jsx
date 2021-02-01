@@ -10,6 +10,14 @@ const dummyPost = {
 };
 
 export const initialState = {
+  isAddPostLoading: false, // 포스트 등록 중
+  isAddPostDone: false,
+  addPostError: null,
+
+  isAddCommentLoading: false, // 포스트 댓글 등록 중
+  isAddCommentDone: false,
+  addCommentError: null,
+
   mainPosts: [
     {
       id: 1,
@@ -46,25 +54,71 @@ export const initialState = {
       ]
     }
   ],
-  imagePaths: [],
-  postAdded: false
+  imagePaths: []
 };
 
-const ADD_POST = 'ADD_POST';
+export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
+export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
+export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
-export const addPost = {
-  type: ADD_POST
-};
+export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
+export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
+export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
+
+export const addPostRequestAction = (data) => ({
+  type: ADD_POST_REQUEST,
+  data
+});
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case ADD_POST: {
+    case ADD_POST_REQUEST: {
       return {
         ...state,
-        mainPosts: [dummyPost, ...state.mainPosts], // 앞에 있어야 맨 위로 올라감
-        postAdded: true
+        isAddPostLoading: true,
+        isAddPostDone: false,
+        addPostError: null
       };
     }
+    case ADD_POST_SUCCESS: {
+      return {
+        ...state,
+        mainPosts: [dummyPost, ...state.mainPosts],
+        isAddPostLoading: false,
+        isAddPostDone: true
+      };
+    }
+    case ADD_POST_FAILURE: {
+      return {
+        ...state,
+        isAddPostLoading: false,
+        addPostError: action.error
+      };
+    }
+
+    case ADD_COMMENT_REQUEST: {
+      return {
+        ...state,
+        isAddCommentLoading: true,
+        isAddCommentDon: false,
+        addCommentError: null
+      };
+    }
+    case ADD_COMMENT_SUCCESS: {
+      return {
+        ...state,
+        isAddCommentLoading: false,
+        isAddCommentDon: true
+      };
+    }
+    case ADD_COMMENT_FAILURE: {
+      return {
+        ...state,
+        isAddCommentLoading: false,
+        addCommentError: action.error
+      };
+    }
+
     default: {
       return {
         ...state

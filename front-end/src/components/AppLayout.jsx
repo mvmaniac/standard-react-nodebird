@@ -13,7 +13,7 @@ const InputSearchStyled = styled(Input.Search)`
 `;
 
 const AppLayout = ({children}) => {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const isLoginDone = useSelector((state) => state.user.isLoginDone);
 
   return (
     <div>
@@ -33,7 +33,7 @@ const AppLayout = ({children}) => {
       </Menu>
       <Row>
         <Col xs={24} md={6}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {isLoginDone ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}
