@@ -11,7 +11,7 @@ const UserProfile = () => {
   const dispatch = useDispatch();
 
   const onLogout = useCallback(() => {
-    dispatch(logoutRequestAction);
+    dispatch(logoutRequestAction());
   }, [dispatch]);
 
   return (
@@ -19,15 +19,18 @@ const UserProfile = () => {
       actions={[
         <div key="twit">
           짹짹
-          <br />0
+          <br />
+          {my.posts.length}
         </div>,
         <div key="following">
           팔로잉
-          <br />0
+          <br />
+          {my.followings.length}
         </div>,
         <div key="followings">
           팔로워
-          <br />0
+          <br />
+          {my.followers.length}
         </div>
       ]}
     >

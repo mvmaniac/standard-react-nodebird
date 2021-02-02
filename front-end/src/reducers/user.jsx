@@ -1,14 +1,15 @@
 const dummyUser = (data) => ({
   ...data,
   id: 1,
+  email: 'dummy@gmail.com',
   nickname: '더미',
-  Posts: [{id: 1}],
-  Followings: [
+  posts: [{id: 1}],
+  followings: [
     {nickname: '부기초'},
     {nickname: 'Chanho Lee'},
     {nickname: 'neue zeal'}
   ],
-  Followers: [
+  followers: [
     {nickname: '부기초'},
     {nickname: 'Chanho Lee'},
     {nickname: 'neue zeal'}
@@ -28,6 +29,10 @@ export const initialState = {
   isSignUpDone: false,
   signUpError: null,
 
+  isChangeNicknameLoading: false, // 닉네임 변경 시도 중
+  isChangeNicknameDone: false,
+  changeNicknameError: null,
+
   my: null,
   signUpData: {},
   loginData: {}
@@ -44,6 +49,10 @@ export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
+export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
+export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
+export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
 
 export const FOLLOW_REQUEST = 'FOLLOW_REQUEST';
 export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS';
@@ -67,7 +76,7 @@ export const logoutRequestAction = () => ({
   type: LOG_OUT_REQUEST
 });
 
-export default (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOG_IN_REQUEST: {
       return {
@@ -142,6 +151,30 @@ export default (state = initialState, action) => {
       };
     }
 
+    case CHANGE_NICKNAME_REQUEST: {
+      return {
+        ...state,
+        isChangeNicknameLoading: true,
+        isChangeNicknameDone: false,
+        changeNicknameError: null
+      };
+    }
+    case CHANGE_NICKNAME_SUCCESS: {
+      return {
+        ...state,
+        isChangeNicknameLoading: false,
+        isChangeNicknameDone: true,
+        signUpData: action.data
+      };
+    }
+    case CHANGE_NICKNAME_FAILURE: {
+      return {
+        ...state,
+        isChangeNicknameLoading: false,
+        changeNicknameError: action.error
+      };
+    }
+
     default: {
       return {
         ...state
@@ -149,3 +182,5 @@ export default (state = initialState, action) => {
     }
   }
 };
+
+export default userReducer;

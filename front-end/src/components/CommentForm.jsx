@@ -1,10 +1,11 @@
-import {Button, Form, Input} from 'antd';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
+import {Button, Form, Input} from 'antd';
 import styled from 'styled-components';
 
-import {useSelector} from 'react-redux';
 import useInput from '../hooks/useInput';
+import {addCommentRequestAction} from '../reducers/post';
 
 const FormStyled = styled(Form)`
   div.box-item {
@@ -17,12 +18,29 @@ const FormStyled = styled(Form)`
 
 const CommentForm = ({post}) => {
   const myId = useSelector((state) => state.user.my?.id);
+  const isAddCommentDone = useSelector((state) => state.post.isAddCommentDone);
 
-  const [commentText, onChangeCommentText] = useInput('');
+  const [commentText, onChangeCommentText, setCommentText] = useInput('');
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAddCommentDone) {
+      setCommentText('');
+    }
+  }, [isAddCommentDone, setCommentText]);
 
   const onSubmitForm = useCallback(() => {
     console.log(myId, post.id, commentText);
-  }, [myId, post.id, commentText]);
+
+    dispatch(
+      addCommentRequestAction({
+        userId: myId,
+        postId: post.id,
+        content: commentText
+      })
+    );
+  }, [dispatch, myId, post.id, commentText]);
 
   return (
     <FormStyled onFinish={onSubmitForm}>

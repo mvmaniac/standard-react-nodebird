@@ -1,13 +1,28 @@
-const dummyPost = {
-  id: 2,
-  content: '더미데이터입니다.',
+import shortId from 'shortid';
+import {customAlphabet} from 'nanoid/non-secure';
+
+const nanoid = customAlphabet('1234567890', 4);
+const randomId = () => parseInt(nanoid(), 10);
+
+const dummyPost = (data) => ({
+  id: randomId(),
+  content: data,
   user: {
     id: 1,
-    nickname: '제로초'
+    nickname: shortId.generate()
   },
   images: [],
   comments: []
-};
+});
+
+const dummyComment = (data) => ({
+  id: randomId(),
+  content: data,
+  user: {
+    id: 1,
+    nickname: shortId.generate()
+  }
+});
 
 export const initialState = {
   isAddPostLoading: false, // 포스트 등록 중
@@ -28,25 +43,32 @@ export const initialState = {
       content: '첫 번째 게시글 #해시태그 #걸기 졸리군...',
       images: [
         {
+          id: randomId(),
           src:
             'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726'
         },
         {
+          id: randomId(),
           src: 'https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg'
         },
         {
+          id: randomId(),
           src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg'
         }
       ],
       comments: [
         {
+          id: randomId(),
           user: {
+            id: randomId(),
             nickname: 'nero'
           },
           content: '우와 개정판이 나왔군요~'
         },
         {
+          id: randomId(),
           user: {
+            id: randomId(),
             nickname: 'hero'
           },
           content: '얼른 사고싶어요~'
@@ -70,7 +92,12 @@ export const addPostRequestAction = (data) => ({
   data
 });
 
-export default (state = initialState, action) => {
+export const addCommentRequestAction = (data) => ({
+  type: ADD_COMMENT_REQUEST,
+  data
+});
+
+const postReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_POST_REQUEST: {
       return {
@@ -83,7 +110,7 @@ export default (state = initialState, action) => {
     case ADD_POST_SUCCESS: {
       return {
         ...state,
-        mainPosts: [dummyPost, ...state.mainPosts],
+        mainPosts: [dummyPost(action.data), ...state.mainPosts],
         isAddPostLoading: false,
         isAddPostDone: true
       };
@@ -105,8 +132,18 @@ export default (state = initialState, action) => {
       };
     }
     case ADD_COMMENT_SUCCESS: {
+      // 수동으로 불변성 코드 작성
+      const postIndex = state.mainPosts.findIndex(
+        (value) => value.id === action.data.postId
+      );
+      const post = {...state.mainPosts[postIndex]};
+      post.comments = [dummyComment(action.data.content), ...post.comments];
+      const mainPosts = [...state.mainPosts];
+      mainPosts[postIndex] = post;
+
       return {
         ...state,
+        mainPosts,
         isAddCommentLoading: false,
         isAddCommentDon: true
       };
@@ -126,3 +163,5 @@ export default (state = initialState, action) => {
     }
   }
 };
+
+export default postReducer;

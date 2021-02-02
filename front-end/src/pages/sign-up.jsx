@@ -1,18 +1,34 @@
 import React, {useCallback} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import Head from 'next/head';
 import {Form, Input, Checkbox, Button} from 'antd';
 import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
+import {SIGN_UP_REQUEST} from '../reducers/user';
 
 const FormStyled = styled(Form)`
   margin: 10px 0 0 10px;
 `;
 
 const SignUp = () => {
-  const onSubmitForm = useCallback((values) => {
-    console.log('Received values of form: ', values);
-  }, []);
+  const isSignUpLoading = useSelector((state) => state.user.isSignUpLoading);
+
+  const dispatch = useDispatch();
+
+  const onSubmitForm = useCallback(
+    (values) => {
+      console.log('Received values of form: ', values);
+
+      const {email, nickname, password} = values;
+
+      dispatch({
+        type: SIGN_UP_REQUEST,
+        data: {email, nickname, password}
+      });
+    },
+    [dispatch]
+  );
 
   return (
     <>
@@ -22,21 +38,22 @@ const SignUp = () => {
       <AppLayout>
         <FormStyled layout="vertical" onFinish={onSubmitForm}>
           <Form.Item
-            label="아이디"
-            name="userId"
+            label="이메일"
+            name="email"
             rules={[
               {
                 required: true,
-                message: '아이디를 입력해 주세요.'
+                type: 'email',
+                message: '유효하지 않는 이메일 형식입니다.'
               }
             ]}
           >
-            <Input placeholder="아이디" />
+            <Input placeholder="이메일" />
           </Form.Item>
 
           <Form.Item
             label="닉네임"
-            name="userNickname"
+            name="nickname"
             rules={[
               {
                 required: true,
@@ -49,7 +66,7 @@ const SignUp = () => {
 
           <Form.Item
             label="비밀번호"
-            name="userPassword"
+            name="password"
             rules={[
               {
                 required: true,
@@ -62,7 +79,7 @@ const SignUp = () => {
 
           <Form.Item
             label="비밀번호 확인"
-            name="userPasswordCheck"
+            name="passwordCheck"
             rules={[
               {
                 required: true,
@@ -70,7 +87,7 @@ const SignUp = () => {
               },
               ({getFieldValue}) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('userPassword') === value) {
+                  if (!value || getFieldValue('password') === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject(
@@ -84,7 +101,7 @@ const SignUp = () => {
           </Form.Item>
 
           <Form.Item
-            name="userTerm"
+            name="term"
             valuePropName="checked"
             rules={[
               {
@@ -99,8 +116,8 @@ const SignUp = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              로그인
+            <Button type="primary" htmlType="submit" loading={isSignUpLoading}>
+              가입하기
             </Button>
           </Form.Item>
         </FormStyled>

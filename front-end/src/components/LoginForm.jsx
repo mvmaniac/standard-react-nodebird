@@ -12,7 +12,7 @@ const FormStyled = styled(Form)`
 `;
 
 const LoginForm = () => {
-  const [id, onChangeId] = useInput('');
+  const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
 
   const isLoginLoading = useSelector((state) => state.user.isLoginLoading);
@@ -23,16 +23,21 @@ const LoginForm = () => {
   const onSubmitForm = useCallback(() => {
     dispatch(
       loginRequestAction({
-        id,
+        email,
         password
       })
     );
-  }, [dispatch, id, password]);
+  }, [dispatch, email, password]);
 
   return (
     <FormStyled layout="vertical" onFinish={onSubmitForm}>
-      <Form.Item label="아이디" name="userId">
-        <Input value={id} onChange={onChangeId} placeholder="아이디" required />
+      <Form.Item label="이메일" name="userEmail">
+        <Input
+          value={email}
+          onChange={onChangeEmail}
+          placeholder="이메일"
+          required
+        />
       </Form.Item>
       <Form.Item label="비밀번호" name="userPassword">
         <Input.Password
