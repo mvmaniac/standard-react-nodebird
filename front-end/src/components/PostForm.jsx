@@ -29,7 +29,9 @@ const FormStyled = styled(Form)`
 `;
 
 const PostForm = () => {
-  const {isAddPostDone, imagePaths} = useSelector((state) => state.post);
+  const {isAddPostLoading, isAddPostDone, imagePaths} = useSelector(
+    (state) => state.post
+  );
   const [text, onChangeText, setText] = useInput('');
   const imageInput = useRef();
 
@@ -61,7 +63,7 @@ const PostForm = () => {
         <div className="box-upload">
           <input type="file" multiple hidden ref={imageInput} />
           <Button onClick={onClickImageUpload}>이미지 업로드</Button>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={isAddPostLoading}>
             짹짹
           </Button>
         </div>

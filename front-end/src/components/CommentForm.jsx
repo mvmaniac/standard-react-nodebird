@@ -18,7 +18,9 @@ const FormStyled = styled(Form)`
 
 const CommentForm = ({post}) => {
   const myId = useSelector((state) => state.user.my?.id);
-  const isAddCommentDone = useSelector((state) => state.post.isAddCommentDone);
+  const {isAddCommentLoading, isAddCommentDone} = useSelector(
+    (state) => state.post
+  );
 
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
 
@@ -50,7 +52,7 @@ const CommentForm = ({post}) => {
           value={commentText}
           onChange={onChangeCommentText}
         />
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={isAddCommentLoading}>
           삐약
         </Button>
       </Form.Item>

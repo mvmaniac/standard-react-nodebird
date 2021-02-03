@@ -5,7 +5,7 @@ import {Form, Input, Checkbox, Button} from 'antd';
 import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
-import {SIGN_UP_REQUEST} from '../reducers/user';
+import {signUpRequestAction} from '../reducers/user';
 
 const FormStyled = styled(Form)`
   margin: 10px 0 0 10px;
@@ -21,11 +21,7 @@ const SignUp = () => {
       console.log('Received values of form: ', values);
 
       const {email, nickname, password} = values;
-
-      dispatch({
-        type: SIGN_UP_REQUEST,
-        data: {email, nickname, password}
-      });
+      dispatch(signUpRequestAction({email, nickname, password}));
     },
     [dispatch]
   );
