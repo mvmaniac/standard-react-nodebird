@@ -50,17 +50,15 @@ import {
 } from '../reducers/user';
 
 function signUpAPI(data) {
-  return axios.post('/api/signUp', data);
+  return axios.post('/users', data);
 }
 
 function* signUp(action) {
   try {
-    // const result = yield call(signUpAPI, action.data);
+    yield call(signUpAPI, action.data);
 
-    yield delay(1000);
     yield put({
-      type: SIGN_UP_SUCCESS,
-      data: action.data
+      type: SIGN_UP_SUCCESS
     });
   } catch (error) {
     console.error(error);
@@ -73,17 +71,16 @@ function* signUp(action) {
 }
 
 function loginAPI(data) {
-  return axios.post('/api/login', data);
+  return axios.post('/login', data);
 }
 
 function* login(action) {
   try {
-    // const result = yield call(loginAPI, action.data);
+    const result = yield call(loginAPI, action.data);
 
-    yield delay(1000);
     yield put({
       type: LOG_IN_SUCCESS,
-      data: action.data
+      data: result.data
     });
   } catch (error) {
     console.error(error);

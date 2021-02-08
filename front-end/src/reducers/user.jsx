@@ -60,6 +60,7 @@ export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+export const SIGN_UP_COMPLETE = 'SIGN_UP_COMPLETE';
 
 export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
@@ -79,6 +80,10 @@ export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 export const signUpRequestAction = (data) => ({
   type: SIGN_UP_REQUEST,
   data
+});
+
+export const signUpCompleteAction = () => ({
+  type: SIGN_UP_COMPLETE
 });
 
 export const loginRequestAction = (data) => ({
@@ -155,6 +160,10 @@ const userReducer = (state = initialState, action) =>
       case SIGN_UP_FAILURE: {
         draft.isSignUpLoading = false;
         draft.signUpError = action.error;
+        break;
+      }
+      case SIGN_UP_COMPLETE: {
+        draft.isSignUpDone = false;
         break;
       }
 

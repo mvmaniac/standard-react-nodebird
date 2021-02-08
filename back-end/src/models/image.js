@@ -13,11 +13,14 @@ module.exports = class Image extends Model {
         sequelize,
         modelName: 'image',
         tableName: 'image',
+        underscored: true,
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci'
       }
     );
   }
 
-  static associate(db) {}
+  static associate(db) {
+    db.Image.belongsTo(db.Post);
+  }
 };

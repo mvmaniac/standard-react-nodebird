@@ -17,11 +17,26 @@ module.exports = class User extends Model {
         sequelize,
         modelName: 'user',
         tableName: 'user',
+        underscored: true,
         charset: 'utf8mb4',
         collate: 'utf8mb4_general_ci'
       }
     );
   }
 
-  static associate(db) {}
+  static associate(db) {
+    db.User.hasMany(db.Post);
+    db.User.hasMany(db.Comment);
+    db.User.belongsToMany(db.Post, {through: 'post_like', as: 'liked'});
+    db.User.belongsToMany(db.User, {
+      through: 'follow',
+      as: 'followers',
+      foreignKey: 'followingId'
+    });
+    db.User.belongsToMany(db.User, {
+      through: 'follow',
+      as: 'followings',
+      foreignKey: 'followerId'
+    });
+  }
 };

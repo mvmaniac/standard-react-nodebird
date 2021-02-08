@@ -12,8 +12,6 @@ const Profile = () => {
 
   useEffect(() => {
     // 로그인한 정보가 없다면 메인으로 이동
-    console.log(my?.id);
-
     if (!my?.id) {
       Router.push('/');
     }

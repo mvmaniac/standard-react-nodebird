@@ -1,20 +1,34 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import Head from 'next/head';
-import {Form, Input, Checkbox, Button} from 'antd';
+import Router from 'next/router';
+import {Form, Input, Checkbox, Button, Alert} from 'antd';
 import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
-import {signUpRequestAction} from '../reducers/user';
+import {signUpRequestAction, signUpCompleteAction} from '../reducers/user';
+
+const AlertStyled = styled(Alert)`
+  margin: 0 0 0 10px;
+`;
 
 const FormStyled = styled(Form)`
   margin: 10px 0 0 10px;
 `;
 
 const SignUp = () => {
-  const isSignUpLoading = useSelector((state) => state.user.isSignUpLoading);
+  const {isSignUpLoading, isSignUpDone, signUpError} = useSelector(
+    (state) => state.user
+  );
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isSignUpDone) {
+      dispatch(signUpCompleteAction());
+      Router.push('/');
+    }
+  }, [dispatch, isSignUpDone]);
 
   const onSubmitForm = useCallback(
     (values) => {
@@ -32,6 +46,15 @@ const SignUp = () => {
         <title>회원가입 | NodeBird</title>
       </Head>
       <AppLayout>
+        {signUpError && (
+          <AlertStyled
+            message="에러"
+            description={signUpError.message}
+            type="error"
+            showIcon
+            closable
+          />
+        )}
         <FormStyled layout="vertical" onFinish={onSubmitForm}>
           <Form.Item
             label="이메일"
