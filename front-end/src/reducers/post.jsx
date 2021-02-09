@@ -3,25 +3,26 @@ import faker from 'faker';
 
 faker.seed(10000);
 
-const dummyPost = (data) => ({
-  id: data.id,
-  content: data.content,
-  user: {
-    id: 1,
-    nickname: faker.internet.userName()
-  },
-  images: [],
-  comments: []
-});
+// 임시 데이터
+// const dummyPost = (data) => ({
+//   id: data.id,
+//   content: data.content,
+//   user: {
+//     id: 1,
+//     nickname: faker.internet.userName()
+//   },
+//   images: [],
+//   comments: []
+// });
 
-const dummyComment = (data) => ({
-  id: faker.random.number(),
-  content: data,
-  user: {
-    id: 1,
-    nickname: faker.internet.userName()
-  }
-});
+// const dummyComment = (data) => ({
+//   id: faker.random.number(),
+//   content: data,
+//   user: {
+//     id: 1,
+//     nickname: faker.internet.userName()
+//   }
+// });
 
 export const initialState = {
   hasMorePost: true,
@@ -153,7 +154,7 @@ const postReducer = (state = initialState, action) =>
       case ADD_POST_SUCCESS: {
         draft.isAddPostLoading = false;
         draft.isAddPostDone = true;
-        draft.mainPosts.unshift(dummyPost(action.data)); // unshift: 새로운 요소를 배열의 맨 앞쪽에 추가하고, 새로운 길이를 반환
+        draft.mainPosts.unshift(action.data); // unshift: 새로운 요소를 배열의 맨 앞쪽에 추가하고, 새로운 길이를 반환
         break;
       }
       case ADD_POST_FAILURE: {
@@ -193,7 +194,7 @@ const postReducer = (state = initialState, action) =>
         const post = draft.mainPosts.find(
           (value) => value.id === action.data.postId
         );
-        post.comments.unshift(dummyComment(action.data.content));
+        post.comments.unshift(action.data.content);
 
         // 수동으로 불변성 코드 작성
         // const postIndex = state.mainPosts.findIndex(

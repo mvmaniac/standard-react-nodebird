@@ -27,13 +27,13 @@ const AppLayout = ({children}) => {
         <Menu.Item>
           <InputSearchStyled enterButton />
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item hidden={!!my?.id}>
           <Link href="/sign-up">회원가입</Link>
         </Menu.Item>
       </Menu>
       <Row>
         <Col xs={24} md={6}>
-          {my ? <UserProfile /> : <LoginForm />}
+          {my?.id ? <UserProfile /> : <LoginForm />}
         </Col>
         <Col xs={24} md={12}>
           {children}

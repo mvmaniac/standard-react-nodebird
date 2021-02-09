@@ -52,6 +52,7 @@ export const initialState = {
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
 export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
+export const LOG_IN_ERROR_CLEAR = 'LOG_IN_ERROR_CLEAR';
 
 export const LOG_OUT_REQUEST = 'LOG_OUT_REQUEST';
 export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
@@ -60,7 +61,6 @@ export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
-export const SIGN_UP_COMPLETE = 'SIGN_UP_COMPLETE';
 
 export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
@@ -82,13 +82,13 @@ export const signUpRequestAction = (data) => ({
   data
 });
 
-export const signUpCompleteAction = () => ({
-  type: SIGN_UP_COMPLETE
-});
-
 export const loginRequestAction = (data) => ({
   type: LOG_IN_REQUEST,
   data
+});
+
+export const loginErrorClearAction = () => ({
+  type: LOG_IN_ERROR_CLEAR
 });
 
 export const logoutRequestAction = () => ({
@@ -117,12 +117,16 @@ const userReducer = (state = initialState, action) =>
       case LOG_IN_SUCCESS: {
         draft.isLoginLoading = false;
         draft.isLoginDone = true;
-        draft.my = dummyUser(action.data);
+        draft.my = action.data;
         break;
       }
       case LOG_IN_FAILURE: {
         draft.isLoginLoading = false;
         draft.loginError = action.error;
+        break;
+      }
+      case LOG_IN_ERROR_CLEAR: {
+        draft.loginError = null;
         break;
       }
 
@@ -160,10 +164,6 @@ const userReducer = (state = initialState, action) =>
       case SIGN_UP_FAILURE: {
         draft.isSignUpLoading = false;
         draft.signUpError = action.error;
-        break;
-      }
-      case SIGN_UP_COMPLETE: {
-        draft.isSignUpDone = false;
         break;
       }
 

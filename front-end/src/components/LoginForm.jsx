@@ -1,11 +1,11 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import Link from 'next/link';
-import {Button, Form, Input} from 'antd';
+import {Button, Form, Input, Modal} from 'antd';
 import styled from 'styled-components';
 
 import useInput from '../hooks/useInput';
-import {loginRequestAction} from '../reducers/user';
+import {loginErrorClearAction, loginRequestAction} from '../reducers/user';
 
 const FormStyled = styled(Form)`
   margin: 10px 0 0 10px;
@@ -16,8 +16,20 @@ const LoginForm = () => {
   const [password, onChangePassword] = useInput('');
 
   const isLoginLoading = useSelector((state) => state.user.isLoginLoading);
+  const loginError = useSelector((state) => state.user.loginError);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (loginError) {
+      dispatch(loginErrorClearAction());
+
+      Modal.error({
+        title: '에러',
+        content: loginError.message
+      });
+    }
+  }, [dispatch, loginError]);
 
   // antd의 onFinish를 사용하는 경우 event.preventDefault를 안해줘도 됨
   const onSubmitForm = useCallback(() => {

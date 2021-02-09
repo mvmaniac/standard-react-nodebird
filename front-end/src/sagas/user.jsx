@@ -71,7 +71,7 @@ function* signUp(action) {
 }
 
 function loginAPI(data) {
-  return axios.post('/login', data);
+  return axios.post('/users/login', data);
 }
 
 function* login(action) {
@@ -93,14 +93,13 @@ function* login(action) {
 }
 
 function logoutAPI() {
-  return axios.post('/api/logout');
+  return axios.post('/users/logout');
 }
 
 function* logout() {
   try {
-    // const result = yield call(logoutAPI);
+    yield call(logoutAPI);
 
-    yield delay(1000);
     yield put({
       type: LOG_OUT_SUCCESS
     });

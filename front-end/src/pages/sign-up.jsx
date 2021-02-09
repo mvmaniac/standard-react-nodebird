@@ -6,7 +6,7 @@ import {Form, Input, Checkbox, Button, Alert} from 'antd';
 import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
-import {signUpRequestAction, signUpCompleteAction} from '../reducers/user';
+import {signUpRequestAction} from '../reducers/user';
 
 const AlertStyled = styled(Alert)`
   margin: 0 0 0 10px;
@@ -17,16 +17,23 @@ const FormStyled = styled(Form)`
 `;
 
 const SignUp = () => {
-  const {isSignUpLoading, isSignUpDone, signUpError} = useSelector(
+  const {isSignUpLoading, isSignUpDone, signUpError, isLoginDone} = useSelector(
     (state) => state.user
   );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (isLoginDone) {
+      // 회원가입 페이지에서 로그인을 완료 했다면 메인 페이지로 이동
+      Router.replace('/');
+    }
+  }, [dispatch, isLoginDone]);
+
+  useEffect(() => {
     if (isSignUpDone) {
-      dispatch(signUpCompleteAction());
-      Router.push('/');
+      // 회원가입 완료 시 메인 페이지로 이동
+      Router.replace('/');
     }
   }, [dispatch, isSignUpDone]);
 
