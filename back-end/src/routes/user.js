@@ -35,7 +35,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
       const findUser = await User.findOne({
         where: {id: user.id},
         attributes: {
-          exclude: ['password']
+          exclude: ['password', 'updated_at']
         },
         include: [
           {model: Post, attributes: ['id']},
@@ -55,6 +55,33 @@ router.post('/logout', isLoggedIn, (req, res) => {
   req.session.destroy();
 
   res.json();
+});
+
+// GET /users
+router.get('/', async (req, res, next) => {
+  try {
+    if (req.user) {
+      const findUser = await User.findOne({
+        where: {id: req.user.id},
+        attributes: {
+          exclude: ['password', 'updated_at']
+        },
+        include: [
+          {model: Post, attributes: ['id']},
+          {model: User, as: 'followers', attributes: ['id']},
+          {model: User, as: 'followings', attributes: ['id']}
+        ]
+      });
+
+      res.status(200).json(findUser);
+      return;
+    }
+
+    res.status(204);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });
 
 // POST /users

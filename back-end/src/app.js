@@ -3,6 +3,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors');
+const morgan = require('morgan');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -26,6 +27,7 @@ const userRouter = require('./routes/user');
 
 const app = express();
 
+app.use(morgan('dev'));
 app.use(
   cors({
     origin: 'http://localhost:3060',

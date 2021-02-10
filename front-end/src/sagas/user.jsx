@@ -41,18 +41,23 @@ import {
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
   LOG_OUT_FAILURE,
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
   FOLLOW_REQUEST,
   FOLLOW_SUCCESS,
   FOLLOW_FAILURE,
   UN_FOLLOW_REQUEST,
   UN_FOLLOW_SUCCESS,
-  UN_FOLLOW_FAILURE
+  UN_FOLLOW_FAILURE,
+  CHANGE_NICKNAME_REQUEST,
+  CHANGE_NICKNAME_SUCCESS,
+  CHANGE_NICKNAME_FAILURE
 } from '../reducers/user';
 
 function signUpAPI(data) {
   return axios.post('/users', data);
 }
-
 function* signUp(action) {
   try {
     yield call(signUpAPI, action.data);
@@ -73,7 +78,6 @@ function* signUp(action) {
 function loginAPI(data) {
   return axios.post('/users/login', data);
 }
-
 function* login(action) {
   try {
     const result = yield call(loginAPI, action.data);
@@ -95,7 +99,6 @@ function* login(action) {
 function logoutAPI() {
   return axios.post('/users/logout');
 }
-
 function* logout() {
   try {
     yield call(logoutAPI);
@@ -113,10 +116,51 @@ function* logout() {
   }
 }
 
+function loadMyInfoAPI() {
+  return axios.get('/users');
+}
+function* loadMyInfo() {
+  try {
+    const result = yield call(loadMyInfoAPI);
+
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      error: error.response.data
+    });
+  }
+}
+
+function changeNicknameAPI() {
+  return axios.get('/users');
+}
+function* changeNickname() {
+  try {
+    const result = yield call(changeNicknameAPI);
+
+    yield put({
+      type: CHANGE_NICKNAME_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+
+    yield put({
+      type: CHANGE_NICKNAME_FAILURE,
+      error: error.response.data
+    });
+  }
+}
+
 function followAPI(data) {
   return axios.post('/api/follow', data);
 }
-
 function* follow(action) {
   try {
     // const result = yield call(followAPI, action.data);
@@ -171,6 +215,14 @@ function* watchLogout() {
   yield takeLatest(LOG_OUT_REQUEST, logout);
 }
 
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
+function* watchChangeNickname() {
+  yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
+}
+
 function* watchFollow() {
   yield takeLatest(FOLLOW_REQUEST, follow);
 }
@@ -184,6 +236,8 @@ export default function* userSaga() {
     fork(watchSignUp),
     fork(watchLogin),
     fork(watchLogout),
+    fork(watchLoadMyInfo),
+    fork(watchChangeNickname),
     fork(watchFollow),
     fork(watchUnFollow)
   ]);

@@ -48,7 +48,7 @@ const PostForm = () => {
   }, []);
 
   const onSubmitForm = useCallback(() => {
-    dispatch(addPostRequestAction(text));
+    dispatch(addPostRequestAction({content: text}));
   }, [dispatch, text]);
 
   return (

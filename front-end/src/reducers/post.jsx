@@ -24,33 +24,6 @@ faker.seed(10000);
 //   }
 // });
 
-export const initialState = {
-  hasMorePost: true,
-
-  isLoadPostLoading: false, // 포스트 불러오는 중
-  isLoadPostDone: false,
-  loadPostError: null,
-
-  isAddPostLoading: false, // 포스트 등록 중
-  isAddPostDone: false,
-  addPostError: null,
-
-  isRemovePostLoading: false, // 포스트 삭제 중
-  isRemovePostDone: false,
-  removePostError: null,
-
-  isAddCommentLoading: false, // 포스트 댓글 등록 중
-  isAddCommentDone: false,
-  addCommentError: null,
-
-  isRemoveCommentLoading: false, // 포스트 댓글 삭제 중
-  isRemoveCommentDone: false,
-  removeCommentError: null,
-
-  mainPosts: [],
-  imagePaths: []
-};
-
 export const generateDummyPost = (number) =>
   Array(number)
     .fill()
@@ -78,6 +51,41 @@ export const generateDummyPost = (number) =>
       ]
     }));
 
+export const initialState = {
+  hasMorePost: true,
+
+  isLoadPostLoading: false, // 포스트 불러오는 중
+  isLoadPostDone: false,
+  loadPostError: null,
+
+  isAddPostLoading: false, // 포스트 등록 중
+  isAddPostDone: false,
+  addPostError: null,
+
+  isRemovePostLoading: false, // 포스트 삭제 중
+  isRemovePostDone: false,
+  removePostError: null,
+
+  isAddCommentLoading: false, // 포스트 댓글 등록 중
+  isAddCommentDone: false,
+  addCommentError: null,
+
+  isRemoveCommentLoading: false, // 포스트 댓글 삭제 중
+  isRemoveCommentDone: false,
+  removeCommentError: null,
+
+  isLikePostLoading: false, // 포스트 종아요 등록 중
+  isLikePostDone: false,
+  likePostError: null,
+
+  isUnLikePostLoading: false, // 포스트 좋아요 취소 중
+  isUnLikePostDone: false,
+  unLikePostError: null,
+
+  mainPosts: [],
+  imagePaths: []
+};
+
 export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
 export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
 export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
@@ -97,6 +105,14 @@ export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
 export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
 export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
+
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+
+export const UN_LIKE_POST_REQUEST = 'UN_LIKE_POST_REQUEST';
+export const UN_LIKE_POST_SUCCESS = 'UN_LIKE_POST_SUCCESS';
+export const UN_LIKE_POST_FAILURE = 'UN_LIKE_POST_FAILURE';
 
 export const loadPostRequestAction = (data) => ({
   type: LOAD_POST_REQUEST,
@@ -120,6 +136,16 @@ export const addCommentRequestAction = (data) => ({
 
 export const removeCommentRequestAction = (data) => ({
   type: REMOVE_COMMENT_REQUEST,
+  data
+});
+
+export const likePostRequestAction = (data) => ({
+  type: LIKE_POST_REQUEST,
+  data
+});
+
+export const unLikePostRequestAction = (data) => ({
+  type: UN_LIKE_POST_REQUEST,
   data
 });
 
@@ -194,7 +220,7 @@ const postReducer = (state = initialState, action) =>
         const post = draft.mainPosts.find(
           (value) => value.id === action.data.postId
         );
-        post.comments.unshift(action.data.content);
+        post.comments.unshift(action.data);
 
         // 수동으로 불변성 코드 작성
         // const postIndex = state.mainPosts.findIndex(
@@ -229,6 +255,54 @@ const postReducer = (state = initialState, action) =>
       case REMOVE_COMMENT_FAILURE: {
         draft.isRemoveCommentLoading = false;
         draft.removeCommentError = action.error;
+        break;
+      }
+
+      case LIKE_POST_REQUEST: {
+        draft.isLikePostLoading = true;
+        draft.isLoadPostDone = false;
+        draft.likePostError = null;
+        break;
+      }
+      case LIKE_POST_SUCCESS: {
+        draft.isLikePostLoading = false;
+        draft.isLikePostDone = true;
+
+        const post = draft.mainPosts.find(
+          (value) => value.id === action.data.postId
+        );
+
+        post.likers.push({id: action.data.userId});
+        break;
+      }
+      case LIKE_POST_FAILURE: {
+        draft.isAddCommentLoading = false;
+        draft.likePostError = action.error;
+        break;
+      }
+
+      case UN_LIKE_POST_REQUEST: {
+        draft.isUnLikePostLoading = true;
+        draft.isUnLoadPostDone = false;
+        draft.unLikePostError = null;
+        break;
+      }
+      case UN_LIKE_POST_SUCCESS: {
+        draft.isUnLikePostLoading = false;
+        draft.isUnLikePostDone = true;
+
+        const post = draft.mainPosts.find(
+          (value) => value.id === action.data.postId
+        );
+
+        post.likers = post.likers.filter(
+          (value) => value.id !== action.data.userId
+        );
+        break;
+      }
+      case UN_LIKE_POST_FAILURE: {
+        draft.isUnLikePostLoading = false;
+        draft.unLikePostError = action.error;
         break;
       }
 

@@ -44,6 +44,10 @@ export const initialState = {
   isUnFollowDone: false,
   unFollowError: false,
 
+  isLoadMyInfoLoading: false,
+  isLoadMyInfoDone: false,
+  loadMyInfoError: false,
+
   my: null,
   signUpData: {},
   loginData: {}
@@ -61,6 +65,10 @@ export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
+export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
+export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
+export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
 
 export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
@@ -93,6 +101,15 @@ export const loginErrorClearAction = () => ({
 
 export const logoutRequestAction = () => ({
   type: LOG_OUT_REQUEST
+});
+
+export const loadMyInfoRequestAction = () => ({
+  type: LOAD_MY_INFO_REQUEST
+});
+
+export const changeNicknameRequestAction = (data) => ({
+  type: CHANGE_NICKNAME_REQUEST,
+  data
 });
 
 export const followRequestAction = (data) => ({
@@ -164,6 +181,24 @@ const userReducer = (state = initialState, action) =>
       case SIGN_UP_FAILURE: {
         draft.isSignUpLoading = false;
         draft.signUpError = action.error;
+        break;
+      }
+
+      case LOAD_MY_INFO_REQUEST: {
+        draft.isLoadMyInfoLoading = true;
+        draft.isLoadMyInfoDone = false;
+        draft.loadMyInfoError = null;
+        break;
+      }
+      case LOAD_MY_INFO_SUCCESS: {
+        draft.isLoadMyInfoLoading = false;
+        draft.isLoadMyInfoDone = true;
+        draft.my = action.data;
+        break;
+      }
+      case LOAD_MY_INFO_FAILURE: {
+        draft.isLoadMyInfoLoading = false;
+        draft.loadMyInfoError = action.error;
         break;
       }
 
