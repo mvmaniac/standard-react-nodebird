@@ -211,7 +211,7 @@ const userReducer = (state = initialState, action) =>
       case CHANGE_NICKNAME_SUCCESS: {
         draft.isChangeNicknameLoading = false;
         draft.isChangeNicknameDone = true;
-        draft.signUpData = action.data;
+        draft.my.nickname = action.data.nickname;
         break;
       }
       case CHANGE_NICKNAME_FAILURE: {
@@ -273,7 +273,7 @@ const userReducer = (state = initialState, action) =>
 
       case REMOVE_POST_OF_ME: {
         draft.my.posts = draft.my.posts.filter(
-          (value) => value.id !== action.data
+          (value) => value.id !== action.data.postId
         );
 
         // return {

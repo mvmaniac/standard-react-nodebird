@@ -137,12 +137,12 @@ function* loadMyInfo() {
   }
 }
 
-function changeNicknameAPI() {
-  return axios.get('/users');
+function changeNicknameAPI(data) {
+  return axios.patch('/users/nickname', data);
 }
-function* changeNickname() {
+function* changeNickname(action) {
   try {
-    const result = yield call(changeNicknameAPI);
+    const result = yield call(changeNicknameAPI, action.data);
 
     yield put({
       type: CHANGE_NICKNAME_SUCCESS,
@@ -159,7 +159,7 @@ function* changeNickname() {
 }
 
 function followAPI(data) {
-  return axios.post('/api/follow', data);
+  return axios.patch('/users/follow', data);
 }
 function* follow(action) {
   try {
@@ -181,7 +181,7 @@ function* follow(action) {
 }
 
 function unFollowAPI(data) {
-  return axios.post('/api/follow', data);
+  return axios.delete('/users/follow', data);
 }
 
 function* unFollow(action) {

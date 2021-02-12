@@ -199,7 +199,7 @@ const postReducer = (state = initialState, action) =>
         draft.isRemovePostLoading = false;
         draft.isRemovePostDone = true;
         draft.mainPosts = draft.mainPosts.filter(
-          (value) => value.id !== action.data
+          (value) => value.id !== action.data.postId
         );
         break;
       }

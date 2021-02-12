@@ -1,9 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import styled from 'styled-components';
+
+const DivStyled = styled.div`
+  & {
+    white-space: pre-wrap;
+  }
+`;
 
 const PostCardContent = ({postData}) => (
-  <div>
+  <DivStyled>
     {postData.split(/(#[^\s#]+)/g).map((value, index) => {
       if (value.match(/(#[^\s#]+)/)) {
         return (
@@ -14,7 +21,7 @@ const PostCardContent = ({postData}) => (
       }
       return value;
     })}
-  </div>
+  </DivStyled>
 );
 
 PostCardContent.propTypes = {

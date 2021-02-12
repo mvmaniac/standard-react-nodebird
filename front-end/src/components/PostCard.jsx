@@ -39,12 +39,12 @@ const PostCard = ({post}) => {
 
   const dispatch = useDispatch();
 
-  const onUnLike = useCallback(() => {
-    dispatch(likePostRequestAction({id: post.id}));
+  const onLike = useCallback(() => {
+    dispatch(likePostRequestAction({postId: post.id}));
   }, [dispatch, post.id]);
 
-  const onLike = useCallback(() => {
-    dispatch(unLikePostRequestAction({id: post.id}));
+  const onUnLike = useCallback(() => {
+    dispatch(unLikePostRequestAction({postId: post.id}));
   }, [dispatch, post.id]);
 
   const onToggleComment = useCallback(() => {
@@ -52,10 +52,11 @@ const PostCard = ({post}) => {
   }, []);
 
   const onRemovePost = useCallback(() => {
-    dispatch(removePostRequestAction(post.id));
+    dispatch(removePostRequestAction({postId: post.id}));
   }, [dispatch, post]);
 
-  const liked = likers.find((value) => value.id === myId);
+  const isLike = likers.find((value) => value.id === myId);
+  const isShowFollow = post.user.id !== myId;
 
   return (
     <>
@@ -63,7 +64,7 @@ const PostCard = ({post}) => {
         cover={post.images[0] && <PostImages images={post.images} />}
         actions={[
           <RetweetOutlined key="retweet" />,
-          isLiked ? (
+          isLike ? (
             <HeartTwoTone
               key="heart"
               onClick={onUnLike}
@@ -97,7 +98,7 @@ const PostCard = ({post}) => {
             <EllipsisOutlined />
           </Popover>
         ]}
-        extra={myId && <FollowButton post={post} />}
+        extra={myId && isShowFollow && <FollowButton post={post} />}
       >
         <Card.Meta
           avatar={<Avatar>{postUser.nickname[0]}</Avatar>}
