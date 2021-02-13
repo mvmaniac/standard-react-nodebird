@@ -129,4 +129,95 @@ router.patch('/nickname', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// GET /users/followings
+router.get('/followings', isLoggedIn, async (req, res, next) => {
+  try {
+    const findUser = await User.findOne({where: {id: req.user.id}});
+    if (!findUser) {
+      res.status(404).json({message: '존재하지 않는 사용자입니다.'});
+      return;
+    }
+
+    const followings = await findUser.getFollowings();
+    res.status(200).json({followings});
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// GET /users/followers
+router.get('/followers', isLoggedIn, async (req, res, next) => {
+  try {
+    const findUser = await User.findOne({where: {id: req.user.id}});
+    if (!findUser) {
+      res.status(404).json({message: '존재하지 않는 사용자입니다.'});
+      return;
+    }
+
+    const followers = await findUser.getFollowers();
+    res.status(200).json({followers});
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// PATCH /users/:followingId/follow
+router.patch('/:followingId/follow', isLoggedIn, async (req, res, next) => {
+  try {
+    const followingId = parseInt(req.params.followingId, 10);
+
+    const findUser = await User.findOne({where: {id: followingId}});
+    if (!findUser) {
+      res.status(404).json({message: '존재하지 않는 사용자입니다.'});
+      return;
+    }
+
+    await findUser.addFollowers(req.user.id);
+    res.status(200).json({followingId});
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// DELETE /users/:followingId/follow
+router.delete('/:followingId/follow', isLoggedIn, async (req, res, next) => {
+  try {
+    const followingId = parseInt(req.params.followingId, 10);
+
+    const findUser = await User.findOne({where: {id: followingId}});
+    if (!findUser) {
+      res.status(404).json({message: '존재하지 않는 사용자입니다.'});
+      return;
+    }
+
+    await findUser.removeFollowers(req.user.id);
+    res.status(200).json({followingId});
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// DELETE /users/followers/:followerId
+router.delete('/followers/:followerId', isLoggedIn, async (req, res, next) => {
+  try {
+    const followerId = parseInt(req.params.followerId, 10);
+
+    const findUser = await User.findOne({where: {id: followerId}});
+    if (!findUser) {
+      res.status(404).json({message: '존재하지 않는 사용자입니다.'});
+      return;
+    }
+
+    await findUser.removeFollowings(req.user.id);
+    res.status(200).json({followerId});
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;

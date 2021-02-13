@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import {Button, Card, List} from 'antd';
 import {StopOutlined} from '@ant-design/icons';
 import styled from 'styled-components';
+import {useDispatch} from 'react-redux';
+import {
+  removeFollowerRequestAction,
+  unFollowRequestAction
+} from '../reducers/user';
 
 const ListStyled = styled(List)`
   margin-bottom: 20px;
@@ -17,28 +22,42 @@ const ListStyled = styled(List)`
   }
 `;
 
-const FollowList = ({header, data}) => (
-  <ListStyled
-    // TODO: grid 사이즈 조정
-    grid={{xs: 2, md: 3, xxl: 6}}
-    size="small"
-    header={<div>{header}</div>}
-    loadMore={
-      <div className="box-more">
-        <Button>더보기</Button>
-      </div>
+const FollowList = ({header, data}) => {
+  const dispatch = useDispatch();
+
+  const onCancel = (userId) => () => {
+    if (header === '팔로잉') {
+      dispatch(unFollowRequestAction({followingId: userId}));
+      return;
     }
-    bordered
-    dataSource={data}
-    renderItem={(item) => (
-      <List.Item className="list-follow">
-        <Card actions={[<StopOutlined key="stop" />]}>
-          <Card.Meta description={item.nickname} />
-        </Card>
-      </List.Item>
-    )}
-  />
-);
+    dispatch(removeFollowerRequestAction({followerId: userId}));
+  };
+  return (
+    <ListStyled
+      // TODO: grid 사이즈 조정
+      grid={{xs: 2, md: 3, xxl: 6}}
+      size="small"
+      header={<div>{header}</div>}
+      loadMore={
+        <div className="box-more">
+          <Button>더보기</Button>
+        </div>
+      }
+      bordered
+      dataSource={data}
+      renderItem={(item) => (
+        <List.Item className="list-follow">
+          <Card
+            actions={[<StopOutlined key="stop" />]}
+            onClick={onCancel(item.id)}
+          >
+            <Card.Meta description={item.nickname} />
+          </Card>
+        </List.Item>
+      )}
+    />
+  );
+};
 
 FollowList.propTypes = {
   header: PropTypes.string.isRequired,

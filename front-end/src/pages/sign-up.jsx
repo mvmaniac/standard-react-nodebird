@@ -6,7 +6,7 @@ import {Form, Input, Checkbox, Button, Alert} from 'antd';
 import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
-import {signUpRequestAction} from '../reducers/user';
+import {signUpCompleteAction, signUpRequestAction} from '../reducers/user';
 
 const AlertStyled = styled(Alert)`
   margin: 0 0 0 10px;
@@ -32,6 +32,8 @@ const SignUp = () => {
 
   useEffect(() => {
     if (isSignUpDone) {
+      dispatch(signUpCompleteAction());
+
       // 회원가입 완료 시 메인 페이지로 이동
       Router.replace('/');
     }

@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {Button, Card, Popover, Avatar, List, Comment} from 'antd';
+import {Button, Card, Popover, Avatar, List, Comment, Modal} from 'antd';
 import {
   RetweetOutlined,
   HeartOutlined,
@@ -18,6 +18,7 @@ import FollowButton from './FollowButton';
 import {
   likePostRequestAction,
   removePostRequestAction,
+  retweetRequestAction,
   unLikePostRequestAction
 } from '../reducers/post';
 
@@ -39,21 +40,53 @@ const PostCard = ({post}) => {
 
   const dispatch = useDispatch();
 
+  const onRetweet = useCallback(() => {
+    if (!myId) {
+      Modal.warning({
+        title: '알림',
+        content: '로그인이 필요합니다.'
+      });
+    }
+
+    dispatch(retweetRequestAction({postId: post.id}));
+  }, [dispatch, myId, post.id]);
+
   const onLike = useCallback(() => {
+    if (!myId) {
+      Modal.warning({
+        title: '알림',
+        content: '로그인이 필요합니다.'
+      });
+    }
+
     dispatch(likePostRequestAction({postId: post.id}));
-  }, [dispatch, post.id]);
+  }, [dispatch, myId, post.id]);
 
   const onUnLike = useCallback(() => {
+    if (!myId) {
+      Modal.warning({
+        title: '알림',
+        content: '로그인이 필요합니다.'
+      });
+    }
+
     dispatch(unLikePostRequestAction({postId: post.id}));
-  }, [dispatch, post.id]);
+  }, [dispatch, myId, post.id]);
 
   const onToggleComment = useCallback(() => {
     setIsCommentOpened((prev) => !prev);
   }, []);
 
   const onRemovePost = useCallback(() => {
+    if (!myId) {
+      Modal.warning({
+        title: '알림',
+        content: '로그인이 필요합니다.'
+      });
+    }
+
     dispatch(removePostRequestAction({postId: post.id}));
-  }, [dispatch, post]);
+  }, [dispatch, myId, post.id]);
 
   const isLike = likers.find((value) => value.id === myId);
   const isShowFollow = post.user.id !== myId;
@@ -63,7 +96,7 @@ const PostCard = ({post}) => {
       <CardStyled
         cover={post.images[0] && <PostImages images={post.images} />}
         actions={[
-          <RetweetOutlined key="retweet" />,
+          <RetweetOutlined key="retweet" onClick={onRetweet} />,
           isLike ? (
             <HeartTwoTone
               key="heart"
@@ -98,13 +131,32 @@ const PostCard = ({post}) => {
             <EllipsisOutlined />
           </Popover>
         ]}
+        title={
+          post.retweetId ? `${post.user.nickname}님이 리트윗 하셨습니다.` : ''
+        }
         extra={myId && isShowFollow && <FollowButton post={post} />}
       >
-        <Card.Meta
-          avatar={<Avatar>{postUser.nickname[0]}</Avatar>}
-          title={postUser.nickname}
-          description={<PostCardContent postData={post.content} />}
-        />
+        {post.retweetId && post.retweet ? (
+          <Card
+            cover={
+              post.retweet.images[0] && (
+                <PostImages images={post.retweet.images} />
+              )
+            }
+          >
+            <Card.Meta
+              avatar={<Avatar>{post.retweet.user.nickname[0]}</Avatar>}
+              title={post.retweet.user.nickname}
+              description={<PostCardContent postData={post.retweet.content} />}
+            />
+          </Card>
+        ) : (
+          <Card.Meta
+            avatar={<Avatar>{postUser.nickname[0]}</Avatar>}
+            title={postUser.nickname}
+            description={<PostCardContent postData={post.content} />}
+          />
+        )}
       </CardStyled>
       {isCommentOpened && (
         <>
@@ -146,7 +198,20 @@ PostCard.propTypes = {
       PropTypes.shape({
         id: PropTypes.number
       })
-    )
+    ),
+    retweetId: PropTypes.number,
+    retweet: PropTypes.shape({
+      id: PropTypes.number,
+      user: PropTypes.shape({
+        id: PropTypes.number,
+        nickname: PropTypes.string
+      }),
+      content: PropTypes.string,
+      images: PropTypes.arrayOf(PropTypes.object)
+    }),
+    retweetError: PropTypes.shape({
+      message: PropTypes.string
+    })
   }).isRequired
 };
 

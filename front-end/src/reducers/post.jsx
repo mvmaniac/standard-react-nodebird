@@ -74,6 +74,10 @@ export const initialState = {
   isRemoveCommentDone: false,
   removeCommentError: null,
 
+  isRetweetLoading: false, // 리트윗 중
+  isRetweetDone: false,
+  retweetError: null,
+
   isLikePostLoading: false, // 포스트 종아요 등록 중
   isLikePostDone: false,
   likePostError: null,
@@ -81,6 +85,10 @@ export const initialState = {
   isUnLikePostLoading: false, // 포스트 좋아요 취소 중
   isUnLikePostDone: false,
   unLikePostError: null,
+
+  isUploadImagesLoading: false, // 이미지 업로드 중
+  isUploadImagesDone: false,
+  uploadImagesError: null,
 
   mainPosts: [],
   imagePaths: []
@@ -114,6 +122,17 @@ export const UN_LIKE_POST_REQUEST = 'UN_LIKE_POST_REQUEST';
 export const UN_LIKE_POST_SUCCESS = 'UN_LIKE_POST_SUCCESS';
 export const UN_LIKE_POST_FAILURE = 'UN_LIKE_POST_FAILURE';
 
+export const RETWEET_REQUEST = 'RETWEET_REQUEST';
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+export const RETWEET_FAILURE = 'RETWEET_FAILURE';
+export const RETWEET_ERROR_CLEAR = 'RETWEET_ERROR_CLEAR';
+
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
+
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
+
 export const loadPostRequestAction = (data) => ({
   type: LOAD_POST_REQUEST,
   data
@@ -139,6 +158,15 @@ export const removeCommentRequestAction = (data) => ({
   data
 });
 
+export const retweetRequestAction = (data) => ({
+  type: RETWEET_REQUEST,
+  data
+});
+
+export const retweetErrorClearAction = () => ({
+  type: RETWEET_ERROR_CLEAR
+});
+
 export const likePostRequestAction = (data) => ({
   type: LIKE_POST_REQUEST,
   data
@@ -146,6 +174,16 @@ export const likePostRequestAction = (data) => ({
 
 export const unLikePostRequestAction = (data) => ({
   type: UN_LIKE_POST_REQUEST,
+  data
+});
+
+export const uploadImagesRequestAction = (data) => ({
+  type: UPLOAD_IMAGES_REQUEST,
+  data
+});
+
+export const removeImageAction = (data) => ({
+  type: REMOVE_IMAGE,
   data
 });
 
@@ -161,8 +199,8 @@ const postReducer = (state = initialState, action) =>
       case LOAD_POST_SUCCESS: {
         draft.isLoadPostLoading = false;
         draft.isLoadPostDone = true;
-        draft.mainPosts = action.data.concat(draft.mainPosts);
-        draft.hasMorePost = draft.mainPosts.length < 50;
+        draft.mainPosts = [...draft.mainPosts, ...action.data];
+        draft.hasMorePost = action.data.length === 10;
         break;
       }
       case LOAD_POST_FAILURE: {
@@ -181,6 +219,7 @@ const postReducer = (state = initialState, action) =>
         draft.isAddPostLoading = false;
         draft.isAddPostDone = true;
         draft.mainPosts.unshift(action.data); // unshift: 새로운 요소를 배열의 맨 앞쪽에 추가하고, 새로운 길이를 반환
+        draft.imagePaths = [];
         break;
       }
       case ADD_POST_FAILURE: {
@@ -258,6 +297,28 @@ const postReducer = (state = initialState, action) =>
         break;
       }
 
+      case RETWEET_REQUEST: {
+        draft.isRetweetLoading = true;
+        draft.isRetweetDone = false;
+        draft.retweetError = null;
+        break;
+      }
+      case RETWEET_SUCCESS: {
+        draft.isRetweetLoading = false;
+        draft.isRetweetDone = true;
+        draft.mainPosts.unshift(action.data);
+        break;
+      }
+      case RETWEET_FAILURE: {
+        draft.isRetweetLoading = false;
+        draft.retweetError = action.error;
+        break;
+      }
+      case RETWEET_ERROR_CLEAR: {
+        draft.retweetError = null;
+        break;
+      }
+
       case LIKE_POST_REQUEST: {
         draft.isLikePostLoading = true;
         draft.isLoadPostDone = false;
@@ -303,6 +364,31 @@ const postReducer = (state = initialState, action) =>
       case UN_LIKE_POST_FAILURE: {
         draft.isUnLikePostLoading = false;
         draft.unLikePostError = action.error;
+        break;
+      }
+
+      case UPLOAD_IMAGES_REQUEST: {
+        draft.isUploadImagesLoading = true;
+        draft.isUploadImagesDone = false;
+        draft.uploadImagesError = null;
+        break;
+      }
+      case UPLOAD_IMAGES_SUCCESS: {
+        draft.isUploadImagesLoading = false;
+        draft.isUploadImagesDone = true;
+        draft.imagePaths.unshift(...action.data);
+        break;
+      }
+      case UPLOAD_IMAGES_FAILURE: {
+        draft.isUploadImagesLoading = false;
+        draft.uploadImagesError = action.error;
+        break;
+      }
+
+      case REMOVE_IMAGE: {
+        draft.imagePaths = draft.imagePaths.filter(
+          (value, index) => index !== action.data.index
+        );
         break;
       }
 

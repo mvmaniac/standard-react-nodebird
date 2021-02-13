@@ -43,7 +43,7 @@ const PostImages = ({images}) => {
     return (
       <BoxImageStyled>
         <img
-          src={image.src}
+          src={`http://localhost:3065/${image.src}`}
           alt={image.src}
           onClick={onZoom}
           role="presentation"
@@ -60,13 +60,13 @@ const PostImages = ({images}) => {
     return (
       <BoxImageStyled>
         <img
-          src={image1.src}
+          src={`http://localhost:3065/${image1.src}`}
           alt={image1.src}
           onClick={onZoom}
           role="presentation"
         />
         <img
-          src={image2.src}
+          src={`http://localhost:3065/${image2.src}`}
           alt={image2.src}
           onClick={onZoom}
           role="presentation"
@@ -81,7 +81,7 @@ const PostImages = ({images}) => {
   return (
     <BoxImageStyled>
       <img
-        src={image.src}
+        src={`http://localhost:3065/${image.src}`}
         alt={image.src}
         onClick={onZoom}
         role="presentation"

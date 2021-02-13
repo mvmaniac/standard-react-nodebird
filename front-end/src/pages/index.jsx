@@ -1,23 +1,34 @@
 import React, {useEffect} from 'react'; // next.js 에서는 react를 import 안해도 실행 가능 함...
 import {useDispatch, useSelector} from 'react-redux';
 
+import {Modal} from 'antd';
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
-import {loadPostRequestAction} from '../reducers/post';
+import {loadPostRequestAction, retweetErrorClearAction} from '../reducers/post';
 import {loadMyInfoRequestAction} from '../reducers/user';
 
 const Home = () => {
   const my = useSelector((state) => state.user.my);
-  const {mainPosts, hasMorePost, isLoadPostLoading} = useSelector(
+  const {mainPosts, hasMorePost, isLoadPostLoading, retweetError} = useSelector(
     (state) => state.post
   );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (retweetError) {
+      Modal.error({
+        title: '에러',
+        content: retweetError.message
+      });
+      dispatch(retweetErrorClearAction());
+    }
+  }, [dispatch, retweetError]);
+
+  useEffect(() => {
     dispatch(loadMyInfoRequestAction());
-    dispatch(loadPostRequestAction());
+    dispatch(loadPostRequestAction({lastId: 0}));
   }, [dispatch]);
 
   useEffect(() => {
@@ -32,15 +43,20 @@ const Home = () => {
       //   document.documentElement.scrollHeight
       // );
 
-      const {scrollY} = window;
+      const {pageYOffset} = window;
       const {clientHeight, scrollHeight} = document.documentElement;
 
       if (
-        scrollY + clientHeight > scrollHeight - 300 &&
+        pageYOffset + clientHeight > scrollHeight - 300 &&
         hasMorePost &&
         !isLoadPostLoading
       ) {
-        dispatch(loadPostRequestAction());
+        const lastId = mainPosts[mainPosts.length - 1]?.id ?? 0;
+        dispatch(
+          loadPostRequestAction({
+            lastId
+          })
+        );
       }
     }
 
@@ -49,7 +65,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, [dispatch, hasMorePost, isLoadPostLoading]);
+  }, [dispatch, hasMorePost, isLoadPostLoading, mainPosts]);
 
   return (
     <AppLayout>

@@ -1,14 +1,20 @@
 import React, {useEffect} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Head from 'next/head';
 import Router from 'next/router';
 
 import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
+import {
+  loadFollowersRequestAction,
+  loadFollowingRequestAction
+} from '../reducers/user';
 
 const Profile = () => {
   const my = useSelector((state) => state.user.my);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // 로그인한 정보가 없다면 메인으로 이동
@@ -16,6 +22,11 @@ const Profile = () => {
       Router.push('/');
     }
   }, [my?.id]);
+
+  useEffect(() => {
+    dispatch(loadFollowingRequestAction());
+    dispatch(loadFollowersRequestAction());
+  }, [dispatch]);
 
   if (!my) {
     return null;

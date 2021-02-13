@@ -18,10 +18,10 @@ const FollowButton = ({post}) => {
 
   const onFollow = useCallback(() => {
     if (isFollowing) {
-      dispatch(unFollowRequestAction(post.user.id));
+      dispatch(unFollowRequestAction({followingId: post.user.id}));
       return;
     }
-    dispatch(followRequestAction(post.user.id));
+    dispatch(followRequestAction({followingId: post.user.id}));
   }, [dispatch, isFollowing, post.user.id]);
 
   return (

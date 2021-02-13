@@ -17,17 +17,23 @@ import {
   REMOVE_COMMENT_REQUEST,
   REMOVE_COMMENT_SUCCESS,
   REMOVE_COMMENT_FAILURE,
+  RETWEET_REQUEST,
+  RETWEET_SUCCESS,
+  RETWEET_FAILURE,
   LIKE_POST_REQUEST,
   LIKE_POST_SUCCESS,
   LIKE_POST_FAILURE,
   UN_LIKE_POST_REQUEST,
   UN_LIKE_POST_SUCCESS,
-  UN_LIKE_POST_FAILURE
+  UN_LIKE_POST_FAILURE,
+  UPLOAD_IMAGES_REQUEST,
+  UPLOAD_IMAGES_SUCCESS,
+  UPLOAD_IMAGES_FAILURE
 } from '../reducers/post';
 import {ADD_POST_TO_ME, REMOVE_POST_OF_ME} from '../reducers/user';
 
 function loadPostAPI(data) {
-  return axios.get('/posts', data);
+  return axios.get(`/posts?lastId=${data.lastId}`);
 }
 function* loadPost(action) {
   try {
@@ -48,7 +54,12 @@ function* loadPost(action) {
 }
 
 function addPostAPI(data) {
-  return axios.post('/posts', {content: data.content});
+  const {content, imagePaths} = data;
+
+  return axios.post('/posts', {
+    content,
+    imagePaths
+  });
 }
 function* addPost(action) {
   try {
@@ -141,6 +152,27 @@ function* removeComment(action) {
   }
 }
 
+function retweetAPI(data) {
+  return axios.patch(`/posts/${data.postId}/retweet`);
+}
+function* retweet(action) {
+  try {
+    const result = yield call(retweetAPI, action.data);
+
+    yield put({
+      type: RETWEET_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+
+    yield put({
+      type: RETWEET_FAILURE,
+      error: error.response.data
+    });
+  }
+}
+
 function likePostAPI(data) {
   return axios.patch(`/posts/${data.postId}/like`);
 }
@@ -183,6 +215,27 @@ function* unLikePost(action) {
   }
 }
 
+function uploadImagesAPI(data) {
+  return axios.post('/posts/images', data);
+}
+function* uploadImages(action) {
+  try {
+    const result = yield call(uploadImagesAPI, action.data);
+
+    yield put({
+      type: UPLOAD_IMAGES_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+
+    yield put({
+      type: UPLOAD_IMAGES_FAILURE,
+      error: error.response.data
+    });
+  }
+}
+
 function* watchLoadPost() {
   yield takeLatest(LOAD_POST_REQUEST, loadPost);
 }
@@ -203,12 +256,20 @@ function* watchRemoveComment() {
   yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 }
 
+function* watchRetweet() {
+  yield takeLatest(RETWEET_REQUEST, retweet);
+}
+
 function* watchLikePost() {
   yield takeLatest(LIKE_POST_REQUEST, likePost);
 }
 
 function* watchUnLikePost() {
   yield takeLatest(UN_LIKE_POST_REQUEST, unLikePost);
+}
+
+function* watchUploadImages() {
+  yield takeLatest(UPLOAD_IMAGES_REQUEST, uploadImages);
 }
 
 export default function* postSaga() {
@@ -218,7 +279,9 @@ export default function* postSaga() {
     fork(watchRemovePost),
     fork(watchAddComment),
     fork(watchRemoveComment),
+    fork(watchRetweet),
     fork(watchLikePost),
-    fork(watchUnLikePost)
+    fork(watchUnLikePost),
+    fork(watchUploadImages)
   ]);
 }

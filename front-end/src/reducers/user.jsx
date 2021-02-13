@@ -1,23 +1,23 @@
 import {produce} from 'immer';
-import faker from 'faker';
+// import faker from 'faker';
 
-const dummyUser = (data) => ({
-  ...data,
-  id: 1,
-  email: faker.internet.email(),
-  nickname: faker.internet.userName(),
-  posts: [{id: 1}],
-  followings: [
-    {nickname: faker.internet.userName()},
-    {nickname: faker.internet.userName()},
-    {nickname: faker.internet.userName()}
-  ],
-  followers: [
-    {nickname: faker.internet.userName()},
-    {nickname: faker.internet.userName()},
-    {nickname: faker.internet.userName()}
-  ]
-});
+// const dummyUser = (data) => ({
+//   ...data,
+//   id: 1,
+//   email: faker.internet.email(),
+//   nickname: faker.internet.userName(),
+//   posts: [{id: 1}],
+//   followings: [
+//     {nickname: faker.internet.userName()},
+//     {nickname: faker.internet.userName()},
+//     {nickname: faker.internet.userName()}
+//   ],
+//   followers: [
+//     {nickname: faker.internet.userName()},
+//     {nickname: faker.internet.userName()},
+//     {nickname: faker.internet.userName()}
+//   ]
+// });
 
 export const initialState = {
   isLoginLoading: false, // 로그인 시도 중
@@ -32,21 +32,29 @@ export const initialState = {
   isSignUpDone: false,
   signUpError: null,
 
+  isLoadMyInfoLoading: false, // 내 정보 불러오기 시도 중
+  isLoadMyInfoDone: false,
+  loadMyInfoError: false,
+
   isChangeNicknameLoading: false, // 닉네임 변경 시도 중
   isChangeNicknameDone: false,
   changeNicknameError: null,
 
-  isFollowLoading: false,
+  isLoadFollowingsLoading: false, // 팔로잉 목록 불러오기 시도 중
+  isLoadFollowingsDone: false,
+  loadFollowingsError: false,
+
+  isLoadFollowersLoading: false, // 팔로워 목록 불러오기 시도 중
+  isLoadFollowersDone: false,
+  loadFollowersError: false,
+
+  isFollowLoading: false, // 팔로우 시도 중
   isFollowDone: false,
   followError: false,
 
-  isUnFollowLoading: false,
+  isUnFollowLoading: false, // 언팔로우 시도 중
   isUnFollowDone: false,
   unFollowError: false,
-
-  isLoadMyInfoLoading: false,
-  isLoadMyInfoDone: false,
-  loadMyInfoError: false,
 
   my: null,
   signUpData: {},
@@ -65,6 +73,7 @@ export const LOG_OUT_FAILURE = 'LOG_OUT_FAILURE';
 export const SIGN_UP_REQUEST = 'SIGN_UP_REQUEST';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+export const SIGN_UP_COMPLETE = 'SIGN_UP_COMPLETE';
 
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
@@ -74,6 +83,14 @@ export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
 export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
 
+export const LOAD_FOLLOWING_REQUEST = 'LOAD_FOLLOWING_REQUEST';
+export const LOAD_FOLLOWING_SUCCESS = 'LOAD_FOLLOWING_SUCCESS';
+export const LOAD_FOLLOWING_FAILURE = 'LOAD_FOLLOWING_FAILURE';
+
+export const LOAD_FOLLOWERS_REQUEST = 'LOAD_FOLLOWERS_REQUEST';
+export const LOAD_FOLLOWERS_SUCCESS = 'LOAD_FOLLOWERS_SUCCESS';
+export const LOAD_FOLLOWERS_FAILURE = 'LOAD_FOLLOWERS_FAILURE';
+
 export const FOLLOW_REQUEST = 'FOLLOW_REQUEST';
 export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS';
 export const FOLLOW_FAILURE = 'FOLLOW_FAILURE';
@@ -82,12 +99,20 @@ export const UN_FOLLOW_REQUEST = 'UN_FOLLOW_REQUEST';
 export const UN_FOLLOW_SUCCESS = 'UN_FOLLOW_SUCCESS';
 export const UN_FOLLOW_FAILURE = 'UN_FOLLOW_FAILURE';
 
+export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST';
+export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS';
+export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
+
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
 export const signUpRequestAction = (data) => ({
   type: SIGN_UP_REQUEST,
   data
+});
+
+export const signUpCompleteAction = () => ({
+  type: SIGN_UP_COMPLETE
 });
 
 export const loginRequestAction = (data) => ({
@@ -112,6 +137,14 @@ export const changeNicknameRequestAction = (data) => ({
   data
 });
 
+export const loadFollowingRequestAction = () => ({
+  type: LOAD_FOLLOWING_REQUEST
+});
+
+export const loadFollowersRequestAction = () => ({
+  type: LOAD_FOLLOWERS_REQUEST
+});
+
 export const followRequestAction = (data) => ({
   type: FOLLOW_REQUEST,
   data
@@ -119,6 +152,11 @@ export const followRequestAction = (data) => ({
 
 export const unFollowRequestAction = (data) => ({
   type: UN_FOLLOW_REQUEST,
+  data
+});
+
+export const removeFollowerRequestAction = (data) => ({
+  type: REMOVE_FOLLOWER_REQUEST,
   data
 });
 
@@ -183,6 +221,11 @@ const userReducer = (state = initialState, action) =>
         draft.signUpError = action.error;
         break;
       }
+      case SIGN_UP_COMPLETE: {
+        draft.isSignUpDone = false;
+        draft.signUpData = null;
+        break;
+      }
 
       case LOAD_MY_INFO_REQUEST: {
         draft.isLoadMyInfoLoading = true;
@@ -220,6 +263,42 @@ const userReducer = (state = initialState, action) =>
         break;
       }
 
+      case LOAD_FOLLOWING_REQUEST: {
+        draft.isLoadFollowingLoading = true;
+        draft.isLoadFollowingDone = false;
+        draft.loadFollowingError = null;
+        break;
+      }
+      case LOAD_FOLLOWING_SUCCESS: {
+        draft.isLoadFollowingLoading = false;
+        draft.isLoadFollowingDone = true;
+        draft.my.followings = action.data.followings;
+        break;
+      }
+      case LOAD_FOLLOWING_FAILURE: {
+        draft.isLoadFollowingLoading = false;
+        draft.loadFollowingError = action.error;
+        break;
+      }
+
+      case LOAD_FOLLOWERS_REQUEST: {
+        draft.isLoadFollowersLoading = true;
+        draft.isLoadFollowersDone = false;
+        draft.loadFollowersError = null;
+        break;
+      }
+      case LOAD_FOLLOWERS_SUCCESS: {
+        draft.isLoadFollowersLoading = false;
+        draft.isLoadFollowersDone = true;
+        draft.my.followers = action.data.followers;
+        break;
+      }
+      case LOAD_FOLLOWERS_FAILURE: {
+        draft.isLoadFollowersLoading = false;
+        draft.loadFollowersError = action.error;
+        break;
+      }
+
       case FOLLOW_REQUEST: {
         draft.isFollowLoading = true;
         draft.isFollowDone = false;
@@ -229,7 +308,7 @@ const userReducer = (state = initialState, action) =>
       case FOLLOW_SUCCESS: {
         draft.isFollowLoading = false;
         draft.isFollowDone = true;
-        draft.my.followings.push({id: action.data});
+        draft.my.followings.push({id: action.data.followingId});
         break;
       }
       case FOLLOW_FAILURE: {
@@ -248,13 +327,33 @@ const userReducer = (state = initialState, action) =>
         draft.isUnFollowLoading = false;
         draft.isUnFollowDone = true;
         draft.my.followings = draft.my.followings.filter(
-          (follow) => follow.id !== action.data
+          (follow) => follow.id !== action.data.followingId
         );
         break;
       }
       case UN_FOLLOW_FAILURE: {
         draft.isUnFollowLoading = false;
         draft.unFollowError = action.error;
+        break;
+      }
+
+      case REMOVE_FOLLOWER_REQUEST: {
+        draft.isRemoveFollowerLoading = true;
+        draft.isRemoveFollowerDone = false;
+        draft.removeFollowerError = null;
+        break;
+      }
+      case REMOVE_FOLLOWER_SUCCESS: {
+        draft.isRemoveFollowerLoading = false;
+        draft.isRemoveFollowerDone = true;
+        draft.my.followers = draft.my.followers.filter(
+          (follow) => follow.id !== action.data.followerId
+        );
+        break;
+      }
+      case REMOVE_FOLLOWER_FAILURE: {
+        draft.isRemoveFollowerLoading = false;
+        draft.removeFollowerError = action.error;
         break;
       }
 

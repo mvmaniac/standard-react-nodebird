@@ -1,9 +1,13 @@
 import React, {useCallback, useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Form, Button, Input} from 'antd';
+import {Form, Button, Input, Modal} from 'antd';
 import styled from 'styled-components';
 
-import {addPostRequestAction} from '../reducers/post';
+import {
+  addPostRequestAction,
+  removeImageAction,
+  uploadImagesRequestAction
+} from '../reducers/post';
 import useInput from '../hooks/useInput';
 
 const FormStyled = styled(Form)`
@@ -47,9 +51,45 @@ const PostForm = () => {
     imageInput.current.click();
   }, []);
 
+  const onChangeImages = useCallback(
+    (event) => {
+      console.log(event.target.files);
+
+      const formData = new FormData();
+      Object.values(event.target.files).forEach((file) => {
+        console.log(file);
+        formData.append('image', file);
+      });
+
+      dispatch(uploadImagesRequestAction(formData));
+    },
+    [dispatch]
+  );
+
+  const onRemoveImage = useCallback(
+    (index) => () => {
+      dispatch(removeImageAction({index}));
+    },
+    [dispatch]
+  );
+
   const onSubmitForm = useCallback(() => {
-    dispatch(addPostRequestAction({content: text}));
-  }, [dispatch, text]);
+    if (!text || !text.trim()) {
+      Modal.warning({
+        title: '알림',
+        content: '게시글을 작성하세요.'
+      });
+
+      return;
+    }
+
+    dispatch(
+      addPostRequestAction({
+        content: text,
+        imagePaths
+      })
+    );
+  }, [dispatch, text, imagePaths]);
 
   return (
     <FormStyled encType="multipart/form-data" onFinish={onSubmitForm}>
@@ -61,22 +101,28 @@ const PostForm = () => {
           placeholder="어떤 신기한 일이 있었나요?"
         />
         <div className="box-upload">
-          <input type="file" multiple hidden ref={imageInput} />
+          <input
+            type="file"
+            multiple
+            hidden
+            ref={imageInput}
+            onChange={onChangeImages}
+          />
           <Button onClick={onClickImageUpload}>이미지 업로드</Button>
           <Button type="primary" htmlType="submit" loading={isAddPostLoading}>
             짹짹
           </Button>
         </div>
         <div className="box-image">
-          {imagePaths.map((v) => (
-            <div key={v} className="image">
+          {imagePaths.map((value, index) => (
+            <div key={value} className="image">
               <img
-                src={`http://localhost:3000/${v}`}
+                src={`http://localhost:3065/${value}`}
                 style={{width: '200px'}}
-                alt={v}
+                alt={value}
               />
               <div>
-                <Button>제거</Button>
+                <Button onClick={onRemoveImage(index)}>제거</Button>
               </div>
             </div>
           ))}
