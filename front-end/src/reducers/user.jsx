@@ -34,7 +34,11 @@ export const initialState = {
 
   isLoadMyInfoLoading: false, // 내 정보 불러오기 시도 중
   isLoadMyInfoDone: false,
-  loadMyInfoError: false,
+  loadMyInfoError: null,
+
+  isLoadUserInfoLoading: false, // 남의 정보 불러오기 시도 중
+  isLoadUserInfoDone: false,
+  loadUserInfoError: null,
 
   isChangeNicknameLoading: false, // 닉네임 변경 시도 중
   isChangeNicknameDone: false,
@@ -42,21 +46,22 @@ export const initialState = {
 
   isLoadFollowingsLoading: false, // 팔로잉 목록 불러오기 시도 중
   isLoadFollowingsDone: false,
-  loadFollowingsError: false,
+  loadFollowingsError: null,
 
   isLoadFollowersLoading: false, // 팔로워 목록 불러오기 시도 중
   isLoadFollowersDone: false,
-  loadFollowersError: false,
+  loadFollowersError: null,
 
   isFollowLoading: false, // 팔로우 시도 중
   isFollowDone: false,
-  followError: false,
+  followError: null,
 
   isUnFollowLoading: false, // 언팔로우 시도 중
   isUnFollowDone: false,
-  unFollowError: false,
+  unFollowError: null,
 
   my: null,
+  other: null,
   signUpData: {},
   loginData: {}
 };
@@ -78,6 +83,10 @@ export const SIGN_UP_COMPLETE = 'SIGN_UP_COMPLETE';
 export const LOAD_MY_INFO_REQUEST = 'LOAD_MY_INFO_REQUEST';
 export const LOAD_MY_INFO_SUCCESS = 'LOAD_MY_INFO_SUCCESS';
 export const LOAD_MY_INFO_FAILURE = 'LOAD_MY_INFO_FAILURE';
+
+export const LOAD_USER_INFO_REQUEST = 'LOAD_USER_INFO_REQUEST';
+export const LOAD_USER_INFO_SUCCESS = 'LOAD_USER_INFO_SUCCESS';
+export const LOAD_USER_INFO_FAILURE = 'LOAD_USER_INFO_FAILURE';
 
 export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
@@ -130,6 +139,11 @@ export const logoutRequestAction = () => ({
 
 export const loadMyInfoRequestAction = () => ({
   type: LOAD_MY_INFO_REQUEST
+});
+
+export const loadUserInfoRequestAction = (data) => ({
+  type: LOAD_USER_INFO_REQUEST,
+  data
 });
 
 export const changeNicknameRequestAction = (data) => ({
@@ -236,12 +250,30 @@ const userReducer = (state = initialState, action) =>
       case LOAD_MY_INFO_SUCCESS: {
         draft.isLoadMyInfoLoading = false;
         draft.isLoadMyInfoDone = true;
-        draft.my = action.data;
+        draft.my = action.data ? action.data : null;
         break;
       }
       case LOAD_MY_INFO_FAILURE: {
         draft.isLoadMyInfoLoading = false;
         draft.loadMyInfoError = action.error;
+        break;
+      }
+
+      case LOAD_USER_INFO_REQUEST: {
+        draft.isLoadUserInfoLoading = true;
+        draft.isLoadUserInfoDone = false;
+        draft.loadUserInfoError = null;
+        break;
+      }
+      case LOAD_USER_INFO_SUCCESS: {
+        draft.isLoadUserInfoLoading = false;
+        draft.isLoadUserInfoDone = true;
+        draft.other = action.data ? action.data : null;
+        break;
+      }
+      case LOAD_USER_INFO_FAILURE: {
+        draft.isLoadUserInfoLoading = false;
+        draft.loadUserInfoError = action.error;
         break;
       }
 

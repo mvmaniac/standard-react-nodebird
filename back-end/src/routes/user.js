@@ -77,7 +77,42 @@ router.get('/', async (req, res, next) => {
       return;
     }
 
-    res.status(204);
+    res.status(204).json();
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// GET /users/:userId
+router.get('/:userId', async (req, res, next) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+
+    const findUser = await User.findOne({
+      where: {id: userId},
+      attributes: {
+        exclude: ['password', 'updated_at']
+      },
+      include: [
+        {model: Post, attributes: ['id']},
+        {model: User, as: 'followers', attributes: ['id']},
+        {model: User, as: 'followings', attributes: ['id']}
+      ]
+    });
+
+    if (!findUser) {
+      res.status(404).json({message: '존재하지 않는 사용자입니다.'});
+      return;
+    }
+
+    // posts, followers, followings 의 아이디 값도 안나오게 하기 위해서...
+    const result = findUser.toJSON();
+    result.posts = result.posts.length;
+    result.followers = result.followers.length;
+    result.followings = result.followings.length;
+
+    res.status(200).json(result);
   } catch (error) {
     console.error(error);
     next(error);
