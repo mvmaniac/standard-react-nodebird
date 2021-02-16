@@ -46,10 +46,68 @@ const uploadImages = multer({
 router.get('/', async (req, res, next) => {
   try {
     const lastId = parseInt(req.query.lastId, 10);
+    const userId = parseInt(req.query?.userId ?? 0, 10);
+    const hashtag = req.query?.hashtag ?? '';
+
     const where = {};
+    const include = [
+      {
+        model: User,
+        attributes: ['id', 'nickname']
+      },
+      {
+        model: Image,
+        attributes: ['id', 'src']
+      },
+      {
+        model: Comment,
+        attributes: {
+          exclude: ['updated_at']
+        },
+        include: [
+          {
+            model: User,
+            attributes: ['nickname']
+          }
+        ]
+      },
+      {
+        model: User,
+        as: 'likers',
+        attributes: ['id']
+      },
+      {
+        model: Post,
+        as: 'retweet',
+        attributes: {
+          exclude: ['user_id', 'updated_at']
+        },
+        include: [
+          {
+            model: User,
+            attributes: ['id', 'nickname']
+          },
+          {
+            model: Image,
+            attributes: ['id', 'src']
+          }
+        ]
+      }
+    ];
 
     if (lastId) {
       where.id = {[Op.lt]: lastId};
+    }
+
+    if (userId) {
+      where.userId = {[Op.eq]: userId};
+    }
+
+    if (hashtag) {
+      include.push({
+        model: Hashtag,
+        where: {name: decodeURIComponent(hashtag)}
+      });
     }
 
     const findPosts = await Post.findAll({
@@ -62,6 +120,26 @@ router.get('/', async (req, res, next) => {
         ['created_at', 'DESC'],
         [Comment, 'created_at', 'DESC']
       ],
+      include
+    });
+
+    res.status(200).json(findPosts);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// GET /posts/:postId
+router.get('/:postId', async (req, res, next) => {
+  try {
+    const postId = parseInt(req.params.postId, 10);
+
+    const findPost = await Post.findOne({
+      where: {id: postId},
+      attributes: {
+        exclude: ['user_id', 'updated_at']
+      },
       include: [
         {
           model: User,
@@ -108,7 +186,12 @@ router.get('/', async (req, res, next) => {
       ]
     });
 
-    res.status(200).json(findPosts);
+    if (!findPost) {
+      res.status(404).json({message: '존재하지 않는 게시글입니다.'});
+      return;
+    }
+
+    res.status(200).json(findPost);
   } catch (error) {
     console.error(error);
     next(error);
@@ -185,7 +268,7 @@ router.post('/images', isLoggedIn, uploadImages.array('image'), (req, res) => {
   res.json(req.files.map((value) => `${req.imagePath}/${value.filename}`));
 });
 
-// DELETE /posts
+// DELETE /posts/:postId
 router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   let transaction;
 

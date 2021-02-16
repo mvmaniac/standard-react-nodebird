@@ -94,7 +94,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const {dispatch, sagaTask} = store;
 
     dispatch(loadMyInfoRequestAction());
-    dispatch(loadPostRequestAction({lastId: 0}));
+    dispatch(loadPostRequestAction());
     dispatch(END);
 
     await sagaTask.toPromise();

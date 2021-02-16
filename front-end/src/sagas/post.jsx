@@ -2,9 +2,18 @@ import {all, call, fork, put, takeLatest} from 'redux-saga/effects';
 import axios from 'axios';
 
 import {
+  GET_POST_REQUEST,
+  GET_POST_SUCCESS,
+  GET_POST_FAILURE,
   LOAD_POST_REQUEST,
   LOAD_POST_SUCCESS,
   LOAD_POST_FAILURE,
+  LOAD_POST_BY_USER_REQUEST,
+  LOAD_POST_BY_USER_SUCCESS,
+  LOAD_POST_BY_USER_FAILURE,
+  LOAD_POST_BY_HASHTAG_REQUEST,
+  LOAD_POST_BY_HASHTAG_SUCCESS,
+  LOAD_POST_BY_HASHTAG_FAILURE,
   ADD_POST_REQUEST,
   ADD_POST_SUCCESS,
   ADD_POST_FAILURE,
@@ -32,12 +41,33 @@ import {
 } from '../reducers/post';
 import {ADD_POST_TO_ME, REMOVE_POST_OF_ME} from '../reducers/user';
 
-function loadPostAPI(data) {
-  return axios.get(`/posts?lastId=${data.lastId}`);
+function getPostAPI(data) {
+  return axios.get(`/posts/${data.postId}`);
+}
+function* getPost(action) {
+  try {
+    const result = yield call(getPostAPI, action.data);
+
+    yield put({
+      type: GET_POST_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+
+    yield put({
+      type: GET_POST_FAILURE,
+      error: error.response.data
+    });
+  }
+}
+
+function loadPostAPI(lastId = 0) {
+  return axios.get(`/posts?lastId=${lastId}`);
 }
 function* loadPost(action) {
   try {
-    const result = yield call(loadPostAPI, action.data);
+    const result = yield call(loadPostAPI, action.data.lastId);
 
     yield put({
       type: LOAD_POST_SUCCESS,
@@ -48,6 +78,52 @@ function* loadPost(action) {
 
     yield put({
       type: LOAD_POST_FAILURE,
+      error: error.response.data
+    });
+  }
+}
+
+function loadPostByUserAPI(lastId = 0, userId) {
+  return axios.get(`/posts?lastId=${lastId}&userId=${userId}`);
+}
+function* loadPostByUser(action) {
+  try {
+    const {data} = action;
+    const result = yield call(loadPostByUserAPI, data.lastId, data.userId);
+
+    yield put({
+      type: LOAD_POST_BY_USER_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+
+    yield put({
+      type: LOAD_POST_BY_USER_FAILURE,
+      error: error.response.data
+    });
+  }
+}
+
+function loadPostByHashtagAPI(lastId = 0, hashtag) {
+  return axios.get(
+    `/posts?lastId=${lastId}&hashtag=${encodeURIComponent(hashtag)}`
+  );
+}
+function* loadPostByHashtag(action) {
+  try {
+    const {data} = action;
+    const result = yield call(loadPostByHashtagAPI, data.lastId, data.hashtag);
+
+    yield put({
+      type: LOAD_POST_BY_HASHTAG_SUCCESS,
+      data: result.data
+    });
+  } catch (error) {
+    console.error(error);
+
+    yield put({
+      type: LOAD_POST_BY_HASHTAG_FAILURE,
       error: error.response.data
     });
   }
@@ -236,8 +312,20 @@ function* uploadImages(action) {
   }
 }
 
+function* watchGetPost() {
+  yield takeLatest(GET_POST_REQUEST, getPost);
+}
+
 function* watchLoadPost() {
   yield takeLatest(LOAD_POST_REQUEST, loadPost);
+}
+
+function* watchLoadPostByUser() {
+  yield takeLatest(LOAD_POST_BY_USER_REQUEST, loadPostByUser);
+}
+
+function* watchLoadPostByHashtag() {
+  yield takeLatest(LOAD_POST_BY_HASHTAG_REQUEST, loadPostByHashtag);
 }
 
 function* watchAddPost() {
@@ -274,7 +362,10 @@ function* watchUploadImages() {
 
 export default function* postSaga() {
   yield all([
+    fork(watchGetPost),
     fork(watchLoadPost),
+    fork(watchLoadPostByUser),
+    fork(watchLoadPostByHashtag),
     fork(watchAddPost),
     fork(watchRemovePost),
     fork(watchAddComment),

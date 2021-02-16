@@ -84,8 +84,11 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+// 숫자 정규표현식을 하지 않으면
+// /users/followers, /users/followings URL로 여기를 탐...
+// 아니면 URL를 완전히 다르게 하던가 해야 할 듯...
 // GET /users/:userId
-router.get('/:userId', async (req, res, next) => {
+router.get('/:userId(\\d+)', async (req, res, next) => {
   try {
     const userId = parseInt(req.params.userId, 10);
 

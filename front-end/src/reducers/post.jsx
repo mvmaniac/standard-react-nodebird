@@ -54,7 +54,11 @@ export const generateDummyPost = (number) =>
 export const initialState = {
   hasMorePost: true,
 
-  isLoadPostLoading: false, // 포스트 불러오는 중
+  isGetPostLoading: false, // 포스트 하나 불러오는 중
+  isGetPostDone: false,
+  getPostError: null,
+
+  isLoadPostLoading: false, // 포스트 목록 불러오는 중
   isLoadPostDone: false,
   loadPostError: null,
 
@@ -91,12 +95,25 @@ export const initialState = {
   uploadImagesError: null,
 
   mainPosts: [],
-  imagePaths: []
+  imagePaths: [],
+  singlePost: null
 };
+
+export const GET_POST_REQUEST = 'GET_POST_REQUEST';
+export const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
+export const GET_POST_FAILURE = 'GET_POST_FAILURE';
 
 export const LOAD_POST_REQUEST = 'LOAD_POST_REQUEST';
 export const LOAD_POST_SUCCESS = 'LOAD_POST_SUCCESS';
 export const LOAD_POST_FAILURE = 'LOAD_POST_FAILURE';
+
+export const LOAD_POST_BY_USER_REQUEST = 'LOAD_POST_BY_USER_REQUEST';
+export const LOAD_POST_BY_USER_SUCCESS = 'LOAD_POST_BY_USER_SUCCESS';
+export const LOAD_POST_BY_USER_FAILURE = 'LOAD_POST_BY_USER_FAILURE';
+
+export const LOAD_POST_BY_HASHTAG_REQUEST = 'LOAD_POST_BY_HASHTAG_REQUEST';
+export const LOAD_POST_BY_HASHTAG_SUCCESS = 'LOAD_POST_BY_HASHTAG_SUCCESS';
+export const LOAD_POST_BY_HASHTAG_FAILURE = 'LOAD_POST_BY_HASHTAG_FAILURE';
 
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
@@ -133,8 +150,23 @@ export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 
+export const getPostRequestAction = (data) => ({
+  type: GET_POST_REQUEST,
+  data
+});
+
 export const loadPostRequestAction = (data) => ({
   type: LOAD_POST_REQUEST,
+  data
+});
+
+export const loadPostByUserRequestAction = (data) => ({
+  type: LOAD_POST_BY_USER_REQUEST,
+  data
+});
+
+export const loadPostByHashtagRequestAction = (data) => ({
+  type: LOAD_POST_BY_HASHTAG_REQUEST,
   data
 });
 
@@ -190,12 +222,34 @@ export const removeImageAction = (data) => ({
 const postReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case GET_POST_REQUEST: {
+        draft.isGetPostLoading = true;
+        draft.isGetPostDone = false;
+        draft.getPostError = null;
+        break;
+      }
+      case GET_POST_SUCCESS: {
+        draft.isGetPostLoading = false;
+        draft.isGetPostDone = true;
+        draft.singlePost = action.data;
+        break;
+      }
+      case GET_POST_FAILURE: {
+        draft.isGetPostLoading = false;
+        draft.getPostError = action.error;
+        break;
+      }
+
+      case LOAD_POST_BY_USER_REQUEST:
+      case LOAD_POST_BY_HASHTAG_REQUEST:
       case LOAD_POST_REQUEST: {
         draft.isLoadPostLoading = true;
         draft.isLoadPostDone = false;
         draft.loadPostError = null;
         break;
       }
+      case LOAD_POST_BY_USER_SUCCESS:
+      case LOAD_POST_BY_HASHTAG_SUCCESS:
       case LOAD_POST_SUCCESS: {
         draft.isLoadPostLoading = false;
         draft.isLoadPostDone = true;
@@ -203,6 +257,8 @@ const postReducer = (state = initialState, action) =>
         draft.hasMorePost = action.data.length === 10;
         break;
       }
+      case LOAD_POST_BY_USER_FAILURE:
+      case LOAD_POST_BY_HASHTAG_FAILURE:
       case LOAD_POST_FAILURE: {
         draft.isLoadPostLoading = false;
         draft.loadPostError = action.error;
