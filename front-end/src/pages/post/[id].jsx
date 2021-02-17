@@ -39,7 +39,7 @@ const Post = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  async ({store, req, query}) => {
+  async ({store, req, params}) => {
     const cookie = req?.headers?.cookie ?? '';
     axios.defaults.headers.Cookie = '';
 
@@ -50,11 +50,38 @@ export const getServerSideProps = wrapper.getServerSideProps(
     const {dispatch, sagaTask} = store;
 
     dispatch(loadMyInfoRequestAction());
-    dispatch(getPostRequestAction({postId: query.id})); // or context.params.id
+    dispatch(getPostRequestAction({postId: params.id})); // or context.query.id
     dispatch(END);
 
     await sagaTask.toPromise();
   }
 );
+
+// next.js 기능 중의 하나인 정적인 페이지 미리 만들기를 할 경우
+// export async function getStaticPaths() {
+//   return {
+//     paths: [{params: {id: '1'}}, {params: {id: '2'}}, {params: {id: '3'}}],
+//     fallback: false // true인 경우 paths 없는 경우 에러가 나지 않고 데이터를 요청함
+//   };
+// }
+
+// export const getStaticProps = wrapper.getStaticProps(
+//   async ({store, req, params}) => {
+//     const cookie = req?.headers?.cookie ?? '';
+//     axios.defaults.headers.Cookie = '';
+
+//     if (req && cookie) {
+//       axios.defaults.headers.Cookie = cookie;
+//     }
+
+//     const {dispatch, sagaTask} = store;
+
+//     dispatch(loadMyInfoRequestAction());
+//     dispatch(getPostRequestAction({postId: params.id})); // or context.query.id
+//     dispatch(END);
+
+//     await sagaTask.toPromise();
+//   }
+// );
 
 export default Post;

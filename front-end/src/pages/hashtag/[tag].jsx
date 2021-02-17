@@ -57,7 +57,7 @@ const Hashtag = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  async ({store, req, query}) => {
+  async ({store, req, params}) => {
     const cookie = req?.headers?.cookie ?? '';
     axios.defaults.headers.Cookie = '';
 
@@ -66,7 +66,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     }
 
     const {dispatch, sagaTask} = store;
-    const {tag} = query;
+    const {tag} = params;
 
     dispatch(loadMyInfoRequestAction());
     dispatch(loadPostByHashtagRequestAction({hashtag: tag}));

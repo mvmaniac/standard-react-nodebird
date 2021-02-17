@@ -11,7 +11,7 @@ import 'antd/dist/antd.css';
 const NodeBird = ({Component}) => (
   <>
     <Head>
-      <link rel="shortcut icon" type="image/png" href="/favicon.ico" />
+      <link rel="shortcut icon" href="/favicon.png" />
       {/* <link rel="icon" href="/icon.svg" type="image/svg+xml" /> */}
       <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       <link rel="manifest" href="/manifest.webmanifest" />

@@ -22,7 +22,7 @@ const ListStyled = styled(List)`
   }
 `;
 
-const FollowList = ({header, data}) => {
+const FollowList = ({header, data, onClickMore, loading}) => {
   const dispatch = useDispatch();
 
   const onCancel = (userId) => () => {
@@ -34,13 +34,14 @@ const FollowList = ({header, data}) => {
   };
   return (
     <ListStyled
-      // TODO: grid 사이즈 조정
-      grid={{xs: 2, md: 3, xxl: 6}}
-      size="small"
+      grid={{column: 3}}
+      size="default"
       header={<div>{header}</div>}
       loadMore={
         <div className="box-more">
-          <Button>더보기</Button>
+          <Button onClick={onClickMore} loading={loading}>
+            더보기
+          </Button>
         </div>
       }
       bordered
@@ -65,7 +66,9 @@ FollowList.propTypes = {
     PropTypes.shape({
       nickname: PropTypes.string
     })
-  ).isRequired
+  ).isRequired,
+  onClickMore: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
 export default FollowList;

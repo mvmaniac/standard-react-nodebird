@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 import styled from 'styled-components';
 import {Button, Card, Popover, Avatar, List, Comment, Modal} from 'antd';
 import {
@@ -145,14 +146,22 @@ const PostCard = ({post}) => {
             }
           >
             <Card.Meta
-              avatar={<Avatar>{post.retweet.user.nickname[0]}</Avatar>}
+              avatar={
+                <Link href={`/user/${post.retweet.user.id}`}>
+                  <Avatar>{post.retweet.user.nickname[0]}</Avatar>
+                </Link>
+              }
               title={post.retweet.user.nickname}
               description={<PostCardContent postData={post.retweet.content} />}
             />
           </Card>
         ) : (
           <Card.Meta
-            avatar={<Avatar>{postUser.nickname[0]}</Avatar>}
+            avatar={
+              <Link href={`/user/${post.user.id}`}>
+                <Avatar>{postUser.nickname[0]}</Avatar>
+              </Link>
+            }
             title={postUser.nickname}
             description={<PostCardContent postData={post.content} />}
           />

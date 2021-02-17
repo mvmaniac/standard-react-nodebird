@@ -176,7 +176,8 @@ router.get('/followings', isLoggedIn, async (req, res, next) => {
       return;
     }
 
-    const followings = await findUser.getFollowings();
+    const limit = parseInt(req.query.limit, 10);
+    const followings = await findUser.getFollowings({limit});
     res.status(200).json({followings});
   } catch (error) {
     console.error(error);
@@ -193,7 +194,8 @@ router.get('/followers', isLoggedIn, async (req, res, next) => {
       return;
     }
 
-    const followers = await findUser.getFollowers();
+    const limit = parseInt(req.query.limit, 10);
+    const followers = await findUser.getFollowers({limit});
     res.status(200).json({followers});
   } catch (error) {
     console.error(error);

@@ -115,7 +115,7 @@ const User = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  async ({store, req, query}) => {
+  async ({store, req, params}) => {
     const cookie = req?.headers?.cookie ?? '';
     axios.defaults.headers.Cookie = '';
 
@@ -124,7 +124,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     }
 
     const {dispatch, sagaTask} = store;
-    const {id} = query;
+    const {id} = params;
 
     dispatch(loadMyInfoRequestAction());
     dispatch(loadUserInfoRequestAction({userId: id}));
