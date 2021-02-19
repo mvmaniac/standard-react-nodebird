@@ -1,6 +1,6 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Form, Input} from 'antd';
+import {Form, Input, Modal} from 'antd';
 import styled from 'styled-components';
 
 import useInput from '../hooks/useInput';
@@ -19,10 +19,21 @@ const NicknameEditForm = () => {
   );
 
   const [nickname, onChangeNickname] = useInput(my?.nickname || '');
+  const nicknameRef = useRef();
 
   const dispatch = useDispatch();
 
   const onSubmit = useCallback(() => {
+    if (!nickname || !nickname.trim()) {
+      Modal.warning({
+        title: '알림',
+        content: '닉네임을 입력해 주세요.',
+        onOk: () => nicknameRef.current.focus()
+      });
+
+      return;
+    }
+
     dispatch(changeNicknameRequestAction({nickname}));
   }, [dispatch, nickname]);
 
@@ -35,6 +46,7 @@ const NicknameEditForm = () => {
         onSearch={onSubmit}
         loading={isChangeNicknameLoading}
         value={nickname}
+        ref={nicknameRef}
       />
     </FormStyled>
   );

@@ -1,5 +1,5 @@
-import {produce} from 'immer';
 import faker from 'faker';
+import produce from '../utils/produce';
 
 faker.seed(10000);
 

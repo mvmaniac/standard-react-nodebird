@@ -10,10 +10,6 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'mysql',
-    dialectOptions: {
-      dateStrings: true,
-      typeCast: true
-    },
     timezone: '+09:00',
     operatorsAliases: false
   },
@@ -24,10 +20,6 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'mysql',
-    dialectOptions: {
-      dateStrings: true,
-      typeCast: true
-    },
     timezone: '+09:00',
     operatorsAliases: false
   },
@@ -38,10 +30,6 @@ module.exports = {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
     dialect: 'mysql',
-    dialectOptions: {
-      dateStrings: true,
-      typeCast: true
-    },
     timezone: '+09:00',
     operatorsAliases: false
   }

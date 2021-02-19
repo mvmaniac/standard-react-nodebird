@@ -3,8 +3,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import Link from 'next/link';
 import {Button, Card} from 'antd';
 import Avatar from 'antd/lib/avatar/avatar';
+import styled from 'styled-components';
 
 import {logoutRequestAction} from '../reducers/user';
+
+const AvatarStyled = styled(Avatar)`
+  cursor: pointer;
+`;
 
 const UserProfile = () => {
   const my = useSelector((state) => state.user.my);
@@ -19,31 +24,35 @@ const UserProfile = () => {
   return (
     <Card
       actions={[
-        <div key="twit">
-          {/* <Link href={`/user/${my.id}`}> */}
-          짹짹
-          <br />
-          {my.posts.length}
-          {/* </Link> */}
-        </div>,
-        <div key="following">
-          {/* <Link href="/profile"> */}
-          팔로잉
-          <br />
-          {my.followings.length}
-          {/* </Link> */}
-        </div>,
-        <div key="followings">
-          {/* <Link href="/profile"> */}
-          팔로워
-          <br />
-          {my.followers.length}
-          {/* </Link> */}
-        </div>
+        <Link href={`/user/${my.id}`} key="twit">
+          <div>
+            짹짹
+            <br />
+            {my.posts.length}
+          </div>
+        </Link>,
+        <Link href="/profile" key="following">
+          <div>
+            팔로잉
+            <br />
+            {my.followings.length}
+          </div>
+        </Link>,
+        <Link href="/profile" key="followings">
+          <div>
+            팔로워
+            <br />
+            {my.followers.length}
+          </div>
+        </Link>
       ]}
     >
       <Card.Meta
-        avatar={<Avatar>{my.nickname[0]}</Avatar>}
+        avatar={
+          <Link href="/profile">
+            <AvatarStyled>{my.nickname[0]}</AvatarStyled>
+          </Link>
+        }
         title={my.nickname}
       />
       <Button onClick={onLogout} loading={isLogoutLoading}>

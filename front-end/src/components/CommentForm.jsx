@@ -1,7 +1,7 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {Button, Form, Input} from 'antd';
+import {Button, Form, Input, Modal} from 'antd';
 import styled from 'styled-components';
 
 import useInput from '../hooks/useInput';
@@ -23,6 +23,7 @@ const CommentForm = ({post}) => {
   );
 
   const [commentText, onChangeCommentText, setCommentText] = useInput('');
+  const commentRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -33,7 +34,15 @@ const CommentForm = ({post}) => {
   }, [isAddCommentDone, setCommentText]);
 
   const onSubmitForm = useCallback(() => {
-    console.log(myId, post.id, commentText);
+    if (!commentText || !commentText.trim()) {
+      Modal.warning({
+        title: '알림',
+        content: '댓글을 작성해 주세요.',
+        onOk: () => commentRef.current.focus()
+      });
+
+      return;
+    }
 
     dispatch(
       addCommentRequestAction({
@@ -51,6 +60,7 @@ const CommentForm = ({post}) => {
           rows={4}
           value={commentText}
           onChange={onChangeCommentText}
+          ref={commentRef}
         />
         <Button type="primary" htmlType="submit" loading={isAddCommentLoading}>
           삐약

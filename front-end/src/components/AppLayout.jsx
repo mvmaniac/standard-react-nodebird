@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import Router from 'next/router';
-import {Menu, Input, Row, Col} from 'antd';
+import {Menu, Input, Row, Col, Modal} from 'antd';
 import styled from 'styled-components';
 
 import UserProfile from './UserProfile';
@@ -17,8 +17,19 @@ const InputSearchStyled = styled(Input.Search)`
 const AppLayout = ({children}) => {
   const my = useSelector((state) => state.user.my);
   const [searchInput, onChangeSearchInput] = useInput('');
+  const searchInputRef = useRef();
 
   const onSearch = useCallback(() => {
+    if (!searchInput || !searchInput.trim()) {
+      Modal.warning({
+        title: '알림',
+        content: '검색할 해시태그명을 입력하세요.',
+        onOk: () => searchInputRef.current.focus()
+      });
+
+      return;
+    }
+
     Router.push(`/hashtag/${searchInput}`);
   }, [searchInput]);
 
@@ -37,6 +48,7 @@ const AppLayout = ({children}) => {
             value={searchInput}
             onChange={onChangeSearchInput}
             onSearch={onSearch}
+            ref={searchInputRef}
           />
         </Menu.Item>
         <Menu.Item hidden={!!my?.id}>

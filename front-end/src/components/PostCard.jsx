@@ -22,11 +22,20 @@ import {
   retweetRequestAction,
   unLikePostRequestAction
 } from '../reducers/post';
+import dayjs from '../utils/dayjs';
 
 const CardStyled = styled(Card)`
   &:not(:first-child) {
     margin-top: 20px;
   }
+
+  div.date {
+    float: right;
+  }
+`;
+
+const AvatarStyled = styled(Avatar)`
+  cursor: pointer;
 `;
 
 const PostCard = ({post}) => {
@@ -145,10 +154,11 @@ const PostCard = ({post}) => {
               )
             }
           >
+            <div className="date">{dayjs(post.createdAt).fromNow()}</div>
             <Card.Meta
               avatar={
                 <Link href={`/user/${post.retweet.user.id}`}>
-                  <Avatar>{post.retweet.user.nickname[0]}</Avatar>
+                  <AvatarStyled>{post.retweet.user.nickname[0]}</AvatarStyled>
                 </Link>
               }
               title={post.retweet.user.nickname}
@@ -156,15 +166,18 @@ const PostCard = ({post}) => {
             />
           </Card>
         ) : (
-          <Card.Meta
-            avatar={
-              <Link href={`/user/${post.user.id}`}>
-                <Avatar>{postUser.nickname[0]}</Avatar>
-              </Link>
-            }
-            title={postUser.nickname}
-            description={<PostCardContent postData={post.content} />}
-          />
+          <>
+            <div className="date">{dayjs(post.createdAt).fromNow()}</div>
+            <Card.Meta
+              avatar={
+                <Link href={`/user/${post.user.id}`}>
+                  <AvatarStyled>{postUser.nickname[0]}</AvatarStyled>
+                </Link>
+              }
+              title={postUser.nickname}
+              description={<PostCardContent postData={post.content} />}
+            />
+          </>
         )}
       </CardStyled>
       {isCommentOpened && (

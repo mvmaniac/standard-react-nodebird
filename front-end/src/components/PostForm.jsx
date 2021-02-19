@@ -38,6 +38,7 @@ const PostForm = () => {
   );
   const [text, onChangeText, setText] = useInput('');
   const imageInput = useRef();
+  const textRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -77,7 +78,8 @@ const PostForm = () => {
     if (!text || !text.trim()) {
       Modal.warning({
         title: '알림',
-        content: '게시글을 작성하세요.'
+        content: '게시글을 작성해 주세요.',
+        onOk: () => textRef.current.focus()
       });
 
       return;
@@ -99,6 +101,7 @@ const PostForm = () => {
           onChange={onChangeText}
           maxLength={140}
           placeholder="어떤 신기한 일이 있었나요?"
+          ref={textRef}
         />
         <div className="box-upload">
           <input
