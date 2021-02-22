@@ -4,12 +4,11 @@
     "node": true,
     "es2021": true
   },
-  "extends": ["airbnb", "airbnb/hooks", "prettier", "prettier/react"],
+  "extends": ["airbnb", "airbnb/hooks", "prettier"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -19,6 +18,7 @@
   },
   "plugins": ["react", "react-hooks", "jsx-a11y", "import"],
   "rules": {
-    "react/jsx-filename-extension": ["warn", {"extensions": [".js", ".jsx"]}]
+    "react/jsx-filename-extension": ["warn", {"extensions": [".js", ".jsx"]}],
+    "no-param-reassign": ["off"]
   }
 }
