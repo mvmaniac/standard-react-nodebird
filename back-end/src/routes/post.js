@@ -208,31 +208,44 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     const {content, imagePaths} = req.body;
     const hashtags = content.match(/#[^\s#]+/g);
 
-    const savedPost = await Post.create({
-      content,
-      userId: req.user.id
-    });
+    const savedPost = await Post.create(
+      {
+        content,
+        userId: req.user.id
+      },
+      {transaction}
+    );
 
     if (imagePaths) {
       const savedImages = await Promise.all(
-        imagePaths.map((imagePath) => Image.create({src: imagePath}))
+        imagePaths.map((imagePath) =>
+          Image.create({src: imagePath}, {transaction})
+        )
       );
-      await savedPost.addImages(savedImages); // 여기서 update문이 날라감...
+      // TODO: transaction
+      await savedPost.addImages(savedImages, {transaction}); // 여기서 update문이 날라감...
     }
 
     if (hashtags) {
       // [[노드, true], [리액트, true]]
       const savedHashtags = await Promise.all(
         hashtags.map((hashtag) =>
-          Hashtag.findOrCreate({where: {name: hashtag.slice(1).toLowerCase()}})
+          Hashtag.findOrCreate({
+            where: {name: hashtag.slice(1).toLowerCase()},
+            transaction
+          })
         )
       );
 
-      await savedPost.addHashtags(savedHashtags.map((value) => value[0]));
+      // TODO: transaction
+      await savedPost.addHashtags(
+        savedHashtags.map((value) => value[0]),
+        {transaction}
+      );
     }
 
     const findPost = await Post.findOne({
-      where: {id: savedPost.id},
+      where: {id: savedPost.ids},
       attributes: {
         exclude: ['user_id', 'updated_at']
       },
@@ -245,7 +258,8 @@ router.post('/', isLoggedIn, async (req, res, next) => {
           as: 'likers',
           attributes: ['id']
         }
-      ]
+      ],
+      transaction
     });
 
     await transaction.commit();
