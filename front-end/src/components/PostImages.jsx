@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import {PlusOutlined} from '@ant-design/icons';
 
 import ImagesZoom from './imagesZoom';
+import {API_URL} from '../config/config';
 
 const BoxImageStyled = styled.div`
   display: flex;
@@ -43,7 +44,7 @@ const PostImages = ({images}) => {
     return (
       <BoxImageStyled>
         <img
-          src={`http://localhost:3065/${image.src}`}
+          src={`${API_URL}/${image.src}`}
           alt={image.src}
           onClick={onZoom}
           role="presentation"
@@ -60,13 +61,13 @@ const PostImages = ({images}) => {
     return (
       <BoxImageStyled>
         <img
-          src={`http://localhost:3065/${image1.src}`}
+          src={`${API_URL}/${image1.src}`}
           alt={image1.src}
           onClick={onZoom}
           role="presentation"
         />
         <img
-          src={`http://localhost:3065/${image2.src}`}
+          src={`${API_URL}/${image2.src}`}
           alt={image2.src}
           onClick={onZoom}
           role="presentation"
@@ -81,7 +82,7 @@ const PostImages = ({images}) => {
   return (
     <BoxImageStyled>
       <img
-        src={`http://localhost:3065/${image.src}`}
+        src={`${API_URL}/${image.src}`}
         alt={image.src}
         onClick={onZoom}
         role="presentation"

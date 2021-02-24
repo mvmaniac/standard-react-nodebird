@@ -222,7 +222,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
           Image.create({src: imagePath}, {transaction})
         )
       );
-      // TODO: transaction
+
       await savedPost.addImages(savedImages, {transaction}); // 여기서 update문이 날라감...
     }
 
@@ -237,7 +237,6 @@ router.post('/', isLoggedIn, async (req, res, next) => {
         )
       );
 
-      // TODO: transaction
       await savedPost.addHashtags(
         savedHashtags.map((value) => value[0]),
         {transaction}
@@ -245,7 +244,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     }
 
     const findPost = await Post.findOne({
-      where: {id: savedPost.ids},
+      where: {id: savedPost.id},
       attributes: {
         exclude: ['user_id', 'updated_at']
       },

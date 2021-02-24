@@ -5,8 +5,9 @@ import axios from 'axios';
 import Head from 'next/head';
 import Router from 'next/router';
 import useSWR from 'swr';
-
 import {Modal} from 'antd';
+
+import {API_URL} from '../config/config';
 import wrapper from '../store/configureStore';
 import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameEditForm';
@@ -22,12 +23,12 @@ const Profile = () => {
   const [followersLimit, setFollowersLimit] = useState(3);
 
   const {data: {followings} = {data: {}}, error: followingError} = useSWR(
-    `http://localhost:3065/users/followings?limit=${followingsLimit}`,
+    `${API_URL}/users/followings?limit=${followingsLimit}`,
     fetcher
   );
 
   const {data: {followers} = {data: {}}, error: followerError} = useSWR(
-    `http://localhost:3065/users/followers?limit=${followersLimit}`,
+    `${API_URL}/users/followers?limit=${followersLimit}`,
     fetcher
   );
 

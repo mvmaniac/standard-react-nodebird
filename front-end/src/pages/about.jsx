@@ -8,7 +8,7 @@ import AppLayout from '../components/AppLayout';
 import wrapper from '../store/configureStore';
 import {loadUserInfoRequestAction} from '../reducers/user';
 
-const Profile = () => {
+const About = () => {
   const other = useSelector((state) => state.user.other);
 
   return (
@@ -60,4 +60,4 @@ export const getStaticProps = wrapper.getStaticProps(async ({store}) => {
   console.log('getStaticProps end...');
 });
 
-export default Profile;
+export default About;
