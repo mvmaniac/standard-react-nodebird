@@ -1,17 +1,14 @@
 const path = require('path');
-const process = require('process');
 const express = require('express');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const cors = require('cors');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
 const hpp = require('hpp');
 const helmet = require('helmet');
 
-dotenv.config();
-
+const config = require('./config/config');
 const {sequelize} = require('./models');
 const passportConfig = require('./passport');
 
@@ -29,10 +26,9 @@ sequelize
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
 
-const isProd = process.env.NODE_ENV === 'production';
 const app = express();
 
-if (isProd) {
+if (config.isProd) {
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
@@ -55,24 +51,24 @@ if (isProd) {
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(config.cookie));
 app.use(
   session({
     resave: false, // 매번 세션 강제 저장 여부
     saveUninitialized: false, // 빈 값도 저장 여부
-    secret: process.env.COOKIE_SECRET, // 암호화
+    secret: config.cookie, // 암호화
     cookie: {
       httpOnly: true, // 쿠키를 자바스크립트에서 접근을 하지 못함
       secure: false,
-      domain: isProd && '.devfactory.me'
+      domain: config.isProd && '.devfactory.me'
     }
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/posts', postRouter);
-app.use('/users', userRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/users', userRouter);
 
 app.get('/', (req, res) => {
   res.send('hello express');
@@ -87,7 +83,7 @@ app.use((req, res, next) => {
 
 // 에러 미들웨어
 app.use((err, req, res, next) => {
-  const stack = isProd ? err.stack : '';
+  const stack = config.isProd ? err.stack : '';
 
   res.status(err.status || 500).send({
     message: err.message,
@@ -95,6 +91,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(process.env.HTTP_PORT, () => {
-  console.log(`server is running...${process.env.HTTP_PORT}`);
+app.listen(config.httpPort, () => {
+  console.log(`server is running...${config.httpPort}`);
 });

@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Form, Button, Input, Modal} from 'antd';
 import styled from 'styled-components';
 
-import {API_URL} from '../config/config';
+import {IMAGE_URL} from '../config/config';
 import {
   addPostRequestAction,
   removeImageAction,
@@ -121,7 +121,7 @@ const PostForm = () => {
           {imagePaths.map((value, index) => (
             <div key={value} className="image">
               <img
-                src={`${API_URL}/${value}`}
+                src={`${IMAGE_URL}${value.replace(/\/thumb\//, '/origin/')}`}
                 style={{width: '200px'}}
                 alt={value}
               />

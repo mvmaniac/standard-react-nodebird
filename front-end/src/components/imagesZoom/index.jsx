@@ -11,7 +11,7 @@ import {
   ImgWrapper
 } from './styles';
 
-import {API_URL} from '../../config/config';
+import {IMAGE_URL} from '../../config/config';
 
 const ImagesZoom = ({images, onClose}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -35,7 +35,13 @@ const ImagesZoom = ({images, onClose}) => {
           >
             {images.map((image) => (
               <ImgWrapper key={image.src}>
-                <img src={`${API_URL}/${image.src}`} alt={image.src} />
+                <img
+                  src={`${IMAGE_URL}${image.src.replace(
+                    /\/thumb\//,
+                    '/origin/'
+                  )}`}
+                  alt={image.src}
+                />
               </ImgWrapper>
             ))}
           </Slick>

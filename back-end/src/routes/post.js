@@ -4,41 +4,65 @@ const express = require('express');
 const multer = require('multer');
 const dayjs = require('dayjs');
 const {Op} = require('sequelize');
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 
+const config = require('../config/config');
 const {Post, Comment, Image, User, Hashtag, sequelize} = require('../models');
 const {isLoggedIn} = require('./middlewares');
 
 const router = express.Router();
 
+AWS.config.update({
+  region: 'ap-northeast-2',
+  credentials: new AWS.Credentials({
+    accessKeyId: config.s3AccessKeyId,
+    secretAccessKey: config.s3SecretAccessKey
+  })
+});
+
+const multerStorage = config.isProd
+  ? multerS3({
+      s3: new AWS.S3(),
+      bucket: 'nodebird-s3',
+      key(req, file, cb) {
+        const folderPath = dayjs().format('YYYY/MM/DD');
+        const basename = path.basename(file.originalname); // 제로초
+
+        cb(null, `origin/${folderPath}/${Date.now()}_${basename}`);
+      }
+    })
+  : multer.diskStorage({
+      destination(req, file, cb) {
+        const folderPath = dayjs().format('YYYY/MM/DD');
+        const imagePath = `uploads/${folderPath}`;
+        const uploadPath = `src/${imagePath}`;
+
+        req.imagePath = imagePath;
+
+        fs.access(uploadPath, (error) => {
+          if (error) {
+            console.log(`directory does not exist. ${uploadPath}`);
+
+            fs.mkdir(uploadPath, {recursive: true}, (fsError) => {
+              cb(fsError, uploadPath);
+            });
+
+            return;
+          }
+          cb(null, uploadPath);
+        });
+      },
+      filename(req, file, cb) {
+        // 제로초.png
+        const ext = path.extname(file.originalname); // 확장자 추출(.png)
+        const basename = path.basename(file.originalname, ext); // 제로초
+        cb(null, `${basename}_${new Date().getTime()}${ext}`); // 제로초15184712891.png
+      }
+    });
+
 const uploadImages = multer({
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      const folderPath = dayjs().format('YYYY/MM/DD');
-      const imagePath = `uploads/${folderPath}`;
-      const uploadPath = `src/${imagePath}`;
-
-      req.imagePath = imagePath;
-
-      fs.access(uploadPath, (error) => {
-        if (error) {
-          console.log(`directory does not exist. ${uploadPath}`);
-
-          fs.mkdir(uploadPath, {recursive: true}, (fsError) => {
-            done(fsError, uploadPath);
-          });
-
-          return;
-        }
-        done(null, uploadPath);
-      });
-    },
-    filename(req, file, done) {
-      // 제로초.png
-      const ext = path.extname(file.originalname); // 확장자 추출(.png)
-      const basename = path.basename(file.originalname, ext); // 제로초
-      done(null, `${basename}_${new Date().getTime()}${ext}`); // 제로초15184712891.png
-    }
-  }),
+  storage: multerStorage,
   limits: {fileSize: 20 * 1024 * 1024} // 20MB
 });
 
@@ -278,7 +302,13 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 router.post('/images', isLoggedIn, uploadImages.array('image'), (req, res) => {
   // console.log(req.files);
   // console.log(req.imagePath);
-  res.json(req.files.map((value) => `${req.imagePath}/${value.filename}`));
+  res.json(
+    req.files.map((value) =>
+      config.isProd
+        ? value.location.replace(/\/origin\//, '/thumb/')
+        : `${req.imagePath}/${value.filename}`
+    )
+  );
 });
 
 // DELETE /posts/:postId
