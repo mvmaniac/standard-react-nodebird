@@ -7,6 +7,9 @@ module.exports = class Image extends Model {
         src: {
           type: DataTypes.STRING(200),
           allowNull: false
+        },
+        thumbnail: {
+          type: DataTypes.STRING(200)
         }
       },
       {

@@ -34,6 +34,16 @@ const CommentForm = ({post}) => {
   }, [isAddCommentDone, setCommentText]);
 
   const onSubmitForm = useCallback(() => {
+    if (!myId) {
+      Modal.warning({
+        title: '알림',
+        content: '로그인이 필요합니다.',
+        onOk: () => commentRef.current.focus()
+      });
+
+      return;
+    }
+
     if (!commentText || !commentText.trim()) {
       Modal.warning({
         title: '알림',

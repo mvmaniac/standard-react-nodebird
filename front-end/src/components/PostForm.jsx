@@ -102,6 +102,7 @@ const PostForm = () => {
           onChange={onChangeText}
           maxLength={140}
           placeholder="어떤 신기한 일이 있었나요?"
+          rows={4}
           ref={textRef}
         />
         <div className="box-upload">
@@ -121,7 +122,7 @@ const PostForm = () => {
           {imagePaths.map((value, index) => (
             <div key={value} className="image">
               <img
-                src={`${IMAGE_URL}${value.replace(/\/thumb\//, '/origin/')}`}
+                src={`${IMAGE_URL}${value}`}
                 style={{width: '200px'}}
                 alt={value}
               />

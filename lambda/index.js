@@ -10,7 +10,7 @@ exports.handler = async (event, context, callback) => {
   const Bucket = event.Records[0].s3.bucket.name; // nodebird-s3
   const Key = event.Records[0].s3.object.key;
 
-  const decodeKey = decodeURIComponent(Key); // 한글 파일명을 위한 디코딩
+  const decodeKey = decodeURIComponent(Key.replace(/\+/g, ' ')); // 한글 파일명을 위한 디코딩
 
   const dirname = path.dirname(decodeKey).replace('origin/', '');
   const filename = path.basename(decodeKey);
@@ -36,7 +36,8 @@ exports.handler = async (event, context, callback) => {
 
     const resizedImage = await Sharp(s3Object.Body)
       .resize(800, 800, {
-        fit: 'inside'
+        fit: Sharp.fit.inside,
+        withoutEnlargement: true
       })
       .toFormat(requiredFormat)
       .toBuffer();

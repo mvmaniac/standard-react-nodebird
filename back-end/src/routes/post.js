@@ -81,7 +81,7 @@ router.get('/', async (req, res, next) => {
       },
       {
         model: Image,
-        attributes: ['id', 'src']
+        attributes: ['id', 'src', 'thumbnail']
       },
       {
         model: Comment,
@@ -113,7 +113,7 @@ router.get('/', async (req, res, next) => {
           },
           {
             model: Image,
-            attributes: ['id', 'src']
+            attributes: ['id', 'src', 'thumbnail']
           }
         ]
       }
@@ -171,7 +171,7 @@ router.get('/:postId', async (req, res, next) => {
         },
         {
           model: Image,
-          attributes: ['id', 'src']
+          attributes: ['id', 'src', 'thumbnail']
         },
         {
           model: Comment,
@@ -243,7 +243,13 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     if (imagePaths) {
       const savedImages = await Promise.all(
         imagePaths.map((imagePath) =>
-          Image.create({src: imagePath}, {transaction})
+          Image.create(
+            {
+              src: imagePath,
+              thumbnail: imagePath.replace(/\/origin\//, '/thumb/')
+            },
+            {transaction}
+          )
         )
       );
 
@@ -275,7 +281,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       include: [
         {model: User, attributes: ['id', 'nickname']},
         {model: Comment, attributes: ['id']},
-        {model: Image, attributes: ['id', 'src']},
+        {model: Image, attributes: ['id', 'src', 'thumbnail']},
         {
           model: User,
           as: 'likers',
@@ -304,9 +310,7 @@ router.post('/images', isLoggedIn, uploadImages.array('image'), (req, res) => {
   // console.log(req.imagePath);
   res.json(
     req.files.map((value) =>
-      config.isProd
-        ? value.location.replace(/\/origin\//, '/thumb/')
-        : `${req.imagePath}/${value.filename}`
+      config.isProd ? value.location : `${req.imagePath}/${value.filename}`
     )
   );
 });
@@ -464,7 +468,7 @@ router.patch('/:postId/retweet', isLoggedIn, async (req, res, next) => {
       include: [
         {model: User, attributes: ['id', 'nickname']},
         {model: Comment, attributes: ['id']},
-        {model: Image, attributes: ['id', 'src']},
+        {model: Image, attributes: ['id', 'src', 'thumbnail']},
         {
           model: User,
           as: 'likers',
@@ -483,7 +487,7 @@ router.patch('/:postId/retweet', isLoggedIn, async (req, res, next) => {
             },
             {
               model: Image,
-              attributes: ['id', 'src']
+              attributes: ['id', 'src', 'thumbnail']
             }
           ]
         }

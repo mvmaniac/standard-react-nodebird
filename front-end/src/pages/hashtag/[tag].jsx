@@ -1,8 +1,9 @@
 import React, {useEffect} from 'react';
-import {useRouter} from 'next/router';
+import Router, {useRouter} from 'next/router';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {END} from 'redux-saga';
+import {Button, Result} from 'antd';
 
 import wrapper from '../../store/configureStore';
 import AppLayout from '../../components/AppLayout';
@@ -47,11 +48,24 @@ const Hashtag = () => {
     };
   }, [dispatch, hasMorePost, isLoadPostLoading, mainPosts, tag]);
 
+  const onGoHome = () => {
+    Router.push('/');
+  };
+
   return (
-    <AppLayout>
-      {mainPosts.map((post) => (
-        <PostCard key={post.id} post={post} />
-      ))}
+    <AppLayout tag={tag}>
+      {mainPosts?.length ? (
+        mainPosts.map((post) => <PostCard key={post.id} post={post} />)
+      ) : (
+        <Result
+          title={`"${tag}"에 대한 검색 결과가 없습니다.`}
+          extra={
+            <Button type="primary" key="home" onClick={onGoHome}>
+              노드버드 홈
+            </Button>
+          }
+        />
+      )}
     </AppLayout>
   );
 };

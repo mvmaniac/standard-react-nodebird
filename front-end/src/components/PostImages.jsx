@@ -44,7 +44,7 @@ const PostImages = ({images}) => {
     return (
       <BoxImageStyled>
         <img
-          src={`${IMAGE_URL}${image.src}`}
+          src={`${IMAGE_URL}${image.thumbnail}`}
           alt={image.src}
           onClick={onZoom}
           role="presentation"
@@ -61,14 +61,14 @@ const PostImages = ({images}) => {
     return (
       <BoxImageStyled>
         <img
-          src={`${IMAGE_URL}${image1.src}`}
-          alt={image1.src}
+          src={`${IMAGE_URL}${image1.thumbnail}`}
+          alt={image1.thumbnail}
           onClick={onZoom}
           role="presentation"
         />
         <img
-          src={`${IMAGE_URL}${image2.src}`}
-          alt={image2.src}
+          src={`${IMAGE_URL}${image2.thumbnail}`}
+          alt={image2.thumbnail}
           onClick={onZoom}
           role="presentation"
         />
@@ -82,8 +82,8 @@ const PostImages = ({images}) => {
   return (
     <BoxImageStyled>
       <img
-        src={`${IMAGE_URL}${image.src}`}
-        alt={image.src}
+        src={`${IMAGE_URL}${image.thumbnail}`}
+        alt={image.thumbnail}
         onClick={onZoom}
         role="presentation"
       />

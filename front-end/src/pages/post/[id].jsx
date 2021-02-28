@@ -11,6 +11,8 @@ import {loadMyInfoRequestAction} from '../../reducers/user';
 import AppLayout from '../../components/AppLayout';
 import PostCard from '../../components/PostCard';
 
+import {FRONT_END_URL} from '../../config/config';
+
 const Post = () => {
   const singlePost = useSelector((state) => state.post.singlePost);
   const {user, content, images} = singlePost;
@@ -28,10 +30,10 @@ const Post = () => {
         <meta
           property="og:image"
           content={
-            images[0] ? images[0].src : 'http://localhost:3060/favicon.ico'
+            images[0] ? images[0].thumbnail : `${FRONT_END_URL}/favicon.ico`
           }
         />
-        <meta property="og:url" content={`http://localhost:3060/post/${id}`} />
+        <meta property="og:url" content={`${FRONT_END_URL}/post/${id}`} />
       </Head>
       <PostCard post={singlePost} />
     </AppLayout>

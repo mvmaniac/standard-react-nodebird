@@ -56,6 +56,8 @@ const PostCard = ({post}) => {
         title: '알림',
         content: '로그인이 필요합니다.'
       });
+
+      return;
     }
 
     dispatch(retweetRequestAction({postId: post.id}));
@@ -69,8 +71,17 @@ const PostCard = ({post}) => {
       });
     }
 
+    if (myId === post.user.id) {
+      Modal.error({
+        title: '에러',
+        content: '자신의 글을 좋아요 할 수 없습니다.'
+      });
+
+      return;
+    }
+
     dispatch(likePostRequestAction({postId: post.id}));
-  }, [dispatch, myId, post.id]);
+  }, [dispatch, myId, post.id, post.user.id]);
 
   const onUnLike = useCallback(() => {
     if (!myId) {
@@ -78,6 +89,8 @@ const PostCard = ({post}) => {
         title: '알림',
         content: '로그인이 필요합니다.'
       });
+
+      return;
     }
 
     dispatch(unLikePostRequestAction({postId: post.id}));
@@ -93,6 +106,8 @@ const PostCard = ({post}) => {
         title: '알림',
         content: '로그인이 필요합니다.'
       });
+
+      return;
     }
 
     dispatch(removePostRequestAction({postId: post.id}));
@@ -142,7 +157,10 @@ const PostCard = ({post}) => {
           </Popover>
         ]}
         title={
-          post.retweetId ? `${post.user.nickname}님이 리트윗 하셨습니다.` : ''
+          post.retweetId
+            ? `${dayjs(post.createdAt).fromNow()}에
+              ${post.user.nickname}님이 리트윗 하셨습니다.`
+            : ''
         }
         extra={myId && isShowFollow && <FollowButton post={post} />}
       >
@@ -154,7 +172,9 @@ const PostCard = ({post}) => {
               )
             }
           >
-            <div className="date">{dayjs(post.createdAt).fromNow()}</div>
+            <div className="date">
+              {dayjs(post.retweet.createdAt).fromNow()}
+            </div>
             <Card.Meta
               avatar={
                 <Link href={`/user/${post.retweet.user.id}`}>
@@ -193,6 +213,7 @@ const PostCard = ({post}) => {
                   author={item.user.nickname}
                   avatar={<Avatar>{item.user.nickname[0]}</Avatar>}
                   content={item.content}
+                  datetime={dayjs(post.createdAt).format('YYYY.MM.DD HH:mm:ss')}
                 />
               </List.Item>
             )}
@@ -229,7 +250,8 @@ PostCard.propTypes = {
         nickname: PropTypes.string
       }),
       content: PropTypes.string,
-      images: PropTypes.arrayOf(PropTypes.object)
+      images: PropTypes.arrayOf(PropTypes.object),
+      createdAt: PropTypes.string
     }),
     retweetError: PropTypes.shape({
       message: PropTypes.string

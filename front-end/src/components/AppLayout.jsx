@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
@@ -12,12 +12,21 @@ import useInput from '../hooks/useInput';
 
 const InputSearchStyled = styled(Input.Search)`
   vertical-align: middle;
+
+  button > span {
+    margin-right: 0 !important;
+  }
 `;
 
-const AppLayout = ({children}) => {
+const AppLayout = ({children, tag}) => {
   const my = useSelector((state) => state.user.my);
-  const [searchInput, onChangeSearchInput] = useInput('');
+  const [searchInput, onChangeSearchInput, setSearchInput] = useInput('');
   const searchInputRef = useRef();
+
+  useEffect(() => {
+    setSearchInput(tag);
+    searchInputRef.current.focus();
+  }, [setSearchInput, tag]);
 
   const onSearch = useCallback(() => {
     if (!searchInput || !searchInput.trim()) {
@@ -63,13 +72,16 @@ const AppLayout = ({children}) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          <a
-            href="https://www.zerocho.com"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Made by ZeroCho
-          </a>
+          <strong>
+            Made by Devfactory with &nbsp;
+            <a
+              href="https://www.zerocho.com"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              ZeroCho
+            </a>
+          </strong>
         </Col>
       </Row>
     </div>
@@ -77,7 +89,12 @@ const AppLayout = ({children}) => {
 };
 
 AppLayout.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  tag: PropTypes.string
+};
+
+AppLayout.defaultProps = {
+  tag: ''
 };
 
 export default AppLayout;
