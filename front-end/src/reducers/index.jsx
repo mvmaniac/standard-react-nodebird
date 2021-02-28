@@ -26,10 +26,10 @@ const combinedReducer = combineReducers({
 const rootReducer = (state, action) => {
   switch (action.type) {
     case HYDRATE:
-      console.log('HYDRATE', HYDRATE);
+      // console.log('HYDRATE', HYDRATE);
       return action.payload;
     default: {
-      console.log('default', action);
+      // console.log('default', action);
       return combinedReducer(state, action);
     }
   }

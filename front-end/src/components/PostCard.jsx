@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
@@ -20,7 +20,8 @@ import {
   likePostRequestAction,
   removePostRequestAction,
   retweetRequestAction,
-  unLikePostRequestAction
+  unLikePostRequestAction,
+  updatePostRequestAction
 } from '../reducers/post';
 import dayjs from '../utils/dayjs';
 
@@ -42,11 +43,12 @@ const PostCard = ({post}) => {
   const {user: postUser, likers} = post;
 
   const myId = useSelector((state) => state.user.my?.id);
-  const isRemovePostLoading = useSelector(
-    (state) => state.post.isRemovePostLoading
+  const {isRemovePostLoading, isUpdatePostDone} = useSelector(
+    (state) => state.post
   );
 
   const [isCommentOpened, setIsCommentOpened] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -100,6 +102,36 @@ const PostCard = ({post}) => {
     setIsCommentOpened((prev) => !prev);
   }, []);
 
+  const onEditPost = useCallback(() => {
+    setIsEditMode(true);
+  }, []);
+
+  const onUpdatePost = useCallback(
+    (text, textRef) => () => {
+      if (!text || !text.trim()) {
+        Modal.warning({
+          title: '알림',
+          content: '게시글을 작성해 주세요.',
+          onOk: () => textRef.current.focus()
+        });
+
+        return;
+      }
+
+      dispatch(
+        updatePostRequestAction({
+          postId: post.id,
+          content: text
+        })
+      );
+    },
+    [dispatch, post.id]
+  );
+
+  const onCancelPost = useCallback(() => {
+    setIsEditMode(false);
+  }, []);
+
   const onRemovePost = useCallback(() => {
     if (!myId) {
       Modal.warning({
@@ -112,6 +144,12 @@ const PostCard = ({post}) => {
 
     dispatch(removePostRequestAction({postId: post.id}));
   }, [dispatch, myId, post.id]);
+
+  useEffect(() => {
+    if (isUpdatePostDone) {
+      onCancelPost();
+    }
+  }, [isUpdatePostDone, onCancelPost]);
 
   const isLike = likers.find((value) => value.id === myId);
   const isShowFollow = post.user.id !== myId;
@@ -138,7 +176,9 @@ const PostCard = ({post}) => {
               <Button.Group>
                 {myId && myId === postUser.id ? (
                   <>
-                    <Button>수정</Button>
+                    {!post.retweetId && (
+                      <Button onClick={onEditPost}>수정</Button>
+                    )}
                     <Button
                       type="danger"
                       onClick={onRemovePost}
@@ -182,7 +222,9 @@ const PostCard = ({post}) => {
                 </Link>
               }
               title={post.retweet.user.nickname}
-              description={<PostCardContent postData={post.retweet.content} />}
+              description={
+                <PostCardContent postContent={post.retweet.content} />
+              }
             />
           </Card>
         ) : (
@@ -195,7 +237,14 @@ const PostCard = ({post}) => {
                 </Link>
               }
               title={postUser.nickname}
-              description={<PostCardContent postData={post.content} />}
+              description={
+                <PostCardContent
+                  postContent={post.content}
+                  isEditMode={isEditMode}
+                  onUpdatePost={onUpdatePost}
+                  onCancelPost={onCancelPost}
+                />
+              }
             />
           </>
         )}

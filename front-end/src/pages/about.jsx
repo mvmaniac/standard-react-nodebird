@@ -49,7 +49,7 @@ const About = () => {
 // 접속할때 마다 정보가 바뀌지 않는 것들, 빈번하게 안바뀌는 것들
 // 블로그 게시글 같은거...?
 export const getStaticProps = wrapper.getStaticProps(async ({store}) => {
-  console.log('getStaticProps start...');
+  // console.log('getStaticProps start...');
 
   const {dispatch, sagaTask} = store;
 
@@ -57,7 +57,7 @@ export const getStaticProps = wrapper.getStaticProps(async ({store}) => {
   dispatch(END);
 
   await sagaTask.toPromise();
-  console.log('getStaticProps end...');
+  // console.log('getStaticProps end...');
 });
 
 export default About;

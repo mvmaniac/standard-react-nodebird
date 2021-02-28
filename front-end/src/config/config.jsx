@@ -1,11 +1,11 @@
 const isProd = process.env.NODE_ENV === 'production';
 
 export const FRONT_END_URL = isProd
-  ? 'http://nodebird.devfactory.me'
+  ? 'https://nodebird.devfactory.me'
   : 'http://localhost:3060';
 
 export const BACK_END_URL = isProd
-  ? 'http://nodebird-api.devfactory.me'
+  ? 'https://nodebird-api.devfactory.me'
   : 'http://localhost:3065';
 
 export const IMAGE_URL = isProd ? '' : `${BACK_END_URL}/`;

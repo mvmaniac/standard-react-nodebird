@@ -315,6 +315,84 @@ router.post('/images', isLoggedIn, uploadImages.array('image'), (req, res) => {
   );
 });
 
+// PATCH /posts/:postId
+router.patch('/:postId', isLoggedIn, async (req, res, next) => {
+  let transaction;
+
+  try {
+    transaction = await sequelize.transaction();
+
+    const postId = parseInt(req.params.postId, 10);
+    const {content, imagePaths} = req.body;
+    const hashtags = content.match(/#[^\s#]+/g);
+
+    console.log(postId);
+    console.log(content);
+
+    await Post.update(
+      {content},
+      {
+        where: {id: postId, userId: req.user.id},
+        transaction
+      }
+    );
+
+    const findPost = await Post.findOne({
+      where: {id: postId},
+      attributes: {
+        exclude: ['user_id', 'updated_at']
+      },
+      transaction
+    });
+
+    // TODO: 기능구현 필요
+    // if (imagePaths) {
+    //   const savedImages = await Promise.all(
+    //     imagePaths.map((imagePath) =>
+    //       Image.create(
+    //         {
+    //           src: imagePath,
+    //           thumbnail: imagePath.replace(/\/origin\//, '/thumb/')
+    //         },
+    //         {transaction}
+    //       )
+    //     )
+    //   );
+
+    //   // set으로 하면 기존 꺼 다 지우고 다시 insert 함...
+    //   await findPost.setImages(savedImages, {transaction});
+    // }
+
+    if (hashtags) {
+      // [[노드, true], [리액트, true]]
+      const savedHashtags = await Promise.all(
+        hashtags.map((hashtag) =>
+          Hashtag.findOrCreate({
+            where: {name: hashtag.slice(1).toLowerCase()},
+            transaction
+          })
+        )
+      );
+
+      // set으로 하면 기존 꺼 다 지우고 다시 insert 함...
+      await findPost.setHashtags(
+        savedHashtags.map((value) => value[0]),
+        {transaction}
+      );
+    }
+
+    await transaction.commit();
+    res.status(200).json(findPost);
+  } catch (error) {
+    if (transaction) {
+      await transaction.rollback();
+    }
+
+    console.error(error);
+    next(error);
+  }
+});
+
 // DELETE /posts/:postId
 router.delete('/:postId', isLoggedIn, async (req, res, next) => {
   let transaction;

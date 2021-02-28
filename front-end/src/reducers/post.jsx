@@ -66,6 +66,10 @@ export const initialState = {
   isAddPostDone: false,
   addPostError: null,
 
+  isUpdatePostLoading: false, // 포스트 수정 중
+  isUpdatePostDone: false,
+  addUpdateError: null,
+
   isRemovePostLoading: false, // 포스트 삭제 중
   isRemovePostDone: false,
   removePostError: null,
@@ -118,6 +122,10 @@ export const LOAD_POST_BY_HASHTAG_FAILURE = 'LOAD_POST_BY_HASHTAG_FAILURE';
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
+
+export const UPDATE_POST_REQUEST = 'UPDATE_POST_REQUEST';
+export const UPDATE_POST_SUCCESS = 'UPDATE_POST_SUCCESS';
+export const UPDATE_POST_FAILURE = 'UPDATE_POST_FAILURE';
 
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
@@ -172,6 +180,11 @@ export const loadPostByHashtagRequestAction = (data) => ({
 
 export const addPostRequestAction = (data) => ({
   type: ADD_POST_REQUEST,
+  data
+});
+
+export const updatePostRequestAction = (data) => ({
+  type: UPDATE_POST_REQUEST,
   data
 });
 
@@ -280,6 +293,31 @@ const postReducer = (state = initialState, action) =>
       }
       case ADD_POST_FAILURE: {
         draft.isAddPostLoading = false;
+        draft.addPostError = action.error;
+        break;
+      }
+
+      case UPDATE_POST_REQUEST: {
+        draft.isUpdatePostLoading = true;
+        draft.isUpdatePostDone = false;
+        draft.updatePostError = null;
+        break;
+      }
+      case UPDATE_POST_SUCCESS: {
+        draft.isUpdatePostLoading = false;
+        draft.isUpdatePostDone = true;
+
+        const findPost = draft.mainPosts.find(
+          (value) => value.id === action.data.id
+        );
+
+        findPost.content = action.data.content;
+
+        draft.imagePaths = [];
+        break;
+      }
+      case UPDATE_POST_FAILURE: {
+        draft.isUpdatePostLoading = false;
         draft.addPostError = action.error;
         break;
       }

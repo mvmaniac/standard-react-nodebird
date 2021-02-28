@@ -8,17 +8,18 @@ import rootSaga from '../sagas';
 
 // 커스텀 미들웨어
 // eslint-disable-next-line no-unused-vars
-const loggerMiddleware = ({dispatch, getState}) => (next) => (action) => {
-  console.log(action);
-  return next(action);
-};
+// const loggerMiddleware = ({dispatch, getState}) => (next) => (action) => {
+//   console.log(action);
+//   return next(action);
+// };
 
+// eslint-disable-next-line no-unused-vars
 const configureStore = (context) => {
-  console.log(context);
-
   const sagaMiddleware = createSagaMiddleware();
 
-  const middlewares = [sagaMiddleware, loggerMiddleware];
+  // const middlewares = [sagaMiddleware, loggerMiddleware];
+  const middlewares = [sagaMiddleware];
+
   const enhancer =
     process.env.NODE_ENV === 'production'
       ? compose(applyMiddleware(...middlewares))

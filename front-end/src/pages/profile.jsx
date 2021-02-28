@@ -95,8 +95,6 @@ const Profile = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({store, req}) => {
-    console.log('getServerSideProps start...');
-
     // 프론트 서버에서 수행하므로 쿠키를 임의로 넣어주어야 함
     const cookie = req?.headers?.cookie ?? '';
     axios.defaults.headers.Cookie = '';
@@ -111,7 +109,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
     dispatch(END);
 
     await sagaTask.toPromise();
-    console.log('getServerSideProps end...');
   }
 );
 

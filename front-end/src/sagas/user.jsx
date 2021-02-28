@@ -198,8 +198,6 @@ function* loadFollowing() {
   try {
     const result = yield call(loadFollowingAPI);
 
-    console.log(result);
-
     yield put({
       type: LOAD_FOLLOWING_SUCCESS,
       data: result.data

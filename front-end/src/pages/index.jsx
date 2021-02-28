@@ -81,7 +81,7 @@ const Home = () => {
 // 서버사이드 렌더링은 프론트 서버에서 실행됨
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({store, req}) => {
-    console.log('getServerSideProps start...');
+    // console.log('getServerSideProps start...');
 
     // 프론트 서버에서 수행하므로 쿠키를 임의로 넣어주어야 함
     const cookie = req?.headers?.cookie ?? '';
@@ -98,7 +98,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
     dispatch(END);
 
     await sagaTask.toPromise();
-    console.log('getServerSideProps end...');
+    // console.log('getServerSideProps end...');
   }
 );
 

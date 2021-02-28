@@ -15,6 +15,7 @@ const NodeBird = ({Component}) => (
       {/* <link rel="icon" href="/icon.svg" type="image/svg+xml" /> */}
       <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       <link rel="manifest" href="/manifest.webmanifest" />
+      <title>DevFactory | NodeBird</title>
       <meta charSet="utf-8" />
     </Head>
     <Component />

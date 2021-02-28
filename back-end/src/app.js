@@ -57,9 +57,10 @@ app.use(
     resave: false, // 매번 세션 강제 저장 여부
     saveUninitialized: false, // 빈 값도 저장 여부
     secret: config.cookie, // 암호화
+    proxy: config.isProd, // nginx 앞단에 proxy가 있는 경우에만
     cookie: {
       httpOnly: true, // 쿠키를 자바스크립트에서 접근을 하지 못함
-      secure: false,
+      secure: config.isProd,
       domain: config.isProd && '.devfactory.me'
     }
   })
