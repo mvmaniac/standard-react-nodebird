@@ -33,7 +33,6 @@ module.exports = {
       dateStrings: true,
       typeCast: true
     },
-    timezone: '+09:00',
-    operatorsAliases: false
+    timezone: '+09:00'
   }
 };

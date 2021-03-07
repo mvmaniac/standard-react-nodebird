@@ -28,6 +28,16 @@ const userRouter = require('./routes/user');
 
 const app = express();
 
+const sessionOptions = {
+  resave: false, // 매번 세션 강제 저장 여부
+  saveUninitialized: false, // 빈 값도 저장 여부
+  secret: config.cookie, // 암호화
+  cookie: {
+    httpOnly: true, // 쿠키를 자바스크립트에서 접근을 하지 못함
+    secure: false
+  }
+};
+
 if (config.isProd) {
   app.use(morgan('combined'));
   app.use(hpp());
@@ -38,6 +48,10 @@ if (config.isProd) {
       credentials: true
     })
   );
+
+  sessionOptions.proxy = true; // nginx 앞단에 proxy가 있는 경우에만
+  sessionOptions.cookie.secure = true;
+  sessionOptions.cookie.domain = '.devfactory.me';
 } else {
   app.use(morgan('dev'));
   app.use(
@@ -52,19 +66,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(config.cookie));
-app.use(
-  session({
-    resave: false, // 매번 세션 강제 저장 여부
-    saveUninitialized: false, // 빈 값도 저장 여부
-    secret: config.cookie, // 암호화
-    proxy: config.isProd, // nginx 앞단에 proxy가 있는 경우에만
-    cookie: {
-      httpOnly: true, // 쿠키를 자바스크립트에서 접근을 하지 못함
-      secure: config.isProd,
-      domain: config.isProd && '.devfactory.me'
-    }
-  })
-);
+app.use(session(sessionOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 
