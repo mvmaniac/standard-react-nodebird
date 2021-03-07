@@ -4,12 +4,14 @@ const express = require('express');
 const multer = require('multer');
 const dayjs = require('dayjs');
 const {Op} = require('sequelize');
+const sanitizeHtml = require('sanitize-html');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 
 const config = require('../config/config');
 const {Post, Comment, Image, User, Hashtag, sequelize} = require('../models');
 const {isLoggedIn} = require('./middlewares');
+const sanitizeHelper = require('../utils/sanitizeHelper');
 
 const router = express.Router();
 
@@ -232,9 +234,11 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     const {content, imagePaths} = req.body;
     const hashtags = content.match(/#[^\s#]+/g);
 
+    const filterContent = sanitizeHtml(content, sanitizeHelper.options);
+
     const savedPost = await Post.create(
       {
-        content,
+        content: filterContent,
         userId: req.user.id
       },
       {transaction}
@@ -326,11 +330,12 @@ router.patch('/:postId', isLoggedIn, async (req, res, next) => {
     const {content, imagePaths} = req.body;
     const hashtags = content.match(/#[^\s#]+/g);
 
-    console.log(postId);
-    console.log(content);
+    const filterContent = sanitizeHtml(content, sanitizeHelper.options);
 
     await Post.update(
-      {content},
+      {
+        content: filterContent
+      },
       {
         where: {id: postId, userId: req.user.id},
         transaction
@@ -404,7 +409,10 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => {
 
     await Image.destroy({where: {postId}, transaction});
     await Comment.destroy({where: {postId}, transaction});
-    await Post.destroy({where: {id: postId, userId: req.user.id}, transaction});
+    await Post.destroy({
+      where: {id: postId, userId: req.user.id},
+      transaction
+    });
 
     await transaction.commit();
 
@@ -430,8 +438,13 @@ router.post('/:postId/comments', isLoggedIn, async (req, res, next) => {
       return;
     }
 
+    const filterContent = sanitizeHtml(
+      req.body.content,
+      sanitizeHelper.options
+    );
+
     const savedComment = await Comment.create({
-      content: req.body.content,
+      content: filterContent,
       postId,
       userId: req.user.id
     });

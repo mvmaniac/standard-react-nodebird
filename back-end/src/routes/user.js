@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
+const sanitizeHtml = require('sanitize-html');
 
 const {User, Post} = require('../models');
 const {isLoggedIn, isNotLoggedIn} = require('./middlewares');
@@ -153,14 +154,16 @@ router.post('/', isNotLoggedIn, async (req, res, next) => {
 // PATCH /users/nickname
 router.patch('/nickname', isLoggedIn, async (req, res, next) => {
   try {
+    const filterNickname = sanitizeHtml(req.body.nickname);
+
     await User.update(
       {
-        nickname: req.body.nickname
+        nickname: filterNickname
       },
       {where: {id: req.user.id}}
     );
 
-    res.status(200).json({nickname: req.body.nickname});
+    res.status(200).json({nickname: filterNickname});
   } catch (error) {
     console.error(error);
     next(error);
