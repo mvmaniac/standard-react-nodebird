@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 import {Button, Card, Popover, Avatar, List, Comment, Modal} from 'antd';
 import {
@@ -12,7 +13,6 @@ import {
   HeartTwoTone
 } from '@ant-design/icons';
 
-import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
@@ -24,6 +24,12 @@ import {
   updatePostRequestAction
 } from '../reducers/post';
 import dayjs from '../utils/dayjs';
+
+// 이미지의 경우 에러 처리를 위해 서버사이드 렌더링를 적용하지 않음
+// import PostImages from './PostImages';
+const PostImagesWithNoSSR = dynamic(() => import('./PostImages'), {
+  ssr: false
+});
 
 const CardStyled = styled(Card)`
   &:not(:first-child) {
@@ -157,7 +163,7 @@ const PostCard = ({post}) => {
   return (
     <>
       <CardStyled
-        cover={post.images[0] && <PostImages images={post.images} />}
+        cover={post.images[0] && <PostImagesWithNoSSR images={post.images} />}
         actions={[
           <RetweetOutlined key="retweet" onClick={onRetweet} />,
           isLike ? (
@@ -208,7 +214,7 @@ const PostCard = ({post}) => {
           <Card
             cover={
               post.retweet.images[0] && (
-                <PostImages images={post.retweet.images} />
+                <PostImagesWithNoSSR images={post.retweet.images} />
               )
             }
           >

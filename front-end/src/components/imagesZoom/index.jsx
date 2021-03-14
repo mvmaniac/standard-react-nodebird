@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import PropTypes from 'prop-types';
 import Slick from 'react-slick';
 import {
@@ -15,6 +15,11 @@ import {IMAGE_URL} from '../../config/config';
 
 const ImagesZoom = ({images, onClose}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  const onError = useCallback((event) => {
+    const {target} = event;
+    target.src = `${IMAGE_URL}${target.alt}`;
+  }, []);
 
   return (
     <Overlay>
@@ -35,7 +40,11 @@ const ImagesZoom = ({images, onClose}) => {
           >
             {images.map((image) => (
               <ImgWrapper key={image.src}>
-                <img src={`${IMAGE_URL}${image.src}`} alt={image.src} />
+                <img
+                  src={`${IMAGE_URL}${image.src}`}
+                  alt={image.src}
+                  onError={onError}
+                />
               </ImgWrapper>
             ))}
           </Slick>

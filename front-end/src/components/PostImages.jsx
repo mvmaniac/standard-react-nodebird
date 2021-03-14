@@ -38,6 +38,11 @@ const PostImages = ({images}) => {
     setIsShowImages(false);
   }, []);
 
+  const onError = useCallback((event) => {
+    const {target} = event;
+    target.src = `${IMAGE_URL}${target.alt}`;
+  }, []);
+
   if (images.length === 1) {
     const image = images[0];
 
@@ -47,6 +52,7 @@ const PostImages = ({images}) => {
           src={`${IMAGE_URL}${image.thumbnail}`}
           alt={image.src}
           onClick={onZoom}
+          onError={onError}
           role="presentation"
         />
         {isShowImages && <ImagesZoom images={images} onClose={onClose} />}
@@ -64,12 +70,14 @@ const PostImages = ({images}) => {
           src={`${IMAGE_URL}${image1.thumbnail}`}
           alt={image1.thumbnail}
           onClick={onZoom}
+          onError={onError}
           role="presentation"
         />
         <img
           src={`${IMAGE_URL}${image2.thumbnail}`}
           alt={image2.thumbnail}
           onClick={onZoom}
+          onError={onError}
           role="presentation"
         />
         {isShowImages && <ImagesZoom images={images} onClose={onClose} />}
@@ -85,6 +93,7 @@ const PostImages = ({images}) => {
         src={`${IMAGE_URL}${image.thumbnail}`}
         alt={image.thumbnail}
         onClick={onZoom}
+        onError={onError}
         role="presentation"
       />
       <BoxMoreStyled onClick={onZoom} role="presentation">
