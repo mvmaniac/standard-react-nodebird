@@ -86,6 +86,12 @@ app.use((req, res, next) => {
 
 // 에러 미들웨어
 app.use((err, req, res, next) => {
+  // TODO: csrf 에러 처리
+  // if (err.code !== 'EBADCSRFTOKEN') {
+  //   next(err);
+  //   return;
+  // }
+
   const stack = config.isProd ? err.stack : '';
 
   res.status(err.status || 500).send({
