@@ -2,226 +2,325 @@
 
 ### 1. 강의 실습 예제 기반
 
-* [React로 NodeBird SNS 만들기](https://www.inflearn.com/course/react_nodebird "React로 NodeBird SNS 만들기") 참고
+- [[리뉴얼] React로 NodeBird SNS 만들기](https://www.inflearn.com/course/%EB%85%B8%EB%93%9C%EB%B2%84%EB%93%9C-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EB%A6%AC%EB%89%B4%EC%96%BC# "[리뉴얼] React로 NodeBird SNS 만들기") 참고
 
 ### 2. 차이점
 
-* Next.js는 9.x 사용
-* ESLint & Prettier 설정 추가
-* EditorConfig 설정 추가
-* CI/CD 적용(?)
+- ESLint & Prettier 설정 추가
+- EditorConfig 설정 추가
 
 ### 3. TODO
 
-* sequelize 공부 (JPA와 비교하여...)
-* react-slick UI 변경
-* 해시태크 검색 시 리트윗 글도 나오도록 수정
-* `db.Post.findOne`으로 게시글 체크 중복코드를 미들웨어로 적용
-* loadUserPostsAPI 에도 인피니트스크롤링 적용
-* https 적용
-* MySQL 8.x 변경
+- CI/CD 적용
+- 리덕스 툴킷 적용
+- import 경로 설정
+- csurf 확인 및 적용
+- 팔로우, 언팔로우 버튼 로딩 처리 (누른 버튼만 로딩이 되게...)
+- 팔로우, 팔로워 목록 가지고 올 때 필요한 정보만 가져오기
+- 이미지 업로드 파일 수정
 
 ### 4. Setting
 
 #### 4-1. front-end
 
-* react
+- react
 
-    ``` javascript
-    npm i react react-dom
-    npm i prop-types
-    npm i react-redux redux-devtools-extension
-    ```
+  ```javascript
+  npm i react react-dom
+  npm i prop-types
+  ```
 
-* redux
+- redux
 
-    ``` javascript
-    npm i redux react-redux redux-saga
-    ```
+  ```javascript
+  npm i redux react-redux
+  npm i redux-devtools-extension
+  ```
 
-* next
+- redux-saga
 
-    ``` javascript
-    npm i next
-    npm i next-redux-wrapper
-    npm i next-redux-saga
-    npm i -D @next/bundle-analyzer
-    ```
+  ```javascript
+    npm i redux-saga
+  ```
 
-* express
+- next
 
-    ``` javascript
-    npm i express
-    npm i cookie-parser
-    npm i express-session
-    npm i dotenv
-    npm i morgan
-    ```
+  ```javascript
+  npm i next
+  npm i next-redux-wrapper
+  npm i swr
+  npm i @next/bundle-analyzer
+  ```
 
-* antd
+- immer
 
-    ``` javascript
-    npm i antd
-    ```
+  ```javascript
+  npm i immer
+  ```
 
-* axios
+- dayjs
 
-    ``` javascript
-    npm i axios
-    ```
+  ```javascript
+  npm i dayjs
+  ```
 
-* pm2
-  
-    ``` javascript
-    npm i pm2
-    ```
+- pm2 & cross-env
 
-* cross-env
-  
-    ``` javascript
-    npm i cross-env
-    ```
+  ```javascript
+  npm i pm2
+  npm i cross-env
+  ```
 
-* react-slick
-  
-    ``` javascript
-    npm i react-slick
-    ```
+- antd & styled-components & babel-plugin-styled-components
 
-* react-helmet
-  
-    ``` javascript
-    npm i react-helmet
-    ```
+  ```javascript
+  npm i antd @ant-design/icons
+  npm i styled-components
+  npm i babel-plugin-styled-components
+  ```
 
-* immer
-  
-    ``` javascript
-    npm i immer
-    ```
+- faker & shortid
 
-* styled-components
-  
-    ``` javascript
-    npm i styled-components
-    ```
+  ```javascript
+  npm i faker shortid
+  ```
 
-* eslint & prettier
+- eslint & prettier
 
-    ``` javascript
-    npm i -D eslint
-    npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
-    npm i -D prettier eslint-config-prettier eslint-plugin-prettier
-    npm i -D babel-eslint
-    ```
-
-* nodemon
-
-    ``` javascript
-    npm i -D nodemon
-    ```
-
-* webpack & plugins
-
-    ``` javascript
-    npm i -D webpack
-    npm i -D compression-webpack-plugin
-    ```
-
-* babel
-
-    ``` javascript
-    npm i -D @babel/plugin-proposal-nullish-coalescing-operator
-    npm i -D @babel/plugin-proposal-optional-chaining
-    npm i -D babel-plugin-styled-components
-    ```
+  ```javascript
+  npm i -D eslint
+  npm i -D eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react eslint-plugin-react-hooks
+  npm i -D prettier eslint-config-prettier
+  ```
 
 #### 4-2. back-end
 
-* express & etc
+- express & express-session
 
-    ``` javascript
-    npm i express
-    npm i bcrypt
-    npm i cookie-parser
-    npm i express-session
-    npm i dotenv
-    npm i helmet hpp
-    npm i morgan
-    npm i multer
-    npm i passport passport-local
+  ```javascript
+  npm i express
+  npm i express-session
+  ```
+
+- bcrypt & cors & cookie-parser & dotenv & morgan & multer
+
+  ```javascript
+  npm i bcrypt
+  npm i cors
+  npm i cookie-parser
+  npm i dotenv
+  npm i morgan
+  npm i multer
+  ```
+
+- passport & passport-local
+
+  ```javascript
+  npm i passport passport-local
+  ```
+
+- sequelize & mysql2
+
+  ```javascript
+  npm i sequelize
+  npm i mysql2
+  npm i -D sequelize-cli
+  ```
+
+- pm2 & cross-env & helmet & hpp
+
+  ```javascript
+  npm i pm2
+  npm i cross-env
+  npm i helmet
+  npm i hpp
+  ```
+
+- sanitize-html & csurf
+
+  ```javascript
+  npm i sanitize-html
+  npm i csurf
+  ```
+
+- multer-s3 & aws-sdk
+
+  ```javascript
+  npm i multer-s3
+  npm i aws-sdk
+  ```
+
+- nodemon
+
+  ```javascript
+  npm i -D nodemon
+  ```
+
+- eslint & prettier
+
+  ```javascript
+  npm i -D eslint
+  npm i -D eslint-config-airbnb-base eslint-plugin-import
+  npm i -D prettier eslint-config-prettier
+  ```
+
+#### 4-2. lambda
+
+- aws-sdk & sharp
+
+  ```javascript
+  npm i aws-sdk sharp
+  ```
+
+- eslint & prettier
+
+  ```javascript
+  npm i -D eslint
+  npm i -D eslint-config-airbnb-base eslint-plugin-import
+  npm i -D prettier eslint-config-prettier
+  ```
+
+#### 4-5. ec2 (nodebird-front, nodebird-back)
+
+- front-end, back-end 는 각각 EC2 (Ubuntu 20.04.LTS)
+
+- 패키지 업데이트
+  `sudo apt update && sudo apt upgrade`
+
+- 필요한 패키지 설치  
+  `sudo apt install -y build-essential`
+
+- nodejs 설치 (해당 LTS 버전으로, 혹여 별도의 npm 업데이트가 뜬다면 그냥 하지 말자...)
+  `curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash --`  
+  `sudo apt install -y nodejs`
+
+- 소스 다운로드 (.env 파일 직접 옮겨야 함)  
+   `sudo git clone https://github.com/mvmaniac/standard-react-nodebird.git /app`
+
+- 패키지 설치 (해당 결로로 이동)
+  `sudo npm i --production`
+
+  혹시 npm 업데이트 시 sudo를 꼭 넣어서 실행 할 것
+  `sudo npm i -g npm`
+
+- PM2
+
+  - 기본 명령어  
+    `sudo npx pm2 list`  
+    `sudo npx pm2 monit`
+    `sudo npx pm2 show <id|name>`
+    `sudo npx pm2 start <id|name>`
+    `sudo npx pm2 stop <id|name>`
+    `sudo npx pm2 delete <id|name>`
+    `sudo npx pm2 restart <id|name>`
+    `sudo npx pm2 kill`  
+    `sudo npx pm2 reload all`
+
+  - 기동 명령어 (80포트로 띄위기 때문에 sudo를 붙어 주어야 함)
+
+    1. front-end:
+
+       - 기동: `sudo npm run build && sudo npx pm2 start --name nodebird-front npm -- start && sudo npx pm2 monit`
+       - 재시작: `sudo npm run build && sudo npx pm2 restart nodebird-front && sudo npx pm2 monit`
+
+    2. back-end
+       - 기동: `sudo npm run start && sudo npx pm2 monit`
+       - 재시작: `sudo npx pm2 restart nodebird-back && sudo npx pm2 monit`
+
+- HTTPS
+
+  - nginx로 80 이나 443 포트로 접속하면 nginx에서 받아서
+    front-end 혹은 back-end 서버로 리버스 프록시 해줌
+
+    1. nginx 설지
+
+       - `sudo apt install -y nginx`
+
+    2. nginx 설정
+
+       - `sudo vi /etc/nginx/nginx.conf`
+       - http 속성 안에 server 설정 추가
+       - back-end의 경우에만 X-Forwarded-Proto 헤더 설정 추가
+
+         ```conf
+         server {
+           server_name <도메인 URL>;
+           listen 80;
+           location / {
+             proxy_set_header HOST $host;
+             proxy_set_header X-Forwarded-Proto $scheme;
+             proxy_pass http://127.0.0.1:<포트번호>;
+             proxy_redirect off;
+           }
+         }
+         ```
+
+    3. nginx 시작
+
+       - `sudo systemctl status nginx`
+       - `sudo systemctl start nginx`
+       - `sudo systemctl restart nginx`
+       - `sudo systemctl stop nginx`
+
+    4. 80 포트 확인
+
+       - `sudo lsof -i tcp:80`
+
+    5. https 인증서 설치 및 자동 갱신
+
+       - 한 서버에 하나의 도메인에만 httsp 적용 (2개 이상은..)
+       - [certbot instructions for nginx on ubuntu 20.04](https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx "certbot instructions for nginx on ubuntu 20.04") 참고
+
+         - `sudo systemctl status snapd` (안 깔려 있다면...)
+         - `sudo snap install core; sudo snap refresh core`
+         - `sudo snap install --classic certbot`
+         - `sudo certbot --nginx` (메일 주소 입력 및 도메인 URL 선택)
+         - `sudo certbot renew --dry-run` (갱신 테스트)
+         - `sudo certbot renew` (갱신)
+         - `sudo certbot certificates` (인증서 정보 확인)
+
+       - nginx.conf 파일에 certbot이 자동으로 입력한 설정 정리 (들어쓰기...)
+       - crontab 등록
+
+         - `sudo systemctl status cron`
+         - `sudo systemctl restart cron`
+         - `sudo crontab -l` (파일 확인)
+         - `sudo crontab -e` (파일 편집)
+         - `view /var/log/syslog` or `less /var/log/syslog` (로그 확인)
+         - 매월 1일 05시 갱신 및 완료 후 nginx 재시작 처리
+
+           ```bash
+           0 05 1 * * sudo /usr/bin/certbot renew --renew-hook="sudo systemctl restart nginx"
+           ```
+
+#### 4-6. rds (nodebird-db)
+
+- DB는 RDS
+
+- 퍼블릭 액세스 가능은 예로 함 (귀차니즘...)
+
+- 파라미터 변경
+
+  - 'utf8mb4' 설정 파라미터
+
+    ```text
+    character_set_client
+    character_set_connection
+    character_set_database
+    character_set_filesystem
+    character_set_results
+    character_set_server
     ```
 
-* sequelize
+  - 'utf8mb4_general_ci' 설정 파라미터
 
-    ``` javascript
-    npm i sequelize
+    ```text
+    collation_connection
+    collation_server
     ```
 
-* axios
+- DDL & DDL
 
-    ``` javascript
-    npm i axios
-    ```
-
-* pm2
-  
-    ``` javascript
-    npm i pm2
-    ```
-
-* cross-env
-  
-    ``` javascript
-    npm i cross-env
-    ```
-
-* mysql2
-
-    ``` javascript
-    npm i mysql2
-    ```
-
-* aws-sdk & S3
-
-    ``` javascript
-    npm i aws-sdk multer-s3
-    ```
-
-* eslint & prettier
-
-    ``` javascript
-    npm i -D eslint
-    npm i -D eslint-config-airbnb-base eslint-plugin-import
-    npm i -D prettier eslint-config-prettier eslint-plugin-prettier
-    ```
-
-* nodemon
-
-    ``` javascript
-    npm i -D nodemon
-    ```
-
-#### 4-3. lambda
-
-* aws-sdk & sharp
-
-    ``` javascript
-    npm i aws-sdk sharp
-    ```
-
-* eslint & prettier
-
-    ``` javascript
-    npm i -D eslint
-    npm i -D eslint-config-airbnb-base eslint-plugin-import
-    npm i -D prettier eslint-config-prettier eslint-plugin-prettier
-    ```
-
-#### 4-4. db
-
-* ddl & dcl
-  
   ```sql
     CREATE DATABASE nodebird;
     CREATE USER dev@'%' IDENTIFIED BY 'xxxx';
@@ -229,130 +328,27 @@
     FLUSH PRIVILEGES;
   ```
 
-#### 4-5. server
+#### 4-7. lambda (nodebird-lambda, nodebird-s3)
 
-* front-end, back-end 는 각각 EC2, DB는 RDS
-* 원활한 진행을 위해 관리자 권한으로 작업 아니면 ```sudo``` 붙여서 명령어 실행  
-  ```sudo su -```
+- 이미지 리사이즈를 위해 쓰는 패키지인 sharp가 Lambda에서 실행이 되려면
+  리눅스 같은 곳에 설치된 패키지를 사용해야 함
+  만약 그게 아니라면 로컬에 설치된 파일을 직접 업로드해도 될듯?
 
-* 필요한 패키지 설치  
-    amazon-linux  
-    ```amazon-linux-extras install -y **epel**```  
-    ```yum install -y git```  
-    or  
-    ```yum groupinstall 'Development Tools'```
+  1.먼저 Lambda를 생성 한 후 Cloud9 환경을 생성
 
-    ubuntu  
-    ```apt-get install -y build-essential```
+  2.Cloud9 에디터 상 index.js, package.json 파일만 로컬에서 업로드
 
-* nodejs 설치 (LTS 버전으로)  
-    amazon-linux  
-    ```curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash --```  
-    ```yum install -y nodejs```
+  3.Cloud9 터미널에 패키지 설치 후 해당 폴더 자체를 Lambda에 배포
 
-    ubuntu  
-    ```curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash --```  
-    ```apt-get install -y nodejs```
-
-* 소스 다운로드 (.env 파일 직접 옮겨야 함)  
-    ```git clone https://github.com/mvmaniac/standard-react-nodebird.git /app```
-
-* PM2 설치 (명령어를 전역으로 쓰는 용도임)  
-    ```npm i -g pm2```
-
-#### 4-6. aws
-
-* EC2  
-보안그룹 명칭은 'react-node-bird-server', 인바운드 규칙은 80, 22, 433  
-외부접속은 내 IP만 가능하게 할 수 있음
-
-* Route 53  
-탄력적 IP는 비용이 발생하므로 번거롭지만 EC2 IP가 변경 될 때마다 IP 설정 필요  
-유료 도메인 구매 후 해당 사이트에서 AWS 에서 제공한 DNS로 변경해야함  
-변경 후 다시 AWS 에서 EC2 연결하고 해당 도메인으로 접속하는데 최초는 오래 걸리는 듯? (2 ~ 3일?)  
-아니면 상황에 따라 다를 수 있음.
-
-* RDS (MySQL 5.x)  
-중지 시켜도 비용이 발생하므로 안쓰면 삭제 해야 함  
-퍼블릭 액세스 가능성을 '예'  
-보안그룹 명칭은 'react-node-bird-db', 인바운드 규칙은 3306  
-파라미터 그룹 명칭은 'react-node-bird', 아래 처럼 파라미터 변경
-
-    아래 목록은 'utf8mb4'  
-    character_set_client  
-    character_set_connection  
-    character_set_database  
-    character_set_filesystem  
-    character_set_results  
-    character_set_server  
-  
-    아래 목록은 'utf8mb4_general_ci'  
-    collation_connection  
-    collation_server  
-
-* S3  
-버킷정책을 퍼블릭으로 함
-
-    ``` javascript
-    {
-        "Version": "2012-10-17",
-        "Id": "PolicyXXXXXXXXXXXXXX",
-        "Statement": [
-            {
-                "Sid": "StmtXXXXXXXXXXXXXX",
-                "Effect": "Allow",
-                "Principal": "*",
-                "Action": [
-                    "s3:GetObject",
-                    "s3:PutObject"
-                ],
-                "Resource": "arn:aws:s3:::S3명칭/*"
-            }
-        ]
-    }
-    ```
-
-* Lambda & Cloud9  
-람다 배포는 Cloud9 를 통해서 올림
+- 다만 Cloud9의 환경과 Lambda 환경이 틀린데도 불구하고 다행히 잘됨...
+  Cloud9: Linux2, Node 10
+  Lambda: Node 14
 
 ### 5. etc
 
-* next & express
-front-end 에서 next와 express를 연결한 이유는 주소를 동적으로 생성하기 위해서  
-예를 들어 해쉬태그 링크를 눌렀을 떄 동적으로 페이지를 가져오기 위해서(?)
+- bundle-analyzer
+  Parsed size 기준으로 500KB ~ 1MB 이하로 외부 라이브러리가 크다면 tree shaking으로 검색하여 적용해야 함
 
-* .env
-.env 파일을 만들어서 사용하는 환경변수가 있으므로, 해당 파일을 만들어서 설정 필요 (해당 파일은 저장소에 올리면 안됨)  
-front-end는 COOKIE_SECRET  
-back-end는 COOKIE_SECRET, DB_PASSWORD  
-
-* containers와 components 폴더의 차이  
-containers 폴더에는 redux의 dispatch 하는 부분이 있는 것만  
-components 폴더에는 ImageZoom 처럼 화면만 표시하는 것만 넣음
-
-* Next.js Link의 prefetch  
-페이지 로딩 시 해당 페이지까지 같이 불러옴(?)  
-너무 많이 쓰면은 안되고 사용자가 자주 다니는 페이지들인 경우 사용
-근데 Next.js 9 부터는 자동으로 prefetch 되기 떄문에 안 써도 됨
-
-* bundle-analyzer  
-Parsed size 기준으로 500KB ~ 1MB 이하로
-외부 라이브러리가 크다면 tree shaking으로 검색하여 적용해야 함
-
-* pm2  
-  * 기본 명령어  
-    ```pm2 list```  
-    ```pm2 monit```  
-    ```pm2 kill```  
-    ```pm2 reload all```  
-
-  * 기동 명령어  
-    init: ```npm run start && pm2 monit```  
-    front-end: ```npm run build && pm2 reload all && pm2 monit```  
-    back-end: ```pm2 reload all && pm2 monit```
-
-* Sequelize를 사용해서 등록일/수정일 사용하는 경우  
-[블로그 내용 참고](https://lemontia.tistory.com/873 "블로그 내용 참고")  
-    > 등록일/수정일을 서버시간이나 DB시간를 보지 않음, timezone 설정으로 하면 됨  
-    > 조회 할 때도 timezone 설정으로 가지고 오지 않음, dialectOptions 으로 시간을 String으로 변환  
-    > 한 마디로 저장할 때는 timezone을 적용하도록 옵션을 유지하되, 조회 할 때 날짜를 String 형태로 받음  
+- Sequelize를 사용해서 등록일/수정일 사용하는 경우
+  [블로그 내용 참고](https://lemontia.tistory.com/873 "블로그 내용 참고")
+  > 등록일/수정일을 서버시간이나 DB시간를 보지 않음, timezone 설정으로 하면 됨
