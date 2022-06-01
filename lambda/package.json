@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.927.0",
-    "sharp": "^0.28.3"
+    "sharp": "^0.30.5"
   },
   "devDependencies": {
     "eslint": "^7.28.0",
